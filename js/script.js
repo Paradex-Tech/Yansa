@@ -1975,10 +1975,71 @@
     });
   }
 
+  /* ---------- Forms → Google Sheet ----------
+     Both forms post to a Google Apps Script web app (backend/forms.gs), which
+     appends a row to the "Yansa Website — Form Submissions" sheet. The body
+     is form-encoded so the browser sends it without a CORS preflight, which
+     Apps Script can't answer. */
+  var FORMS_ENDPOINT = 'https://script.google.com/macros/s/AKfycby1FseYxoZf98idb1vlxApBTynyOCM12i5B3SKHmHeEEYV1xkUWQpcnin7PoLonbN95UA/exec'; // Apps Script "Web app" URL, ends in /exec
+
+  // Brochure PDF to download after the form. Empty = thank-you only.
+  var BROCHURE_URL = '';
+
+  function sendForm(formName, form) {
+    var data = new URLSearchParams(new FormData(form));
+    data.append('form', formName);
+    data.append('page', location.pathname.split('/').pop() || 'index.html');
+
+    if (!FORMS_ENDPOINT) return Promise.reject(new Error('FORMS_ENDPOINT not set'));
+
+    return fetch(FORMS_ENDPOINT, { method: 'POST', body: data })
+      .then(function (res) { return res.json(); })
+      .then(function (out) {
+        if (!out.ok) throw new Error(out.error || 'Submission failed');
+      });
+  }
+
+  // Honeypot for bots; hidden from people and screen readers
+  var HONEYPOT =
+    '<input type="text" name="website" class="form-hp" tabindex="-1" autocomplete="off" aria-hidden="true">';
+
+  /* ---------- Contact form ---------- */
+  var contactForm = document.getElementById('contact-form');
+
+  if (contactForm) {
+    contactForm.insertAdjacentHTML('beforeend', HONEYPOT);
+    var cButton = contactForm.querySelector('button[type="submit"]');
+    var cStatus = document.createElement('p');
+    cStatus.className = 'form-status';
+    cStatus.setAttribute('role', 'status');
+    contactForm.appendChild(cStatus);
+
+    contactForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      cButton.disabled = true;
+      cButton.textContent = 'Sending…';
+      cStatus.textContent = '';
+      cStatus.classList.remove('form-status--error');
+
+      sendForm('contact', contactForm)
+        .then(function () {
+          contactForm.reset();
+          cStatus.textContent = 'Thank you! We’ll be in touch shortly.';
+        })
+        .catch(function () {
+          cStatus.textContent = 'Something went wrong. Please try again, or email us directly.';
+          cStatus.classList.add('form-status--error');
+        })
+        .then(function () {
+          cButton.disabled = false;
+          cButton.textContent = 'Send';
+        });
+    });
+  }
+
   /* ---------- Brochure — details before download ----------
      Every "Download Brochure" button (a[data-brochure]) opens a small form.
-     Front end only for now: submitting shows a thank-you in the popup.
-     Nothing is sent or downloaded yet. */
+     The details go to the sheet, then the brochure downloads. */
   var brochureLinks = document.querySelectorAll('a[data-brochure]');
 
   if (brochureLinks.length && window.HTMLDialogElement) {
@@ -1993,16 +2054,22 @@
         '<input type="text" name="organisation" autocomplete="organization" required placeholder="Organisation name *" aria-label="Organisation name">' +
         '<input type="email" name="email" autocomplete="email" required placeholder="Work email *" aria-label="Work email">' +
         '<input type="tel" name="phone" autocomplete="tel" placeholder="Phone (optional)" aria-label="Phone">' +
+        HONEYPOT +
         '<button type="submit" class="btn btn--orange">Download</button>' +
+        '<p class="form-status form-status--error" role="status" hidden></p>' +
       '</form>' +
       '<div class="brochure-thanks" hidden>' +
         '<h2>Thank you!</h2>' +
-        '<p>Your brochure download will begin shortly.</p>' +
+        '<p>' + (BROCHURE_URL
+          ? 'Your brochure download will begin shortly.'
+          : 'We’ll send the brochure to your email shortly.') + '</p>' +
       '</div>';
     document.body.appendChild(bDialog);
 
     var bForm = bDialog.querySelector('form');
     var bThanks = bDialog.querySelector('.brochure-thanks');
+    var bButton = bForm.querySelector('button[type="submit"]');
+    var bError = bForm.querySelector('.form-status');
 
     Array.prototype.forEach.call(brochureLinks, function (link) {
       link.addEventListener('click', function (e) {
@@ -2010,6 +2077,7 @@
         bForm.reset();
         bForm.hidden = false;
         bThanks.hidden = true;
+        bError.hidden = true;
         bDialog.showModal();
       });
     });
@@ -2026,8 +2094,31 @@
     // Browser validation handles required fields and the email format
     bForm.addEventListener('submit', function (e) {
       e.preventDefault();
-      bForm.hidden = true;
-      bThanks.hidden = false;
+      bButton.disabled = true;
+      bButton.textContent = 'Sending…';
+      bError.hidden = true;
+
+      sendForm('brochure', bForm)
+        .then(function () {
+          bForm.hidden = true;
+          bThanks.hidden = false;
+          if (BROCHURE_URL) {
+            var a = document.createElement('a');
+            a.href = BROCHURE_URL;
+            a.download = '';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+          }
+        })
+        .catch(function () {
+          bError.textContent = 'Something went wrong. Please try again.';
+          bError.hidden = false;
+        })
+        .then(function () {
+          bButton.disabled = false;
+          bButton.textContent = 'Download';
+        });
     });
   }
 

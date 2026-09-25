@@ -51,19 +51,19 @@
           <form class="contact-form" id="contact-form">
             <div class="form-field">
               <label for="fullname">Full Name</label>
-              <input type="text" id="fullname" name="fullname" placeholder="Your name">
+              <input type="text" id="fullname" name="fullname" autocomplete="name" required placeholder="Your name">
             </div>
             <div class="form-field">
               <label for="email">Email Address</label>
-              <input type="email" id="email" name="email" placeholder="Your email address">
+              <input type="email" id="email" name="email" autocomplete="email" required placeholder="Your email address">
             </div>
             <div class="form-field">
               <label for="facility">Facility/Company</label>
-              <input type="text" id="facility" name="facility" placeholder="Facility name">
+              <input type="text" id="facility" name="facility" autocomplete="organization" placeholder="Facility name">
             </div>
             <div class="form-field">
               <label for="message">Message</label>
-              <textarea id="message" name="message" rows="4" placeholder="Write something...."></textarea>
+              <textarea id="message" name="message" rows="4" required placeholder="Write something...."></textarea>
             </div>
             <button type="submit" class="btn btn--orange">Send</button>
           </form>

@@ -3963,6 +3963,11 @@ body.sol-dialog-open {
   gap: 10px;
 }
 
+/* display:flex above would otherwise beat the hidden attribute */
+.brochure-form[hidden] {
+  display: none;
+}
+
 .brochure-form input {
   background: #ffffff;
   border: 1px solid #a9d1d7;
@@ -3992,6 +3997,35 @@ body.sol-dialog-open {
 .brochure-thanks p {
   color: #5c5c5c;
   margin: 8px 0 0;
+}
+
+/* Form submission feedback (contact + brochure) */
+.form-status {
+  margin: 0;
+  color: #006a65;
+}
+
+.form-status:empty {
+  display: none;
+}
+
+.form-status--error {
+  color: #b3261e;
+}
+
+.contact-form .btn:disabled,
+.brochure-form .btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+/* Bot trap: off-screen rather than display:none so naive bots still fill it */
+.form-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
 }
 
 /* In-page targets for the site's links (contact form, case studies, FAQs).
