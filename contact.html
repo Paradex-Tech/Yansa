@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact | Yansa</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="navbar__inner">
+      <a href="index.html" class="navbar__logo">
+        <img src="images/logo-nav.svg" alt="Yansa">
+      </a>
+      <nav class="navbar__links">
+        <a href="index.html">Home</a>
+        <a href="solution.html">Solution</a>
+        <a href="about.html">About Us</a>
+        <a href="yanq.html">YanQ</a>
+        <a href="contact.html" class="is-active">Contact</a>
+        <a href="#contact-form">Career</a>
+      </nav>
+      <a href="#contact-form" class="btn btn--teal navbar__cta">Book a Diagnosis</a>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- CONTACT HERO -->
+    <section class="contact-hero">
+      <div class="header-placeholder">
+        <img src="images/contact-hero.jpg" alt="Power quality analyser and clamp meter on site at an electrical substation">
+        <div class="header-placeholder__overlay">
+          <h1>Let's Begin With a Diagnosis.</h1>
+          <p>Tell us what your facility is experiencing. We will take it from there.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAP + FORM -->
+    <section class="contact-body">
+      <div class="contact-body__inner">
+        <div class="contact-map">
+          <img src="images/contact-map-photo.png" alt="Map showing Yansa facility location">
+        </div>
+        <div class="contact-form-col">
+          <h2>Your Facility. Your Challenge. Tell Us.</h2>
+          <p class="contact-form-col__sub">Every diagnosis starts with a conversation.</p>
+
+          <form class="contact-form" id="contact-form">
+            <div class="form-field">
+              <label for="fullname">Full Name</label>
+              <input type="text" id="fullname" name="fullname" placeholder="Your name">
+            </div>
+            <div class="form-field">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" placeholder="Your email address">
+            </div>
+            <div class="form-field">
+              <label for="facility">Facility/Company</label>
+              <input type="text" id="facility" name="facility" placeholder="Facility name">
+            </div>
+            <div class="form-field">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" rows="4" placeholder="Write something...."></textarea>
+            </div>
+            <button type="submit" class="btn btn--orange">Send</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__cta">
+      <div class="footer__icon" aria-hidden="true">
+        <img src="images/icons/footer-icon.svg" alt="">
+      </div>
+      <h2>Refine Power before it becomes an expensive problem.</h2>
+      <p>Tell us what your facility is experiencing. We will handle the rest.</p>
+      <div class="footer__buttons">
+        <a href="#contact-form" class="btn btn--orange">Book a Diagnosis</a>
+        <a href="#" class="btn btn--outline-orange" data-brochure>Download Brochure</a>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <div class="footer__brand">
+        <img src="images/logo-footer.svg" alt="Yansa">
+        <p>Follow us for power quality insights, field observations, and engineering perspectives from the industry.</p>
+        <div class="footer__socials">
+          <img src="images/icons/social-1.svg" alt="Social link">
+          <img src="images/icons/social-2.svg" alt="Social link">
+          <img src="images/icons/social-3.svg" alt="Social link">
+          <img src="images/icons/social-4.svg" alt="Social link">
+        </div>
+      </div>
+      <div class="footer__links">
+        <div class="footer__col">
+          <a href="index.html">Home</a>
+          <a href="solution.html">Solutions</a>
+          <a href="yanq.html">YanQ</a>
+          <a href="about.html">About</a>
+        </div>
+        <div class="footer__col">
+          <a href="contact.html">Contact</a>
+          <a href="#contact-form">Careers</a>
+          <a href="index.html#case-studies">Case Studies</a>
+          <a href="about.html#faq">FAQs</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/concentric-waves-icon.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
