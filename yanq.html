@@ -13,7 +13,7 @@
       <a href="index.html" class="navbar__logo">
         <img src="images/logo-nav.svg" alt="Yansa">
       </a>
-      <nav class="navbar__links">
+      <nav class="navbar__links" id="site-nav" aria-label="Main">
         <a href="index.html">Home</a>
         <a href="solution.html">Solution</a>
         <a href="about.html">About Us</a>
@@ -22,6 +22,9 @@
         <a href="contact.html#contact-form">Career</a>
       </nav>
       <a href="contact.html#contact-form" class="btn btn--orange navbar__cta">Book a Diagnosis</a>
+      <button class="navbar__toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+        <span class="navbar__toggle-bar" aria-hidden="true"></span>
+      </button>
     </div>
   </header>
 

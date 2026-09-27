@@ -696,9 +696,53 @@
       var delta = y - lastY;
       if (Math.abs(delta) < JITTER) return;
 
-      navbar.classList.toggle('is-hidden', !(y < TOP || delta < 0));
+      // Never slide away while the phone menu is open
+      var keep = y < TOP || delta < 0 || navbar.classList.contains('is-open');
+      navbar.classList.toggle('is-hidden', !keep);
       lastY = y;
     });
+  }
+
+
+  /* ---------- Navbar: phone menu ----------
+     Below 900px the links live in a drop-down panel behind the menu
+     button. It closes when a link is chosen, on Escape (returning focus to
+     the button), on a tap outside the bar, and if the window grows past the
+     breakpoint. */
+  function initMobileNav() {
+    var navbar = document.querySelector('.navbar');
+    var toggle = navbar && navbar.querySelector('.navbar__toggle');
+    if (!toggle) return;
+
+    var wide = window.matchMedia('(min-width: 901px)');
+
+    function setOpen(open) {
+      navbar.classList.toggle('is-open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    }
+
+    toggle.addEventListener('click', function () {
+      setOpen(!navbar.classList.contains('is-open'));
+    });
+
+    toArray(navbar.querySelectorAll('.navbar__links a')).forEach(function (link) {
+      link.addEventListener('click', function () { setOpen(false); });
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key !== 'Escape' || !navbar.classList.contains('is-open')) return;
+      setOpen(false);
+      toggle.focus();
+    });
+
+    document.addEventListener('click', function (event) {
+      if (navbar.classList.contains('is-open') && !navbar.contains(event.target)) setOpen(false);
+    });
+
+    var onWide = function () { if (wide.matches) setOpen(false); };
+    if (wide.addEventListener) wide.addEventListener('change', onWide);
+    else wide.addListener(onWide);
   }
 
 
@@ -1771,6 +1815,7 @@
   initFooterMark();
   initSolutionDialog();
   initNavbarAutoHide();
+  initMobileNav();
   initNavIndicator();
   initSymptomFocus();
   initFaq();

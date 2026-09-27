@@ -45,6 +45,7 @@
   --line: #bcc9c7;
 
   /* Layout */
+  --gutter: 10%;
   --nav-height: 89px;
   --inner-hero-height: calc(100vh - var(--nav-height));
   --section-pad-y: 120px;
@@ -76,6 +77,30 @@
   --fs-body: 17px;
   --fs-small: 15px;
   --fs-label: 14px;
+}
+
+/* Mobile browsers resize 100vh as the address bar shows and hides;
+   svh is the stable small-viewport height. */
+@supports (height: 100svh) {
+  :root {
+    --inner-hero-height: calc(100svh - var(--nav-height));
+  }
+}
+
+@media (max-width: 900px) {
+  :root {
+    --gutter: 32px;
+    --nav-height: 65px;
+    --section-pad-y: 88px;
+  }
+}
+
+@media (max-width: 560px) {
+  :root {
+    --gutter: 20px;
+    --section-pad-y: 64px;
+    --header-gap: 32px;
+  }
 }
 
 @media (max-width: 1100px) {
@@ -501,7 +526,7 @@ ul {
   position: sticky;
   top: 0;
   z-index: 100;
-  padding: 0 10%;
+  padding: 0 var(--gutter);
   transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -517,7 +542,7 @@ ul {
   max-width: 1152px;
   width: 100%;
   margin: 0 auto;
-  height: 88px;
+  height: calc(var(--nav-height) - 1px); /* the border is the last pixel */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -573,9 +598,126 @@ ul {
   }
 }
 
+/* Menu button: three bars that fold into a cross when open. Only shown
+   below 900px, where the links move into a drop-down panel. */
+.navbar__toggle {
+  display: none;
+  position: relative;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  margin-right: -10px; /* optical: aligns the bars, not the tap area, to the gutter */
+  border: 0;
+  background: none;
+  color: var(--petrol);
+  cursor: pointer;
+}
+
+.navbar__toggle-bar,
+.navbar__toggle-bar::before,
+.navbar__toggle-bar::after {
+  position: absolute;
+  left: 11px;
+  width: 22px;
+  height: 2px;
+  border-radius: 1px;
+  background: currentColor;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
+}
+
+.navbar__toggle-bar {
+  top: 21px;
+}
+
+.navbar__toggle-bar::before,
+.navbar__toggle-bar::after {
+  content: "";
+  left: 0;
+}
+
+.navbar__toggle-bar::before {
+  transform: translateY(-7px);
+}
+
+.navbar__toggle-bar::after {
+  transform: translateY(7px);
+}
+
+.navbar.is-open .navbar__toggle-bar {
+  background: transparent;
+}
+
+.navbar.is-open .navbar__toggle-bar::before {
+  transform: rotate(45deg);
+}
+
+.navbar.is-open .navbar__toggle-bar::after {
+  transform: rotate(-45deg);
+}
+
+.navbar__toggle:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
 @media (max-width: 900px) {
+  .navbar__inner {
+    gap: 12px;
+  }
+
+  .navbar__cta {
+    margin-left: auto;
+    padding: 10px 18px;
+  }
+
+  .navbar__toggle {
+    display: block;
+  }
+
+  /* The links drop down under the bar as a full-width panel */
   .navbar__links {
     display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 0;
+    padding: 8px var(--gutter) 20px;
+    background: #ffffff;
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 16px 32px rgba(26, 65, 70, 0.12);
+  }
+
+  .navbar.is-open .navbar__links {
+    display: flex;
+  }
+
+  .navbar__links a {
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(188, 201, 199, 0.5);
+  }
+
+  .navbar__links a:last-of-type {
+    border-bottom: 0;
+  }
+
+  .navbar__indicator {
+    display: none;
+  }
+}
+
+/* The call to action lives in every footer too, so the smallest phones
+   drop it from the bar rather than crowd the menu button. */
+@media (max-width: 359px) {
+  .navbar__cta {
+    display: none;
+  }
+
+  .navbar__toggle {
+    margin-left: auto;
   }
 }
 
@@ -635,6 +777,57 @@ ul {
 .about-measure,
 .yanq-works-intro {
   min-height: 60vh;
+}
+
+/* On tablets and phones a section is as tall as its content: a screen-high
+   minimum there is mostly empty space around a narrow column. */
+@media (max-width: 900px) {
+  .diagnosis,
+  .yanq-hero,
+  .symptoms,
+  .why,
+  .cases,
+  .contact-body,
+  .generates,
+  .inaction,
+  .results,
+  .faq,
+  .industries,
+  .yanq-step,
+  .yanq-delivers,
+  .about-statement,
+  .about-measure,
+  .yanq-works-intro {
+    min-height: 0;
+  }
+}
+
+/* One vertical rhythm on phones, whatever each section uses on desktop */
+@media (max-width: 560px) {
+  .diagnosis,
+  .symptoms,
+  .quote,
+  .why,
+  .cases,
+  .generates,
+  .inaction,
+  .results,
+  .about-statement,
+  .about-measure,
+  .industries,
+  .yanq-hero,
+  .yanq-works-intro,
+  .yanq-step,
+  .yanq-delivers,
+  .contact-body {
+    padding-top: var(--section-pad-y);
+    padding-bottom: var(--section-pad-y);
+  }
+
+  .faq {
+    padding-top: 24px;
+    padding-bottom: var(--section-pad-y);
+  }
 }
 
 /* Centred content columns. width:100% is required: inside a flex-column
@@ -782,7 +975,7 @@ ul {
    stage, so this must not become its containing block. */
 .hero__layout {
   width: 100%;
-  padding: 0 10%;
+  padding: 0 var(--gutter);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -896,7 +1089,7 @@ ul {
   background: var(--petrol-bright);
   position: relative;
   overflow: hidden;
-  padding: var(--section-pad-y) 10%;
+  padding: var(--section-pad-y) var(--gutter);
 }
 
 .diagnosis__wave {
@@ -936,7 +1129,7 @@ ul {
 
 @media (max-width: 900px) {
   .diagnosis {
-    padding: 80px 32px;
+    padding: var(--section-pad-y) var(--gutter);
   }
 }
 
@@ -946,7 +1139,7 @@ ul {
    keyboard since the card has no control to click. */
 .symptoms {
   background: var(--ivory);
-  padding: var(--section-pad-y) 10%;
+  padding: var(--section-pad-y) var(--gutter);
 }
 
 .symptoms__header {
@@ -1055,6 +1248,32 @@ ul {
   }
 }
 
+/* Touch screens have no hover, so the detail is simply shown */
+@media (hover: none) {
+  .symptom-card__detail {
+    max-height: none;
+    opacity: 1;
+    transform: none;
+    margin-top: 14px;
+  }
+}
+
+@media (max-width: 560px) {
+  .symptoms__grid {
+    gap: 16px;
+  }
+
+  .symptom-card {
+    min-height: 0;
+    gap: 28px;
+    padding: 24px;
+  }
+
+  .symptom-card img {
+    height: 40px;
+  }
+}
+
 /* ---------- Quote: scroll-driven read-along ----------
    The rail on the left fills like a progress bar and the sentence lights a
    word at a time as it travels up the viewport. Nothing is pinned.
@@ -1064,7 +1283,7 @@ ul {
    a narrow screen the quote is a plain block of type. */
 .quote {
   background: var(--petrol);
-  padding: var(--section-pad-y) 10%;
+  padding: var(--section-pad-y) var(--gutter);
 }
 
 .quote__stage {
@@ -1123,7 +1342,7 @@ ul {
 /* ---------- Why Yansa ---------- */
 .why {
   background: var(--cream);
-  padding: var(--section-pad-y) 10%;
+  padding: var(--section-pad-y) var(--gutter);
 }
 
 .why__header {
@@ -1236,7 +1455,7 @@ ul {
    collapse to a header strip above it, the ones to come have not arrived. */
 .cases {
   background: var(--ivory);
-  padding: var(--section-pad-y) 10%;
+  padding: var(--section-pad-y) var(--gutter);
 }
 
 .cases__stage {
@@ -1471,7 +1690,7 @@ ul {
 /* ---------- What Generates Power Quality Problems ---------- */
 .generates {
   background: var(--cream);
-  padding: 112px 10%;
+  padding: 112px var(--gutter);
   text-align: center;
 }
 
@@ -1558,7 +1777,7 @@ ul {
    lifts away and the one behind steps forward. */
 .problems {
   position: relative;
-  padding: 0 10%;
+  padding: 0 var(--gutter);
   background: var(--petrol);
   text-align: center;
 }
@@ -1711,10 +1930,70 @@ ul {
   height: 24px;
 }
 
+/* Tablets: a tighter cascade, so the rearmost card stays on screen */
+@media (max-width: 900px) {
+  .problems__stack {
+    margin-bottom: 64px;
+  }
+
+  .problem-card.is-next {
+    transform: translate(12px, 26px);
+  }
+
+  .problem-card.is-later {
+    transform: translate(24px, 52px);
+  }
+}
+
+/* Phones: the icon moves to the top-right corner so the copy gets the
+   card's full width, and the cascade tightens again. */
+@media (max-width: 560px) {
+  .problems__sticky {
+    padding: var(--section-pad-y) 0;
+  }
+
+  .problems h2 {
+    margin-bottom: 32px;
+  }
+
+  .problems__stack {
+    margin-bottom: 40px;
+  }
+
+  .problem-card {
+    position: relative;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 24px 22px 28px;
+  }
+
+  .problem-card.is-next {
+    transform: translate(8px, 20px);
+  }
+
+  .problem-card.is-later {
+    transform: translate(16px, 40px);
+  }
+
+  .problem-card__icon {
+    position: absolute;
+    top: 22px;
+    right: 18px;
+    width: 96px;
+    height: 64px;
+    margin-left: 0;
+  }
+
+  .problems__dots {
+    display: none;
+  }
+}
+
 /* ---------- Active / Passive / Hybrid solution rows ---------- */
 .solutions-row {
   background: var(--cream);
-  padding: 56px 10%;
+  padding: 56px var(--gutter);
 }
 
 .solutions-row__inner {
@@ -1817,7 +2096,7 @@ ul {
 /* ---------- What Inaction Costs ---------- */
 .inaction {
   background: var(--petrol);
-  padding: 90px 10%;
+  padding: 90px var(--gutter);
 }
 
 .inaction__inner {
@@ -1898,7 +2177,7 @@ ul {
    in its light "document" skin. */
 .results {
   background: var(--cream);
-  padding: 90px 10%;
+  padding: 90px var(--gutter);
 }
 
 .results__inner {
@@ -2050,7 +2329,7 @@ ul {
    layout never shifts and the caret never chases a reflow. */
 .about-statement {
   background: var(--ivory);
-  padding: 100px 10%;
+  padding: 100px var(--gutter);
 }
 
 .about-statement__inner {
@@ -2128,7 +2407,7 @@ ul {
 .about-measure {
   background: var(--petrol);
   text-align: center;
-  padding: 100px 10%;
+  padding: 100px var(--gutter);
 }
 
 /* A flex row so the static word and the clipped rotating box line up on
@@ -2377,7 +2656,7 @@ ul {
 .industries {
   background: var(--petrol);
   text-align: center;
-  padding: 100px 10%;
+  padding: 100px var(--gutter);
 }
 
 .industries h2 {
@@ -2433,7 +2712,7 @@ ul {
    <details> list. */
 .faq {
   background: var(--ivory);
-  padding: 45px 10% 96px;
+  padding: 45px var(--gutter) 96px;
 }
 
 .faq__inner {
@@ -2529,29 +2808,38 @@ ul {
   }
 
   .about-statement {
-    padding: 80px 32px;
+    padding: var(--section-pad-y) var(--gutter);
   }
 
+  /* Two columns: re-draw the inner grid lines for three rows of two */
   .industries__grid {
     grid-template-columns: 1fr 1fr;
   }
 
   .industries__cell:nth-child(3n) {
-    border-right: 1px solid #dadbd0;
+    border-right: 1px solid #cdd6d1;
   }
 
   .industries__cell:nth-child(2n) {
     border-right: none;
   }
+
+  .industries__cell:nth-child(n+4) {
+    border-bottom: 1px solid #cdd6d1;
+  }
+
+  .industries__cell:nth-child(n+5) {
+    border-bottom: none;
+  }
 }
 
 @media (max-width: 560px) {
-  .industries__grid {
-    grid-template-columns: 1fr;
+  .industries > p {
+    margin-bottom: 32px;
   }
 
   .industries__cell {
-    border-right: none !important;
+    padding: 28px 12px;
   }
 }
 
@@ -2563,7 +2851,7 @@ ul {
   background: var(--petrol-bright);
   position: relative;
   overflow: hidden;
-  padding: 90px 10%;
+  padding: 90px var(--gutter);
 }
 
 .yanq-hero__inner {
@@ -2607,7 +2895,7 @@ ul {
 /* ---------- How YanQ Works: intro ---------- */
 .yanq-works-intro {
   background: var(--cream);
-  padding: 100px 10%;
+  padding: 100px var(--gutter);
 }
 
 .yanq-works-intro__inner {
@@ -2627,7 +2915,7 @@ ul {
 }
 
 .yanq-works-intro__lead {
-  color: var(--text-on-dark);
+  color: var(--ink);
 }
 
 .yanq-works-intro__rest {
@@ -2637,7 +2925,7 @@ ul {
 /* ---------- How YanQ Works: step ---------- */
 .yanq-step {
   background: var(--petrol);
-  padding: 90px 10%;
+  padding: 90px var(--gutter);
   position: relative;
   overflow: hidden;
 }
@@ -2783,7 +3071,7 @@ ul {
 /* ---------- What YanQ Delivers ---------- */
 .yanq-delivers {
   background: var(--cream);
-  padding: 100px 10%;
+  padding: 100px var(--gutter);
   text-align: center;
 }
 
@@ -2812,7 +3100,7 @@ ul {
 
 @media (max-width: 900px) {
   .yanq-hero {
-    padding: 80px 32px;
+    padding: var(--section-pad-y) var(--gutter);
   }
 
   .yanq-hero__watermark {
@@ -2822,15 +3110,32 @@ ul {
   .yanq-works-intro,
   .yanq-step,
   .yanq-delivers {
-    padding: 60px 32px;
+    padding: var(--section-pad-y) var(--gutter);
   }
 
   .yanq-step__dots {
     display: none;
   }
 
+  /* The dashed wave runs down the middle, straight through the stacked
+     copy once the columns wrap */
+  .yanq-step__spine {
+    display: none;
+  }
+
+  .yanq-step__inner {
+    gap: 40px;
+  }
+
+  .yanq-step__title,
+  .yanq-works-intro h2,
+  .yanq-delivers h2 {
+    margin-bottom: 36px;
+  }
+
   .yanq-delivers__grid {
     grid-template-columns: 1fr;
+    gap: 32px;
   }
 }
 
@@ -2840,7 +3145,7 @@ ul {
    ========================================================= */
 .contact-body {
   background: var(--cream);
-  padding: 80px 10%;
+  padding: 80px var(--gutter);
 }
 
 .contact-body__inner {
@@ -3059,6 +3364,21 @@ ul {
   .footer__bottom {
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+@media (max-width: 560px) {
+  .footer__cta {
+    padding: 48px var(--gutter) 24px;
+  }
+
+  .footer__bottom {
+    padding: 24px var(--gutter) 40px;
+    gap: 32px;
+  }
+
+  .footer__links {
+    gap: 48px;
   }
 }
 
@@ -3341,6 +3661,13 @@ body.sol-dialog-open {
 .brochure-thanks p {
   color: #5c5c5c;
   margin: 8px 0 0;
+}
+
+/* iOS zooms the page into any field under 16px */
+@media (max-width: 560px) {
+  .brochure-form input {
+    font-size: 16px;
+  }
 }
 
 /* ---------- Form feedback (contact + brochure) ---------- */
