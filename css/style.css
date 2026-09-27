@@ -1,4 +1,129 @@
-﻿/* ---------- Fonts ---------- */
+/* =========================================================
+   Yansa — site stylesheet
+
+   1. Tokens          colour, layout and type-scale variables
+   2. Base            fonts, reset, element defaults, utilities
+   3. Typography      the single source of font-size
+   4. Buttons
+   5. Layout          navbar, section shell, inner-page heroes
+   6. Home            hero, diagnosis, symptoms, quote, why, case studies
+   7. Solutions       generates, problems, solution rows, inaction, results
+   8. About           hero decor, statement, measure, values, industries, FAQ
+   9. YanQ
+   10. Contact
+   11. Footer
+   12. Dialogs & forms
+   13. Motion         scroll reveal and icon animations
+   ========================================================= */
+
+
+/* =========================================================
+   1. TOKENS
+   ========================================================= */
+:root {
+  /* Brand */
+  --orange: #ff8c40;
+  --orange-edge: #f57f2e;
+  --teal: #34b6af;
+  --teal-edge: #2aa39c;
+  --teal-deep: #006a65;
+  --teal-brand: #007f7f;
+  --teal-mid: #039999;
+  --petrol: #1a4146;
+  --petrol-bright: #167777;
+
+  /* Text */
+  --ink: #1a1c16;
+  --text: #3d4948;
+  --text-on-dark: #f1f1e6;
+  --mist: #a9d1d7;
+
+  /* Surfaces and lines */
+  --cream: #fafaef;
+  --ivory: #fdfbf3;
+  --ivory-card: #fffefa;
+  --line: #bcc9c7;
+
+  /* Layout */
+  --nav-height: 89px;
+  --inner-hero-height: calc(100vh - var(--nav-height));
+  --section-pad-y: 120px;
+  --header-gap: 48px;
+
+  /* Home hero scroll animation */
+  --hero-runway: 110vh;
+  --hero-stage-h: calc(100vh - var(--nav-height));
+  --hero-frame-w: 762px;
+
+  /* Case studies stepping: sized so one open card plus a strip for each of
+     the others still fits under the navbar in a single viewport. */
+  --case-strip: 104px;
+  --case-full: 360px;
+  --cases-runway: 140vh;
+  --cases-stage-h: calc(100vh - var(--nav-height));
+
+  /* Type scale (see section 3) */
+  --fs-scale: 1;
+  --fs-display: 84px;
+  --fs-numeral: 76px;
+  --fs-h1: 52px;
+  --fs-h2: 42px;
+  --fs-statement: 34px;
+  --fs-h3: 30px;
+  --fs-h4: 24px;
+  --fs-copy-lg: 20px;
+  --fs-lead: 19px;
+  --fs-body: 17px;
+  --fs-small: 15px;
+  --fs-label: 14px;
+}
+
+@media (max-width: 1100px) {
+  :root {
+    --fs-display: 64px;
+    --fs-numeral: 60px;
+    --fs-h1: 44px;
+    --fs-h2: 36px;
+    --fs-statement: 29px;
+    --fs-h3: 26px;
+    --fs-h4: 22px;
+    --fs-copy-lg: 19px;
+  }
+}
+
+@media (max-width: 820px) {
+  :root {
+    --fs-display: 46px;
+    --fs-numeral: 48px;
+    --fs-h1: 34px;
+    --fs-h2: 29px;
+    --fs-statement: 23px;
+    --fs-h3: 22px;
+    --fs-h4: 20px;
+    --fs-copy-lg: 18px;
+    --fs-lead: 17px;
+  }
+}
+
+@media (max-width: 560px) {
+  :root {
+    --fs-display: 36px;
+    --fs-numeral: 40px;
+    --fs-h1: 29px;
+    --fs-h2: 25px;
+    --fs-statement: 20px;
+    --fs-h3: 20px;
+    --fs-h4: 18px;
+    --fs-copy-lg: 17px;
+    --fs-lead: 16px;
+    --fs-body: 16px;
+  }
+}
+
+
+/* =========================================================
+   2. BASE
+   ========================================================= */
 @font-face {
   font-family: 'Liberation Sans';
   src: url('../fonts/LiberationSans-Regular.ttf') format('truetype');
@@ -15,45 +140,14 @@
   font-display: swap;
 }
 
-@font-face {
-  font-family: 'Liberation Sans';
-  src: url('../fonts/LiberationSans-Italic.ttf') format('truetype');
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Liberation Sans';
-  src: url('../fonts/LiberationSans-BoldItalic.ttf') format('truetype');
-  font-weight: 700;
-  font-style: italic;
-  font-display: swap;
-}
-
-/* ---------- Reset & base ---------- */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Surface colours. The greige (#f1f1e6 / #f4f4e9) that used to fill sections
-   and cards read as grey, so surfaces are ivory, and cards sitting on a cream
-   section are a step brighter so they still separate from it. */
-:root {
-  --ivory: #fdfbf3;
-  --ivory-card: #fffefa;
-}
-
 html {
   scroll-behavior: smooth;
-}
-
-/* The hidden attribute must win over section rules that set display
-   (e.g. the parked Case Studies section). */
-[hidden] {
-  display: none !important;
 }
 
 body {
@@ -82,7 +176,210 @@ ul {
   list-style: none;
 }
 
-/* Buttons — raised inset highlight + tinted shadow, pressing in on :active */
+/* Must beat section rules that set display (e.g. the parked Case Studies) */
+[hidden] {
+  display: none !important;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.accent {
+  color: var(--orange);
+}
+
+.accent-gradient {
+  background: linear-gradient(90deg, var(--teal-mid), #9e9e9e);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Keeps an in-page target clear of the sticky navbar */
+#contact-form,
+#case-studies,
+#faq {
+  scroll-margin-top: 110px;
+}
+
+
+/* =========================================================
+   3. TYPOGRAPHY
+   Every font-size on the site comes from here. Tiers are
+   multiplied by --fs-scale where they are used rather than
+   where they are declared, so a section can set --fs-scale
+   and resize all of its type at once (see the About page).
+
+   Display 84 · H1 52 · H2 42 · Statement 34 · H3 30 · H4 24
+   Lead 19 · Body 17 · Small 15 · Label 14
+   ========================================================= */
+
+/* Display — the one oversized statement on the site */
+.diagnosis h2 {
+  font-size: calc(var(--fs-display) * var(--fs-scale, 1));
+  line-height: 1.05;
+  letter-spacing: -2px;
+}
+
+/* Numeral — the outsized figure on a problem card */
+.problem-card__num {
+  font-size: calc(var(--fs-numeral) * var(--fs-scale, 1));
+  line-height: 1;
+  letter-spacing: -2px;
+}
+
+/* H1 — page hero titles */
+.hero__heading h1,
+.header-placeholder__overlay h1 {
+  font-size: calc(var(--fs-h1) * var(--fs-scale, 1));
+  line-height: 1.15;
+  letter-spacing: -1px;
+}
+
+/* H2 — section headings, including the footer call to action */
+.diagnosis__eyebrow,
+.symptoms__header h2,
+.why__header h2,
+.cases__header h2,
+.contact-form-col h2,
+.yanq-hero h2,
+.yanq-works-intro h2,
+.yanq-step__title,
+.yanq-delivers h2,
+.about-measure h2,
+.about-values h2,
+.industries h2,
+.faq__header h2,
+.generates h2,
+.solutions-row h2,
+.problems h2,
+.inaction h2,
+.results h2,
+.footer__cta h2 {
+  font-size: calc(var(--fs-h2) * var(--fs-scale, 1));
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+
+/* Statement — pull quotes and standalone claims */
+.quote p,
+.yanq-works-intro__quote,
+.about-statement p {
+  font-size: calc(var(--fs-statement) * var(--fs-scale, 1));
+  line-height: 1.4;
+  letter-spacing: -0.3px;
+}
+
+/* H3 — sub-section headings and figure labels */
+.yanq-step__text h3,
+.deliver-stat h3,
+.case-card__num,
+.case-card__title {
+  font-size: calc(var(--fs-h3) * var(--fs-scale, 1));
+  line-height: 1.25;
+  letter-spacing: -0.3px;
+}
+
+/* H4 — card titles */
+.why-card h3,
+.symptom-card__title,
+.inaction-card__row h3,
+.results__title,
+.problem-card__text h3,
+.generates__card h3,
+.faq__question {
+  font-size: calc(var(--fs-h4) * var(--fs-scale, 1));
+  line-height: 1.3;
+  letter-spacing: -0.2px;
+}
+
+/* The rotating statement's copy, a step above a normal lead */
+.about-measure p {
+  font-size: calc(var(--fs-copy-lg) * var(--fs-scale, 1));
+  line-height: 1.5;
+}
+
+/* Lead — the paragraph that introduces a section */
+.hero__heading p,
+.header-placeholder__overlay p,
+.diagnosis__body,
+.symptoms__header p,
+.why__header p,
+.cases__header p,
+.case-card p,
+.case-card__more,
+.contact-form-col__sub,
+.yanq-hero__body,
+.about-values__copy,
+.generates > p,
+.solutions-row__inner > p,
+.inaction__inner > p,
+.results__inner > p,
+.results__plus,
+.industries > p,
+.faq__header p,
+.footer__cta p {
+  font-size: calc(var(--fs-lead) * var(--fs-scale, 1));
+  line-height: 1.6;
+}
+
+/* Body — running copy, navigation, controls */
+.btn,
+.navbar__links a,
+.why-card p,
+.symptom-card__detail p,
+.yanq-step__text > p,
+.industries__cell,
+.faq__answer,
+.results__desc,
+.solution-card__label .plus,
+.form-field input,
+.form-field textarea,
+.footer__brand p,
+.footer__col a {
+  font-size: calc(var(--fs-body) * var(--fs-scale, 1));
+  line-height: 1.6;
+}
+
+/* Small — dense copy inside compact cards */
+.generates__card p,
+.problem-card__text p,
+.inaction-card p,
+.deliver-stat p,
+.solution-card__label {
+  font-size: calc(var(--fs-small) * var(--fs-scale, 1));
+  line-height: 1.55;
+}
+
+/* Label — eyebrows, tags, counters, form labels */
+.yanq-hero__label,
+.yanq-step__number,
+.yanq-step__tag,
+.yanq-step__sampling,
+.yanq-pill,
+.inaction-card__tag,
+.results__num,
+.faq__num,
+.form-field label {
+  font-size: calc(var(--fs-label) * var(--fs-scale, 1));
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   4. BUTTONS
+   Raised inset highlight and a tinted shadow; lifts on hover,
+   presses in on :active.
+   ========================================================= */
 .btn {
   position: relative;
   display: inline-flex;
@@ -100,7 +397,7 @@ ul {
     border-color 0.18s ease, transform 0.08s ease;
 }
 
-/* inner hairline that sits just inside the border */
+/* Inner hairline just inside the border */
 .btn::before {
   content: "";
   position: absolute;
@@ -110,7 +407,7 @@ ul {
 }
 
 .btn:focus-visible {
-  outline: 2px solid #34b6af;
+  outline: 2px solid var(--teal);
   outline-offset: 2px;
 }
 
@@ -120,10 +417,10 @@ ul {
   opacity: 0.64;
 }
 
-/* --- solid: orange --- */
+/* Solid orange */
 .btn--orange {
-  background: #ff8c40;
-  border-color: #f57f2e;
+  background: var(--orange);
+  border-color: var(--orange-edge);
   color: #ffffff;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3),
     0 2px 5px rgba(196, 92, 20, 0.32);
@@ -131,7 +428,7 @@ ul {
 
 .btn--orange:hover {
   background: #ff9855;
-  border-color: #f57f2e;
+  border-color: var(--orange-edge);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.38),
     0 6px 16px rgba(196, 92, 20, 0.4);
   transform: translateY(-2px);
@@ -143,39 +440,11 @@ ul {
   transform: translateY(1px);
 }
 
-/* --- solid: teal --- */
-.btn--teal {
-  background: #34b6af;
-  border-color: #2aa39c;
-  color: #ffffff;
-  border-radius: 4px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3),
-    0 2px 5px rgba(16, 104, 99, 0.32);
-}
-
-.btn--teal::before {
-  border-radius: 3px;
-}
-
-.btn--teal:hover {
-  background: #3cc7bf;
-  border-color: #2aa39c;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.38),
-    0 6px 16px rgba(16, 104, 99, 0.4);
-  transform: translateY(-2px);
-}
-
-.btn--teal:active {
-  background: #2ea59e;
-  box-shadow: inset 0 3px 7px rgba(6, 58, 55, 0.4);
-  transform: translateY(1px);
-}
-
-/* --- outline: teal --- */
+/* Outline teal */
 .btn--outline-teal {
   background: transparent;
-  color: #1a4146;
-  border-color: #34b6af;
+  color: var(--petrol);
+  border-color: var(--teal);
   box-shadow: 0 2px 4px rgba(26, 65, 70, 0.1);
 }
 
@@ -185,7 +454,7 @@ ul {
 
 .btn--outline-teal:hover {
   background: rgba(52, 182, 175, 0.12);
-  border-color: #2aa39c;
+  border-color: var(--teal-edge);
   box-shadow: 0 6px 14px rgba(26, 65, 70, 0.16);
   transform: translateY(-2px);
 }
@@ -196,11 +465,11 @@ ul {
   transform: translateY(1px);
 }
 
-/* --- outline: orange --- */
+/* Outline orange */
 .btn--outline-orange {
   background: transparent;
-  color: #ff8c40;
-  border-color: #ff8c40;
+  color: var(--orange);
+  border-color: var(--orange);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
 }
 
@@ -220,10 +489,15 @@ ul {
   transform: translateY(1px);
 }
 
+
+/* =========================================================
+   5. LAYOUT
+   ========================================================= */
+
 /* ---------- Navbar ---------- */
 .navbar {
   background: #ffffff;
-  border-bottom: 1px solid #bcc9c7;
+  border-bottom: 1px solid var(--line);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -231,16 +505,14 @@ ul {
   transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Retreats out of the way on the way down the page and comes back the moment
-   the reader heads up. JS only toggles the class; the slide is CSS, so it
-   cannot fight the scroll. */
+/* Slides away while scrolling down, back on the way up. The script only
+   toggles the class. */
 .navbar.is-hidden {
   transform: translateY(-100%);
 }
 
-/* Same outer padding + inner column as every section, so the logo and the
-   call to action line up with the content underneath them rather than
-   sitting in a narrower box of their own. */
+/* Same inner column as the sections, so the logo and CTA line up with the
+   content underneath them. */
 .navbar__inner {
   max-width: 1152px;
   width: 100%;
@@ -264,17 +536,17 @@ ul {
 }
 
 .navbar__links a {
-  color: #3d4948;
+  color: var(--text);
   transition: color 0.25s ease;
 }
 
 .navbar__links a.is-active,
 .navbar__links a:hover,
 .navbar__links a:focus-visible {
-  color: #006a65;
+  color: var(--teal-deep);
 }
 
-/* Sliding underline; script.js sets its width and position */
+/* Sliding underline; the script sets its width and position */
 .navbar__indicator {
   position: absolute;
   top: 0;
@@ -282,7 +554,7 @@ ul {
   width: 0;
   height: 2px;
   border-radius: 2px;
-  background: #007f7f;
+  background: var(--teal-brand);
   opacity: 0;
   pointer-events: none;
   transition:
@@ -291,21 +563,26 @@ ul {
     opacity 0.25s ease;
 }
 
+.navbar__cta {
+  padding: 12px 24px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .navbar__indicator {
     transition: opacity 0.25s ease;
   }
 }
 
-.navbar__cta {
-  padding: 12px 24px;
+@media (max-width: 900px) {
+  .navbar__links {
+    display: none;
+  }
 }
 
-/* ---------- Section heights ----------
-   Every section centres its content vertically; the min-height is tiered by
-   how much content the section actually carries, so short sections don't sit
-   in a screenful of empty space. min-height, so anything taller still grows. */
-.hero,
+/* ---------- Section shell ----------
+   Sections centre their content vertically. The min-height is tiered by how
+   much each one carries, so a short section never sits in a screen of empty
+   space; it is a minimum, so anything taller still grows. */
 .diagnosis,
 .symptoms,
 .quote,
@@ -330,21 +607,15 @@ ul {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  box-sizing: border-box;
 }
 
-/* Tier 1 — page heroes & large display statements: full screen */
-.hero,
-.contact-hero,
-.yanq-hero-intro,
-.about-hero,
-.solution-hero,
+/* Full screen: large display statements */
 .diagnosis,
 .yanq-hero {
   min-height: 100vh;
 }
 
-/* Tier 2 — content sections (card grids, forms, lists): substantial */
+/* Content sections: card grids, forms, lists */
 .symptoms,
 .why,
 .cases,
@@ -359,19 +630,16 @@ ul {
   min-height: 80vh;
 }
 
-/* Tier 3 — short statement / interstitial sections */
-.quote,
+/* Short statements and interstitials */
 .about-statement,
 .about-measure,
 .yanq-works-intro {
   min-height: 60vh;
 }
 
-/* ---------- Centered content containers ----------
-   width:100% is required: these sit inside flex-column sections, where an
-   auto left/right margin makes a flex item shrink to its content instead of
-   expanding to its max-width. Without it every section lands on a different
-   left edge. */
+/* Centred content columns. width:100% is required: inside a flex-column
+   section an auto-margined item would otherwise shrink to its content, and
+   every section would land on a different left edge. */
 .diagnosis__content,
 .symptoms__header,
 .symptoms__grid,
@@ -398,83 +666,30 @@ ul {
   width: 100%;
 }
 
-/* ---------- Card hover interaction ----------
-   The grid supplies the perspective; JS writes the rotation onto the card.
-   Only the symptom cards tilt, so only they need a 3D context - the Why
-   Yansa cards are scaled and nothing else. */
-.symptoms__grid {
-  perspective: 1000px;
-}
-
-.symptom-card {
-  transform-style: preserve-3d;
-}
-
-.symptom-card,
-.why-card {
-  will-change: transform;
-  transition: box-shadow 0.35s ease, border-color 0.35s ease,
-    background-color 0.35s ease;
-}
-
-.why-card:hover {
-  border-color: #34b6af;
-  box-shadow: 0 18px 40px rgba(26, 65, 70, 0.16);
-}
-
-/* title nudges across on hover */
-.symptom-card__title,
-.why-card h3 {
-  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.symptom-card:hover .symptom-card__title,
-.why-card:hover h3 {
-  transform: translateX(4px);
-}
-
-/* underline that draws out from the left on hover */
-.why-card h3 {
+/* ---------- Inner-page hero ----------
+   About, Solutions, YanQ and Contact open on a full-bleed photo with the
+   heading centred over it. */
+.contact-hero,
+.yanq-hero-intro,
+.about-hero,
+.solution-hero {
   position: relative;
-  padding-bottom: 8px;
+  overflow: hidden;
+  min-height: var(--inner-hero-height);
+  background: var(--ivory);
+  text-align: center;
 }
 
-.why-card h3::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    rgba(52, 182, 175, 0.55),
-    rgba(52, 182, 175, 0.25),
-    transparent
-  );
-  transform: scaleX(0.3);
-  transform-origin: left;
-  transition: transform 0.4s ease-out;
-}
-
-.why-card:hover h3::after {
-  transform: scaleX(1);
-}
-
-/* ---------- Header placeholder image ---------- */
 .header-placeholder {
+  position: relative;
   width: 100%;
-  max-width: 1152px;
-  height: 70vh;
-  margin: 40px auto 0;
-  border-radius: 10px;
+  height: var(--inner-hero-height);
+  min-height: var(--inner-hero-height);
   overflow: hidden;
   background: #e3e3d8;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 10px solid #ffffff;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
 .header-placeholder img {
@@ -483,9 +698,202 @@ ul {
   object-fit: cover;
 }
 
-/* ---------- Diagnosis / Precision ---------- */
+.header-placeholder__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 8%;
+}
+
+/* Scrim so the type stays readable over any photo */
+.header-placeholder__overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(4, 25, 23, 0.55) 0%,
+    rgba(4, 25, 23, 0.35) 50%,
+    rgba(4, 25, 23, 0.55) 100%
+  );
+}
+
+.header-placeholder__overlay > * {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+}
+
+.header-placeholder__overlay h1 {
+  color: #ffffff;
+  margin-bottom: 16px;
+  text-shadow: 0 2px 18px rgba(4, 25, 23, 0.45);
+}
+
+.header-placeholder__overlay p {
+  color: rgba(255, 255, 255, 0.92);
+  margin: 0 auto;
+  text-shadow: 0 1px 12px rgba(4, 25, 23, 0.45);
+}
+
+.contact-hero .header-placeholder__overlay p {
+  max-width: 672px;
+}
+
+@media (max-width: 560px) {
+  .header-placeholder__overlay {
+    padding: 24px 6%;
+  }
+}
+
+
+/* =========================================================
+   6. HOME
+   ========================================================= */
+
+/* ---------- Hero: scroll-driven video reveal ----------
+   What is written first IS the settled design: heading, framed media,
+   buttons. It stands on its own with no JavaScript, which is also what
+   narrow screens and reduced-motion users get.
+
+   The script opts into the animation with .is-scrolly, which pins the stage
+   and lifts the media out of its frame so it can be driven from full bleed
+   back into it. Because the end state is the plain layout, progress 1 always
+   lands on the real design. */
+.hero {
+  position: relative;
+  background: var(--ivory);
+}
+
+.hero__stage {
+  position: relative;
+  padding: 77px 0 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Deliberately unpositioned: the media is positioned against the sticky
+   stage, so this must not become its containing block. */
+.hero__layout {
+  width: 100%;
+  padding: 0 10%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.hero__heading {
+  position: relative;
+  z-index: 1;
+  transform-origin: 50% 50%;
+}
+
+.hero__heading h1 {
+  color: var(--teal-brand);
+  margin-bottom: 16px;
+}
+
+.hero__heading p {
+  color: #151515;
+  opacity: 0.8;
+}
+
+.hero__frame-slot {
+  width: 100%;
+  max-width: var(--hero-frame-w);
+  aspect-ratio: 16 / 9;
+  margin-top: 40px;
+}
+
+.hero__media {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #e3e3d8;
+  border: 10px solid #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.hero__media img,
+.hero__media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Only needed over the full-bleed state, so off by default */
+.hero__media-scrim {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(4, 25, 23, 0.5) 0%,
+    rgba(4, 25, 23, 0.32) 50%,
+    rgba(4, 25, 23, 0.5) 100%
+  );
+}
+
+.hero__ctas {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 24px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Animated mode. The height past the stage is the scroll runway. */
+.hero.is-scrolly {
+  height: calc(var(--hero-stage-h) + var(--hero-runway));
+}
+
+.hero.is-scrolly .hero__stage {
+  position: sticky;
+  top: var(--nav-height);
+  height: var(--hero-stage-h);
+  padding: 0;
+  overflow: hidden;
+}
+
+.hero.is-scrolly .hero__heading,
+.hero.is-scrolly .hero__ctas {
+  will-change: transform;
+}
+
+/* Lifted out of the frame so the script can size it. Sizing rather than
+   scaling keeps object-fit honest at every step. */
+.hero.is-scrolly .hero__media {
+  position: absolute;
+  z-index: 0;
+  left: 0;
+  top: 0;
+  border-width: 0;
+  border-radius: 0;
+  box-shadow: none;
+  will-change: width, height, left, top;
+}
+
+@media (max-width: 768px) {
+  .hero__stage {
+    padding: 48px 0 64px;
+  }
+}
+
+/* ---------- Diagnosis ---------- */
 .diagnosis {
-  background: #167777;
+  background: var(--petrol-bright);
   position: relative;
   overflow: hidden;
   padding: var(--section-pad-y) 10%;
@@ -512,13 +920,11 @@ ul {
 }
 
 .diagnosis__eyebrow {
-  color: #ff8c40;
-  line-height: 1.1;
+  color: var(--orange);
 }
 
 .diagnosis h2 {
   color: #ffffff;
-  line-height: 1.05;
   margin-bottom: 24px;
 }
 
@@ -528,7 +934,16 @@ ul {
   margin-bottom: 40px;
 }
 
-/* ---------- Symptoms ---------- */
+@media (max-width: 900px) {
+  .diagnosis {
+    padding: 80px 32px;
+  }
+}
+
+/* ---------- Symptoms ----------
+   The script tilts a card toward the cursor; the grid supplies the
+   perspective. The detail copy opens on hover, and on :focus-within for the
+   keyboard since the card has no control to click. */
 .symptoms {
   background: var(--ivory);
   padding: var(--section-pad-y) 10%;
@@ -541,7 +956,7 @@ ul {
 }
 
 .symptoms__header h2 {
-  color: #1a4146;
+  color: var(--petrol);
   margin-bottom: 16px;
 }
 
@@ -555,11 +970,12 @@ ul {
   gap: 28px;
   max-width: 1152px;
   margin: 0 auto;
+  perspective: 1000px;
 }
 
 .symptom-card {
   position: relative;
-  background: #1a4146;
+  background: var(--petrol);
   border-radius: 9px;
   padding: 32px;
   min-height: 264px;
@@ -568,10 +984,14 @@ ul {
   align-items: flex-start;
   justify-content: space-between;
   outline: none;
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: box-shadow 0.35s ease, border-color 0.35s ease,
+    background-color 0.35s ease;
 }
 
 .symptom-card:focus-visible {
-  outline: 2px solid #34b6af;
+  outline: 2px solid var(--teal);
   outline-offset: 3px;
 }
 
@@ -588,26 +1008,23 @@ ul {
   align-self: flex-start;
 }
 
-.symptom-card__title {
-  color: #f1f1e6;
-  padding-top: 18px;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-}
-
 .symptom-card__body {
   width: 100%;
 }
 
-/* Detail — collapsed by default, springs open while the card is hovered.
-   :focus-within covers the keyboard, since there is no control to click. */
-/* The open state's max-height is kept close to what the copy actually needs
-   (two lines is 54px; 110px still allows four). It used to open to 260px,
-   so the reveal was visually finished a fifth of the way through its own
-   duration and read as a snap however long the transition was set to.
+.symptom-card__title {
+  color: var(--text-on-dark);
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
 
-   The curve is an ease both ends with no overshoot. The previous one ended
-   on a control point above 1, which sprang past the resting height and
-   added to the pop. */
+.symptom-card:hover .symptom-card__title {
+  transform: translateX(4px);
+}
+
+/* The open max-height stays close to what the copy needs (two lines is
+   54px, 110px allows four) so the reveal eases for its whole duration. */
 .symptom-card__detail {
   max-height: 0;
   opacity: 0;
@@ -620,7 +1037,6 @@ ul {
 }
 
 .symptom-card__detail p {
-  line-height: 1.6;
   color: #9fc2c0;
 }
 
@@ -633,25 +1049,22 @@ ul {
   transition-delay: 0.08s;
 }
 
-/* ---------- Quote ---------- */
-/* ---------- Quote — scroll-driven read-along ----------
-   The rail on the left fills as a progress bar and the sentence lights from
-   muted teal to white a word at a time, so the line being read is the bright
-   one.
+@media (max-width: 900px) {
+  .symptoms__grid {
+    grid-template-columns: 1fr;
+  }
+}
 
-   Nothing is pinned. Progress comes from where the paragraph sits in the
-   viewport, so the reveal runs while the block travels up the screen and is
-   finished with the text still comfortably in view. The section is only as
-   tall as its own content needs.
+/* ---------- Quote: scroll-driven read-along ----------
+   The rail on the left fills like a progress bar and the sentence lights a
+   word at a time as it travels up the viewport. Nothing is pinned.
 
-   What is written here is the finished state: rail full, every word white.
-   The script opts into the animation by adding .is-scrolly, so with no JS,
-   reduced motion or a narrow screen the quote simply reads as a normal
-   block of type. */
+   Written here is the finished state (rail full, every word lit). The script
+   opts into the animation with .is-scrolly, so with no JS, reduced motion or
+   a narrow screen the quote is a plain block of type. */
 .quote {
-  background: #1a4146;
+  background: var(--petrol);
   padding: var(--section-pad-y) 10%;
-  min-height: 0;
 }
 
 .quote__stage {
@@ -662,20 +1075,16 @@ ul {
 .quote__inner {
   max-width: 1152px;
   margin: 0 auto;
-  width: 100%;
 }
 
 .quote p {
   position: relative;
   max-width: 896px;
   padding-left: 26px;
-  letter-spacing: -0.5px;
-  line-height: 1.2;
-  color: #f1f1e6;
+  color: var(--text-on-dark);
 }
 
-/* The rail is two stacked bars: a dim track and a bright fill scaled from
-   the top. Scaling rather than animating height keeps it on the compositor. */
+/* The rail: a dim track and a bright fill scaled from the top */
 .quote p::before,
 .quote p::after {
   content: "";
@@ -692,7 +1101,7 @@ ul {
 }
 
 .quote p::after {
-  background: #bcc9c7;
+  background: var(--line);
   transform-origin: 50% 0;
   transform: scaleY(var(--quote-rail, 1));
 }
@@ -701,35 +1110,19 @@ ul {
   color: inherit;
 }
 
-/* Still used by the two-tone pull quote on the YanQ page, which is not
-   scroll-driven. */
-.quote__highlight {
-  color: #f1f1e6;
-}
-
-.quote__muted {
-  color: #6f8b8d;
-}
-
-/* ---- Animated mode (added by the script) ----
-   Only the starting colour. The section keeps its normal height and flow,
-   because the reveal is driven by the paragraph travelling up the viewport
-   rather than by pinning it in place. */
-
-/* The script lights one word at a time, so every word starts muted. The
-   switch is deliberately instant: a transition here would blur the boundary
-   between lit and unlit words back into the gradient this replaced. */
+/* Words switch instantly: a transition would blur lit and unlit words back
+   into a gradient. */
 .quote.is-scrolly .quote__word {
   color: #6f8b8d;
 }
 
 .quote.is-scrolly .quote__word.is-lit {
-  color: #f1f1e6;
+  color: var(--text-on-dark);
 }
 
 /* ---------- Why Yansa ---------- */
 .why {
-  background: #fafaef;
+  background: var(--cream);
   padding: var(--section-pad-y) 10%;
 }
 
@@ -738,17 +1131,13 @@ ul {
   margin: 0 auto var(--header-gap);
 }
 
-.why__header p {
-  max-width: 768px;
-}
-
 .why__header h2 {
-  letter-spacing: -1px;
-  color: #1a1c16;
+  color: var(--ink);
   margin-bottom: 24px;
 }
 
 .why__header p {
+  max-width: 768px;
   color: #505050;
 }
 
@@ -760,6 +1149,7 @@ ul {
   margin: 0 auto;
 }
 
+/* The script scales a hovered card slightly; it does not tilt */
 .why-card {
   background: var(--ivory-card);
   border: 1px solid #a6cdd3;
@@ -767,6 +1157,14 @@ ul {
   padding: 25px;
   display: flex;
   flex-direction: column;
+  will-change: transform;
+  transition: box-shadow 0.35s ease, border-color 0.35s ease,
+    background-color 0.35s ease;
+}
+
+.why-card:hover {
+  border-color: var(--teal);
+  box-shadow: 0 18px 40px rgba(26, 65, 70, 0.16);
 }
 
 .why-card__icon {
@@ -787,15 +1185,55 @@ ul {
 }
 
 .why-card h3 {
-  color: #1a1c16;
+  position: relative;
+  color: var(--ink);
   margin-bottom: 8px;
+  padding-bottom: 8px;
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Underline that draws out from the left on hover */
+.why-card h3::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(52, 182, 175, 0.55),
+    rgba(52, 182, 175, 0.25),
+    transparent
+  );
+  transform: scaleX(0.3);
+  transform-origin: left;
+  transition: transform 0.4s ease-out;
+}
+
+.why-card:hover h3 {
+  transform: translateX(4px);
+}
+
+.why-card:hover h3::after {
+  transform: scaleX(1);
 }
 
 .why-card p {
-  color: #3d4948;
+  color: var(--text);
 }
 
-/* ---------- Case Studies ---------- */
+@media (max-width: 900px) {
+  .why__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Case studies (hidden in the markup for now) ----------
+   Plain layout: three cards overlapping slightly. Animated mode (.is-scrolly,
+   added by the script when the stack fits the viewport) pins the section and
+   steps through the cards: the one being read is open, the ones already read
+   collapse to a header strip above it, the ones to come have not arrived. */
 .cases {
   background: var(--ivory);
   padding: var(--section-pad-y) 10%;
@@ -810,18 +1248,16 @@ ul {
 .cases__header {
   max-width: 1152px;
   margin: 0 auto var(--header-gap);
-  width: 100%;
 }
 
 .cases__header h2 {
-  letter-spacing: -1px;
-  color: #1a1c16;
+  color: var(--ink);
   margin-bottom: 17px;
 }
 
 .cases__header p {
   max-width: 896px;
-  color: #3d4948;
+  color: var(--text);
 }
 
 .cases__stack {
@@ -829,15 +1265,9 @@ ul {
   margin: 0 auto;
 }
 
-/* ---------- Case cards ----------
-   All three cards carry the same format. They are full height and pulled
-   up over one another, so each of the earlier ones shows only a header
-   strip while the last sits fully open. The peek heights are what the
-   negative margins below work out to:
-     card 01 shows 128px, card 02 shows 160px, card 03 shows all 400px. */
 .case-card {
   position: relative;
-  border: 1px solid #bcc9c7;
+  border: 1px solid var(--line);
   border-radius: 8px;
   box-shadow: 0 4px 20px rgba(26, 65, 70, 0.08);
   overflow: hidden;
@@ -868,18 +1298,16 @@ ul {
 }
 
 .case-card__num {
-  color: #1a1c16;
+  color: var(--ink);
   opacity: 0.7;
-  letter-spacing: -0.3px;
 }
 
 .case-card__title {
-  color: #1a1c16;
-  letter-spacing: -0.3px;
+  color: var(--ink);
 }
 
 .case-card p {
-  color: #3d4948;
+  color: var(--text);
   max-width: 400px;
   margin-bottom: 12px;
 }
@@ -895,25 +1323,14 @@ ul {
   object-fit: cover;
 }
 
-/* While stepping, the card's height changes but the picture's must not, or
-   object-fit re-crops on every frame and the image appears to morph. Pinning
-   it to the open height and letting the card clip it makes a collapsing card
-   read as one card sliding over another. */
-.cases.is-scrolly .case-card__photo {
-  height: var(--case-full);
-  align-self: flex-start;
-  flex-shrink: 0;
-}
-
+/* The overlap sits inside each card's own bottom padding, so no copy is
+   ever covered. */
 .case-card--01 {
   background: #a6cdd3;
   margin-top: 0;
   z-index: 1;
 }
 
-/* The overlap is only 32px, inside the card's own 49px bottom padding, so
-   nothing legible is ever covered. The deep peek-stack belongs to the
-   animated mode below, where each card gets opened in turn. */
 .case-card--02 {
   background: #ffd5ac;
   margin-top: -32px;
@@ -926,23 +1343,9 @@ ul {
   z-index: 3;
 }
 
-/* ---- Animated mode (added by the script) ----
-   Pinned, and scroll steps through the cards one at a time. The card being
-   read is open at full height; the ones already read collapse to a header
-   strip stacked above it; the ones still to come have not arrived yet.
-
-   That is the point of the stepping: every card gets its turn open, so all
-   three are actually readable. A stack where only the last card is ever
-   expanded hides the other two for good.
-
-   Without JS, reduced motion, a narrow screen or a viewport too short to
-   hold the open card, none of this applies and the plain stack stands. */
-/* display/min-height are reset because the shared section rule centres
-   .cases as a flex column. Left as-is the stage is centred in the tall
-   section instead of starting at its top, which parks half the runway as
-   empty space above it and leaves the pin only half its travel - so the
-   last card steps after the stage has already scrolled away. The plain,
-   unanimated stack keeps the centring. */
+/* Animated mode. The shared section rule centres .cases as a flex column,
+   which would park half the runway as empty space above the stage, so it is
+   reset to a block that starts at the top. */
 .cases.is-scrolly {
   display: block;
   min-height: 0;
@@ -953,7 +1356,6 @@ ul {
 
 .cases.is-scrolly .cases__stage {
   position: sticky;
-  /* also the containing block for the side tracker */
   top: var(--nav-height);
   height: var(--cases-stage-h);
   justify-content: flex-start;
@@ -964,42 +1366,44 @@ ul {
   margin-bottom: var(--header-gap);
 }
 
-/* The static peek-stack pulls the cards over one another with negative
-   margins and steps their widths, so each one peeks out past the card in
-   front. Stepping shows one card at a time instead, where those widths read
-   as three different left edges against the heading above. Full width, so
-   every card sits on the same column as everything else on the page. */
 .cases.is-scrolly .case-card {
   min-height: 0;
   margin-top: 0;
   height: 0;
   opacity: 0;
-  /* A card that has not arrived must take up no room at all. At height 0 its
-     1px borders would still occupy 2px each and nudge the stack down. */
+  /* At height 0 the 1px borders would still take 2px and nudge the stack */
   border-width: 0;
   will-change: height, opacity;
   transition: height 0.85s cubic-bezier(0.33, 1, 0.68, 1),
     opacity 0.5s ease;
 }
 
-/* Already read: collapsed to its header strip. */
 .cases.is-scrolly .case-card.is-past {
   height: var(--case-strip);
   opacity: 1;
   border-width: 1px;
 }
 
-/* Being read: open, all of its content reachable. */
 .cases.is-scrolly .case-card.is-active {
   height: var(--case-full);
   opacity: 1;
   border-width: 1px;
 }
 
-/* ---------- Side tracker ----------
-   Same vertical bars as the problems stack on the solution page, tuned for
-   this section's light background. Only meaningful while stepping, so it is
-   hidden otherwise. */
+/* Pinned to the open height so object-fit does not re-crop every frame
+   while the card's height animates. */
+.cases.is-scrolly .case-card__photo {
+  height: var(--case-full);
+  align-self: flex-start;
+  flex-shrink: 0;
+}
+
+/* Used for the one frame in which the script seeds the stack */
+.cases__stack.is-static .case-card {
+  transition: none;
+}
+
+/* Side tracker, only meaningful while stepping */
 .cases__dots {
   display: none;
 }
@@ -1025,174 +1429,1138 @@ ul {
 }
 
 .cases__dots .dot.is-active {
-  background: #ff8c40;
+  background: var(--orange);
   height: 24px;
 }
 
-/* Used for the one frame in which the script seeds the stack. */
-.cases__stack.is-static .case-card {
-  transition: none;
+@media (max-width: 900px) {
+  .case-card {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: left;
+    min-height: 0;
+  }
+
+  .case-card__text {
+    padding: 28px;
+  }
+
+  .case-card__photo {
+    width: 100%;
+    height: 180px;
+  }
+
+  .case-card--01,
+  .case-card--02,
+  .case-card--03 {
+    width: 100%;
+    border-radius: 8px;
+  }
+
+  .case-card--02,
+  .case-card--03 {
+    margin-top: 16px;
+  }
 }
 
-/* ---------- Contact page ---------- */
-.contact-hero {
-  background: var(--ivory);
+
+/* =========================================================
+   7. SOLUTIONS
+   ========================================================= */
+
+/* ---------- What Generates Power Quality Problems ---------- */
+.generates {
+  background: var(--cream);
+  padding: 112px 10%;
   text-align: center;
-  padding: 100px 10% 80px;
 }
 
-.contact-hero h1 {
-  color: #006a65;
-  letter-spacing: -1px;
+.generates h2 {
+  color: #6b6b6b;
   margin-bottom: 16px;
 }
 
-.contact-hero p {
-  color: #3d4948;
-  max-width: 672px;
-  margin: 0 auto;
+.generates h2 .bold {
+  color: var(--ink);
+  font-weight: bold;
 }
 
-.contact-body {
-  background: #fafaef;
-  padding: 80px 10%;
+.generates > p {
+  color: #505050;
+  margin-bottom: 64px;
 }
 
-.contact-body__inner {
+.generates__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(200px, 1fr));
+  gap: 28px;
   max-width: 1152px;
   margin: 0 auto;
-  display: flex;
-  gap: 80px;
-  align-items: stretch;
-  flex-wrap: wrap;
+  text-align: left;
 }
 
-.contact-map {
-  flex: 1 1 400px;
-  min-height: 500px;
-  border: 1px solid #bcc9c7;
+.generates__card {
+  background: var(--ivory-card);
+  border: 1px solid var(--line);
   border-radius: 8px;
+  padding: 36px 32px;
+}
+
+/* The icons have different aspect ratios, so they are sized by height.
+   Their fills are currentColor, so the accent is set once here. */
+.generates__icon {
+  height: 34px;
+  width: auto;
+  margin-bottom: 28px;
+  color: var(--orange);
+  display: block;
+  overflow: visible;
+}
+
+.generates__card h3 {
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+
+.generates__card p {
+  color: var(--text);
+}
+
+.generates__card--cta {
+  background: var(--cream);
+  border: 1.5px solid var(--orange);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.generates__card--cta .btn {
+  align-self: flex-start;
+  padding: 10px 22px;
+  margin-top: 12px;
+}
+
+@media (max-width: 900px) {
+  .generates__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .generates__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- The Problems These Loads Create ----------
+   Content height, never pinned. The script deals the cards by scroll
+   position as the section passes the middle of the viewport: the front card
+   lifts away and the one behind steps forward. */
+.problems {
+  position: relative;
+  padding: 0 10%;
+  background: var(--petrol);
+  text-align: center;
+}
+
+.problems__sticky {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 0;
   overflow: hidden;
 }
 
-.contact-map img {
+.problems h2 {
+  color: var(--text-on-dark);
+  margin-bottom: 48px;
+}
+
+/* One grid cell holds all three cards, so they overlap exactly and the
+   stack takes the height of the tallest. The bottom margin leaves room for
+   the two cards cascading below the front one. */
+.problems__stack {
+  position: relative;
+  display: grid;
+  max-width: 820px;
+  margin: 0 auto 104px;
+}
+
+.problem-card {
+  grid-area: 1 / 1;
+  background: var(--orange);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 36px 40px;
+  text-align: left;
+  will-change: transform, opacity;
+  transition: transform 0.62s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.5s ease;
+}
+
+/* Only the front card shows its contents; the ones behind read as plain
+   stacked blocks and their copy fades up as they arrive. */
+.problem-card > * {
+  transition: opacity 0.42s ease;
+}
+
+.problem-card:not(.is-front) {
+  pointer-events: none;
+}
+
+.problem-card:not(.is-front) > * {
+  opacity: 0;
+}
+
+.problem-card.is-front {
+  transform: translate(0, 0);
+  opacity: 1;
+  z-index: 3;
+}
+
+.problem-card.is-next {
+  transform: translate(30px, 52px);
+  opacity: 0.85;
+  z-index: 2;
+}
+
+.problem-card.is-later {
+  transform: translate(60px, 104px);
+  opacity: 0.7;
+  z-index: 1;
+}
+
+/* Dealt: lifts clear, above the card it uncovers */
+.problem-card.is-past {
+  transform: translate(-18px, -70px) scale(1.03);
+  opacity: 0;
+  z-index: 4;
+}
+
+/* Seeding frame: position the cards without animating them in */
+.problems__stack.is-static .problem-card,
+.problems__stack.is-static .problem-card > * {
+  transition: none;
+}
+
+.problem-card__num {
+  font-weight: bold;
+  color: var(--petrol);
+  flex-shrink: 0;
+}
+
+.problem-card__text h3 {
+  color: var(--petrol);
+  margin-bottom: 8px;
+}
+
+.problem-card__text p {
+  color: #39383a;
+  max-width: 420px;
+}
+
+.problem-card__icon {
+  width: 150px;
+  height: 100px;
+  margin-left: auto;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+/* Rest pose of the swung vector on Power Factor, which otherwise only comes
+   from its keyframe (the draw-in animations are in section 13). */
+.problem-card__icon .anim-swing {
+  transform: rotate(-38.9deg);
+  transform-origin: 85px 150px;
+}
+
+.problem-card__icon .anim-tick,
+.problem-card__icon .anim-hub,
+.problem-card__icon .anim-origin,
+.problem-card__icon .anim-phi {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.problem-card__icon .anim-needle { transform-origin: 150px 160px; }
+.problem-card__icon .anim-h      { transform-origin: 85px 150px; }
+
+.problems__dots {
+  position: absolute;
+  right: 5%;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.problems__dots .dot {
+  width: 6px;
+  height: 20px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.25);
+  transition: background-color 0.4s ease, height 0.4s ease;
+}
+
+.problems__dots .dot.is-active {
+  background: var(--orange);
+  height: 24px;
+}
+
+/* ---------- Active / Passive / Hybrid solution rows ---------- */
+.solutions-row {
+  background: var(--cream);
+  padding: 56px 10%;
+}
+
+.solutions-row__inner {
+  max-width: 1152px;
+  margin: 0 auto;
+}
+
+.solutions-row h2 {
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+
+.solutions-row__label--active  { color: #e6483c; }
+.solutions-row__label--passive { color: var(--orange); }
+.solutions-row__label--hybrid  { color: var(--teal); }
+
+.solutions-row__inner > p {
+  color: #8a8a8a;
+  max-width: 700px;
+  margin-bottom: 32px;
+}
+
+.solutions-row__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+/* Each card is the button that opens the solution dialog */
+.solution-card {
+  background: #1c1c1c;
+  border-radius: 8px;
+  aspect-ratio: 1;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.solution-card:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 3px;
+}
+
+/* Invisible while its dialog is open, so the panel reads as the card
+   having grown rather than as a copy on top of it. */
+.solution-card.is-morphing {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.solution-card--photo {
+  background: #ffffff;
+}
+
+.solution-card--photo img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.contact-form-col {
-  flex: 1 1 400px;
+.solution-card__label {
+  position: relative;
+  width: 100%;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.55);
+  color: var(--text-on-dark);
 }
 
-.contact-form-col h2 {
-  color: #00423f;
-  letter-spacing: -0.5px;
-  margin-bottom: 8px;
+.solution-card__label .plus {
+  color: var(--orange);
 }
 
-.contact-form-col__sub {
-  color: #3d4948;
-  margin-bottom: 40px;
+.solution-card .plus {
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.contact-form {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.form-field {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.form-field label {
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  color: #3d4948;
-}
-
-.form-field input,
-.form-field textarea {
-  background: #ffffff;
-  border: 1px solid #a9d1d7;
-  border-radius: 8px;
-  padding: 16px 13px;
-  font-family: inherit;
-  color: #151515;
-}
-
-.form-field textarea {
-  resize: vertical;
-  min-height: 120px;
-}
-
-.form-field input::placeholder,
-.form-field textarea::placeholder {
-  color: #bcc9c7;
-}
-
-.form-field input:focus,
-.form-field textarea:focus {
-  outline: none;
-  border-color: #34b6af;
-}
-
-.contact-form .btn {
-  align-self: flex-start;
-  padding: 12px 48px;
-  font-weight: bold;
-  letter-spacing: 0.7px;
-  cursor: pointer;
-  margin-top: 8px;
+.solution-card:hover .plus {
+  transform: rotate(90deg) scale(1.1);
 }
 
 @media (max-width: 900px) {
-  .contact-body__inner {
-    flex-direction: column;
-  }
-
-  .contact-map {
-    min-height: 320px;
+  .solutions-row__grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-
-/* ---------- YanQ page ---------- */
-.accent {
-  color: #ff8c40;
+/* ---------- What Inaction Costs ---------- */
+.inaction {
+  background: var(--petrol);
+  padding: 90px 10%;
 }
 
-.accent-gradient {
-  background: linear-gradient(90deg, #039999, #9e9e9e);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+.inaction__inner {
+  max-width: 1152px;
+  margin: 0 auto;
 }
 
-.yanq-hero-intro {
+.inaction h2 {
+  color: var(--text-on-dark);
+  margin-bottom: 8px;
+}
+
+.inaction__inner > p {
+  color: #95c3c3;
+  margin-bottom: 40px;
+}
+
+.inaction__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(220px, 1fr));
+  gap: 24px;
+}
+
+.inaction-card {
+  background: #143338;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.inaction-card__photo {
+  height: 160px;
+  border-radius: 6px 6px 0 0;
+  background-color: #2a4d51;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.inaction-card__photo--1 { background-image: url("../images/inaction-bearing.jpg"); }
+.inaction-card__photo--2 { background-image: url("../images/inaction-penalties.jpg"); background-position: 30% center; }
+.inaction-card__photo--3 { background-image: url("../images/inaction-resonance.jpg"); background-position: 45% center; }
+
+.inaction-card__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 16px 16px 8px;
+  flex-wrap: wrap;
+}
+
+.inaction-card__row h3 {
+  color: var(--text-on-dark);
+}
+
+.inaction-card__tag {
+  color: #ffb98a;
+  background: rgba(255, 140, 64, 0.15);
+  border: 1px solid rgba(255, 140, 64, 0.4);
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.inaction-card p {
+  color: #8fb0af;
+  padding: 0 16px 20px;
+}
+
+@media (max-width: 900px) {
+  .inaction__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Results, Not Claims ----------
+   Each row is a button that opens the same dialog as the solution cards,
+   in its light "document" skin. */
+.results {
+  background: var(--cream);
+  padding: 90px 10%;
+}
+
+.results__inner {
+  max-width: 1152px;
+  margin: 0 auto;
+}
+
+.results h2 {
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+
+.results .accent-teal {
+  color: var(--teal-mid);
+}
+
+.results__inner > p {
+  color: #5c5c5c;
+  max-width: 700px;
+  margin-bottom: 40px;
+}
+
+.results__list {
+  border-top: 1px solid #d8d8c8;
+  max-width: 1000px;
+}
+
+.results__item {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  padding: 24px 0;
+  border: 0;
+  border-bottom: 1px solid #d8d8c8;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.results__item:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 2px;
+}
+
+.results__item.is-morphing {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.results__num {
+  color: #7ecfc9;
+  width: 24px;
+  flex-shrink: 0;
+}
+
+.results__text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.results__title {
+  color: var(--ink);
+}
+
+.results__desc {
+  color: #8a8a8a;
+}
+
+.results__plus {
+  color: var(--orange);
+  flex-shrink: 0;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.results__item:hover .results__plus {
+  transform: rotate(90deg) scale(1.1);
+}
+
+
+/* =========================================================
+   8. ABOUT
+   Everything below the hero reads one step larger; the hero
+   stays at 1 so its type and the floating decor keep the
+   proportions they were placed to.
+   ========================================================= */
+.about-statement,
+.about-measure,
+.about-values,
+.industries,
+.faq {
+  --fs-scale: 1.1;
+}
+
+/* ---------- Hero floating decor ----------
+   Image wells that drift over the hero photo. The script writes a transform
+   on these every frame (idle drift, cursor push, scroll parallax), so
+   nothing here may set transform. */
+.about-hero__decor {
+  position: absolute;
+  z-index: 3;
+  background-color: #d9d9d9;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 5px;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.about-hero__decor--1 {
+  width: 260px;
+  height: 187px;
+  left: 13%;
+  top: 30%;
+  background-image: url('../images/case-01-photo.png');
+}
+
+.about-hero__decor--2 {
+  width: 330px;
+  height: 238px;
+  left: 5%;
+  bottom: 10%;
+  background-image: url('../images/case-02-photo.png');
+}
+
+.about-hero__decor--3 {
+  width: 180px;
+  height: 130px;
+  right: 28%;
+  bottom: 22%;
+  background-image: url('../images/case-03-photo.png');
+}
+
+.about-hero__decor--4 {
+  width: 400px;
+  height: 288px;
+  right: 6%;
+  top: 20%;
+  background-image: url('../images/hero-plant.png');
+}
+
+/* ---------- Statement (typewriter) ----------
+   Every character is in the DOM from the start, just transparent, so the
+   layout never shifts and the caret never chases a reflow. */
+.about-statement {
+  background: var(--ivory);
+  padding: 100px 10%;
+}
+
+.about-statement__inner {
+  width: 100%;
+  max-width: 1152px;
+  margin: 0 auto;
+}
+
+/* Same width as the We Measure copy below, so the two share a left edge */
+.about-statement p {
+  color: #414141;
+  max-width: 741px;
+  margin: 0 auto;
+}
+
+.about-statement p.tw {
+  position: relative;
+}
+
+.about-statement .teal-text {
+  color: var(--teal-mid);
+}
+
+.tw-char {
+  opacity: 0;
+  transition: opacity 120ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.tw-char.is-in {
+  opacity: 1;
+}
+
+/* Positioned rather than inline so it glides between characters. Its
+   transition matches TW_STEP in script.js, or it falls behind the text. */
+.tw-caret {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2px;
+  height: 1em;
+  background: var(--orange);
+  border-radius: 1px;
+  transform: translate(0, 0);
+  transition: transform 30ms linear;
+  animation: tw-blink 0.7s linear infinite;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* Wrapping to a new line is a jump, not a glide */
+.tw-caret.is-jump {
+  transition: none;
+}
+
+@keyframes tw-blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tw-char {
+    opacity: 1;
+    transition: none;
+  }
+
+  .tw-caret {
+    display: none;
+  }
+}
+
+/* ---------- We Measure. / Solve. / Support. ----------
+   The highlighted word's characters roll up out of the orange box while the
+   next word rolls in. The section is armed by the script, so nothing is
+   hidden if it never runs. */
+.about-measure {
+  background: var(--petrol);
+  text-align: center;
+  padding: 100px 10%;
+}
+
+/* A flex row so the static word and the clipped rotating box line up on
+   their bottom edge (an overflow:hidden box has no usable baseline). */
+.about-measure h2 {
+  color: #ffffff;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.24em;
+}
+
+.about-measure p {
+  color: #f4f4e9;
+  letter-spacing: 0.1px;
+  max-width: 741px;
+  margin: 0 auto;
+}
+
+.measure-static {
+  line-height: 1.2;
+  padding-bottom: 2px;
+}
+
+.measure-highlight {
+  position: relative;
+  isolation: isolate;
+  flex: 0 0 auto;
+  display: inline-block;
+  overflow: hidden;
+  line-height: 1.2;
+  background: var(--orange);
+  color: #ffffff;
+  padding: 2px 16px;
+  border-radius: 5px;
+  white-space: nowrap;
+  transition: width 0.32s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* The script staggers the characters with an inline transition-delay */
+.rotate-char {
+  display: inline-block;
+  line-height: 1.2;
+  opacity: 0;
+  transform: translateY(115%);
+  transition: transform 0.46s cubic-bezier(0.2, 0.9, 0.24, 1), opacity 0.26s ease;
+}
+
+.rotate-char.is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.rotate-char.is-out {
+  opacity: 0;
+  transform: translateY(-120%);
+  transition-duration: 0.36s, 0.22s;
+}
+
+/* Height is set by the script so the paragraph eases between lengths */
+.about-measure__copy {
+  overflow: hidden;
+  transition: height 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.28s ease;
+}
+
+/* Entrance: fade up, then the orange box sweeps across like a highlighter */
+.about-measure.is-armed h2,
+.about-measure.is-armed .about-measure__copy {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1),
+    height 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.about-measure.is-armed.is-visible h2,
+.about-measure.is-armed.is-visible .about-measure__copy {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.about-measure.is-armed.is-visible .about-measure__copy {
+  transition-delay: 0.18s;
+}
+
+.about-measure.is-armed .measure-highlight {
+  background: transparent;
+}
+
+.about-measure.is-armed .measure-highlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--orange);
+  border-radius: 5px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.65s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.about-measure.is-armed.is-visible .measure-highlight::before {
+  transform: scaleX(1);
+  transition-delay: 0.35s;
+}
+
+/* Once rotating, the copy swaps on the faster rotation timing */
+.about-measure.is-rotating .about-measure__copy {
+  transition: opacity 0.34s ease, transform 0.34s cubic-bezier(0.2, 0.8, 0.2, 1),
+    height 0.38s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition-delay: 0s;
+}
+
+.about-measure.is-rotating .about-measure__copy.is-swapping {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+/* ---------- Our Values: pinned while read ----------
+   Two screens tall with the content stuck to the viewport, so scrolling
+   advances the value (the script maps scroll position to a value). The
+   sticky panel's position must not be transitioned: it is already a smooth
+   function of scroll. */
+.about-values {
+  position: relative;
+  height: 200vh;
   background: var(--ivory);
   text-align: center;
-  padding: 100px 10% 80px;
 }
 
-.yanq-hero-intro h1 {
-  color: #006a65;
-  letter-spacing: -1px;
-  margin-bottom: 16px;
+.about-values__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 10%;
+  overflow: hidden;
 }
 
-.yanq-hero-intro p {
-  color: #041917;
+.about-values h2 {
+  color: #414141;
+  margin-bottom: 24px;
 }
 
+.about-values p {
+  color: #797979;
+  letter-spacing: 0.5px;
+  max-width: 558px;
+  margin: 0 auto;
+}
+
+/* Position indicator: the active value's bar widens and its neighbour sits
+   at a middle width. */
+.about-values__bars {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 30px;
+  margin-bottom: 20px;
+}
+
+.value-bar {
+  width: 10px;
+  height: 30px;
+  border-radius: 3px;
+  background: #72adad;
+  opacity: 0.45;
+  transition: width 0.6s cubic-bezier(0.65, 0, 0.35, 1),
+    background-color 0.45s ease,
+    opacity 0.45s ease;
+}
+
+.value-bar.is-near {
+  width: 16px;
+  opacity: 0.7;
+}
+
+.value-bar.is-active {
+  width: 46px;
+  background: var(--teal-mid);
+  opacity: 1;
+}
+
+/* Used for the one frame in which the script seeds the row */
+.about-values__bars.is-static .value-bar {
+  transition: none;
+}
+
+.value-hl {
+  color: var(--teal-mid);
+  transition: color 0.45s ease;
+}
+
+.about-values__copy {
+  transition: opacity 0.34s ease, transform 0.34s cubic-bezier(0.2, 0.8, 0.2, 1),
+    height 0.38s cubic-bezier(0.2, 0.8, 0.2, 1);
+  overflow: hidden;
+}
+
+.about-values__copy.is-swapping {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+/* Entrance: bars, heading and copy rise into place a beat apart while the
+   panel travels in. The script removes both classes once it has played, as
+   they would otherwise override the copy's swap transition. */
+.about-values.is-armed .about-values__bars,
+.about-values.is-armed .about-values__sticky > h2,
+.about-values.is-armed .about-values__copy {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.72s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.72s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.about-values.is-armed.is-visible .about-values__bars,
+.about-values.is-armed.is-visible .about-values__sticky > h2,
+.about-values.is-armed.is-visible .about-values__copy {
+  opacity: 1;
+  transform: none;
+}
+
+.about-values.is-armed.is-visible .about-values__sticky > h2 {
+  transition-delay: 0.12s;
+}
+
+.about-values.is-armed.is-visible .about-values__copy {
+  transition-delay: 0.2s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-values.is-armed .about-values__bars,
+  .about-values.is-armed .about-values__sticky > h2,
+  .about-values.is-armed .about-values__copy {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---------- Industries We Serve ---------- */
+.industries {
+  background: var(--petrol);
+  text-align: center;
+  padding: 100px 10%;
+}
+
+.industries h2 {
+  color: #f4f4e9;
+  margin-bottom: 12px;
+}
+
+.industries > p {
+  color: #95c3c3;
+  margin-bottom: 48px;
+}
+
+.industries__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(160px, 251px));
+  border: 1px solid #2d5a5f;
+  border-radius: 10px;
+  overflow: hidden;
+  max-width: 754px;
+  margin: 0 auto;
+  background: var(--ivory);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
+}
+
+.industries__cell {
+  padding: 40px 24px;
+  border-right: 1px solid #cdd6d1;
+  border-bottom: 1px solid #cdd6d1;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.industries__cell:hover {
+  background: #ffffff;
+  color: var(--teal-deep);
+}
+
+.industries__cell:nth-child(3n) {
+  border-right: none;
+}
+
+.industries__cell:nth-child(n+4) {
+  border-bottom: none;
+}
+
+/* ---------- FAQ ----------
+   The script animates each <details> open and shut (height, gap and
+   opacity) and keeps one open at a time. With no JS it is a plain
+   <details> list. */
+.faq {
+  background: var(--ivory);
+  padding: 45px 10% 96px;
+}
+
+.faq__inner {
+  max-width: 1152px;
+  margin: 0 auto;
+  display: flex;
+  gap: 64px;
+  flex-wrap: wrap;
+}
+
+.faq__header {
+  flex: 1 1 300px;
+  max-width: 393px;
+}
+
+.faq__header h2 {
+  color: #221c1c;
+  margin-bottom: 15px;
+}
+
+.faq__header p {
+  color: #5c5c5c;
+}
+
+.faq__list {
+  flex: 2 1 500px;
+  border-top: 1px solid #ffffff;
+}
+
+.faq__item {
+  border-bottom: 1px solid #ffffff;
+  padding: 20px 0;
+}
+
+.faq__item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq__item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq__num {
+  color: #94a3b8;
+  margin-right: 16px;
+}
+
+.faq__question {
+  color: #221c1c;
+  flex: 1;
+}
+
+.faq__chevron {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.faq__item[open] .faq__chevron {
+  transform: rotate(180deg);
+}
+
+.faq__answer {
+  margin-top: 16px;
+  padding-left: 46px;
+  color: #475569;
+  max-width: 558px;
+  overflow: hidden;
+}
+
+/* Only an item the script is driving gets the transition */
+.faq__item.is-animated .faq__answer {
+  transition: height 0.42s cubic-bezier(0.22, 0.61, 0.36, 1),
+    margin-top 0.42s cubic-bezier(0.22, 0.61, 0.36, 1),
+    opacity 0.32s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq__item.is-animated .faq__answer {
+    transition: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .about-hero__decor {
+    display: none;
+  }
+
+  .about-statement {
+    padding: 80px 32px;
+  }
+
+  .industries__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .industries__cell:nth-child(3n) {
+    border-right: 1px solid #dadbd0;
+  }
+
+  .industries__cell:nth-child(2n) {
+    border-right: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .industries__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .industries__cell {
+    border-right: none !important;
+  }
+}
+
+
+/* =========================================================
+   9. YANQ
+   ========================================================= */
 .yanq-hero {
-  background: #167777;
+  background: var(--petrol-bright);
   position: relative;
   overflow: hidden;
   padding: 90px 10%;
@@ -1228,19 +2596,17 @@ ul {
 
 .yanq-hero h2 {
   color: #f4f4e9;
-  letter-spacing: -1px;
-  line-height: 1.1;
   margin-bottom: 24px;
 }
 
 .yanq-hero__body {
   color: #c5d9d0;
-  line-height: 1.5;
   margin-bottom: 36px;
 }
 
+/* ---------- How YanQ Works: intro ---------- */
 .yanq-works-intro {
-  background: #fafaef;
+  background: var(--cream);
   padding: 100px 10%;
 }
 
@@ -1258,12 +2624,19 @@ ul {
   max-width: 896px;
   border-left: 2px solid #39595d;
   padding-left: 26px;
-  line-height: 1.45;
-  letter-spacing: -0.5px;
 }
 
+.yanq-works-intro__lead {
+  color: var(--text-on-dark);
+}
+
+.yanq-works-intro__rest {
+  color: #6f8b8d;
+}
+
+/* ---------- How YanQ Works: step ---------- */
 .yanq-step {
-  background: #1a4146;
+  background: var(--petrol);
   padding: 90px 10%;
   position: relative;
   overflow: hidden;
@@ -1325,17 +2698,16 @@ ul {
 .yanq-step__tag {
   letter-spacing: 1.1px;
   text-transform: uppercase;
-  color: #ff8c40;
+  color: var(--orange);
 }
 
 .yanq-step__text h3 {
-  color: #f1f1e6;
+  color: var(--text-on-dark);
   margin-bottom: 12px;
 }
 
 .yanq-step__text > p {
   color: #75a1a7;
-  line-height: 1.75;
   margin-bottom: 16px;
 }
 
@@ -1361,11 +2733,11 @@ ul {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #039999;
+  background: var(--teal-mid);
 }
 
 .yanq-step__sampling {
-  color: #ff8c40;
+  color: var(--orange);
 }
 
 .yanq-step__illustration {
@@ -1408,8 +2780,9 @@ ul {
   border-color: #ffffff;
 }
 
+/* ---------- What YanQ Delivers ---------- */
 .yanq-delivers {
-  background: #fafaef;
+  background: var(--cream);
   padding: 100px 10%;
   text-align: center;
 }
@@ -1435,7 +2808,6 @@ ul {
 
 .deliver-stat p {
   color: #7d7d7d;
-  line-height: 1.4;
 }
 
 @media (max-width: 900px) {
@@ -1463,1232 +2835,134 @@ ul {
 }
 
 
-/* ---------- About page ---------- */
-.about-hero {
-  background: var(--ivory);
-  position: relative;
-  text-align: center;
-  padding: 100px 10% 130px;
-  overflow: hidden;
+/* =========================================================
+   10. CONTACT
+   ========================================================= */
+.contact-body {
+  background: var(--cream);
+  padding: 80px 10%;
 }
 
-.about-hero h1 {
-  color: #006a65;
-  letter-spacing: -1px;
-  margin-bottom: 16px;
-  position: relative;
-  z-index: 1;
-}
-
-.about-hero p {
-  color: #3d4948;
-  position: relative;
-  z-index: 1;
-}
-
-/* ---------- About hero — floating decor ----------
-   Each rectangle is an image well. Swap the background-image on the four
-   rules below for the real photographs; the grey stays behind as the colour
-   the card shows while an image loads or if one is missing.
-
-   The script writes a transform on these every frame - a slow idle drift, a
-   push away from the cursor and a parallax offset as the hero scrolls - so
-   nothing else here may set transform. Position is left to the offsets
-   below; the script only ever moves them relative to it. */
-.about-hero__decor {
-  position: absolute;
-  background-color: #d9d9d9;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  border-radius: 5px;
-  overflow: hidden;
-  will-change: transform;
-}
-
-.about-hero__decor--1 {
-  width: 260px;
-  height: 187px;
-  left: 13%;
-  top: 30%;
-  background-image: url('../images/case-01-photo.png');
-}
-
-.about-hero__decor--2 {
-  width: 330px;
-  height: 238px;
-  left: 5%;
-  bottom: 10%;
-  background-image: url('../images/case-02-photo.png');
-}
-
-.about-hero__decor--3 {
-  width: 180px;
-  height: 130px;
-  right: 28%;
-  bottom: 22%;
-  background-image: url('../images/case-03-photo.png');
-}
-
-.about-hero__decor--4 {
-  width: 400px;
-  height: 288px;
-  right: 6%;
-  top: 20%;
-  background-image: url('../images/hero-plant.png');
-}
-
-.about-statement {
-  background: var(--ivory);
-  padding: 100px 10%;
-}
-
-.about-statement__inner {
-  width: 100%;
-  max-width: 1152px;
-  margin: 0 auto;
-}
-
-/* Same width and centring as the rotating statement's copy below it, so the
-   two text blocks share a left edge. Both are centred on the page's centre
-   line, so equal max-widths line their edges up exactly. */
-.about-statement p {
-  color: #414141;
-  letter-spacing: 0.2px;
-  max-width: 741px;
-  margin: 0 auto;
-}
-
-.about-statement .accent {
-  color: #ff8c40;
-}
-
-.about-statement .teal-text {
-  color: #039999;
-}
-
-.about-measure {
-  background: #1a4146;
-  text-align: center;
-  padding: 100px 10%;
-}
-
-/* The heading is a flex row so the static word and the clipped rotating box
-   line up: an `overflow: hidden` box has no usable baseline, so both children
-   are given the same line-height and aligned on their bottom edge instead. */
-.about-measure h2 {
-  color: #ffffff;
-  margin-bottom: 30px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 0.24em;
-}
-
-.measure-static {
-  line-height: 1.2;
-  padding-bottom: 2px;
-}
-
-.measure-highlight {
-  position: relative;
-  isolation: isolate;
-  flex: 0 0 auto;
-  display: inline-block;
-  overflow: hidden;
-  line-height: 1.2;
-  background: #ff8c40;
-  color: #ffffff;
-  padding: 2px 16px;
-  border-radius: 5px;
-  white-space: nowrap;
-  transition: width 0.32s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-/* Rotating characters roll up out of the box and the next word rolls in
-   underneath it; JS staggers them with an inline transition-delay. */
-.rotate-char {
-  display: inline-block;
-  line-height: 1.2;
-  opacity: 0;
-  transform: translateY(115%);
-  transition: transform 0.46s cubic-bezier(0.2, 0.9, 0.24, 1), opacity 0.26s ease;
-}
-
-.rotate-char.is-in {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.rotate-char.is-out {
-  opacity: 0;
-  transform: translateY(-120%);
-  transition-duration: 0.36s, 0.22s;
-}
-
-/* ---------- "We Measure." reveal ----------
-   Children are only hidden once JS has armed the section, so the copy still
-   shows if the script never runs. */
-.about-measure.is-armed h2,
-.about-measure.is-armed .about-measure__copy {
-  opacity: 0;
-  transform: translateY(18px);
-  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1),
-    height 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.about-measure.is-armed.is-visible h2,
-.about-measure.is-armed.is-visible .about-measure__copy {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.about-measure.is-armed.is-visible .about-measure__copy {
-  transition-delay: 0.18s;
-}
-
-/* the orange box sweeps across like a highlighter before the word rolls in */
-.about-measure.is-armed .measure-highlight {
-  background: transparent;
-}
-
-.about-measure.is-armed .measure-highlight::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: #ff8c40;
-  border-radius: 5px;
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 0.65s cubic-bezier(0.65, 0, 0.35, 1);
-}
-
-.about-measure.is-armed.is-visible .measure-highlight::before {
-  transform: scaleX(1);
-  transition-delay: 0.35s;
-}
-
-.about-measure p {
-  color: #f4f4e9;
-  letter-spacing: 0.1px;
-  max-width: 741px;
-  margin: 0 auto;
-}
-
-/* Height is driven from JS so swapping to a shorter or longer paragraph
-   eases instead of jolting the section. */
-.about-measure__copy {
-  overflow: hidden;
-  transition: height 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.28s ease;
-}
-
-/* Once the entrance has played, the copy swaps on the rotation's faster
-   timing instead of the slower one-off reveal timing. */
-.about-measure.is-rotating .about-measure__copy {
-  transition: opacity 0.34s ease, transform 0.34s cubic-bezier(0.2, 0.8, 0.2, 1),
-    height 0.38s cubic-bezier(0.2, 0.8, 0.2, 1);
-  transition-delay: 0s;
-}
-
-/* A short drift under the fade keeps the swap from reading as a blink. */
-.about-measure.is-rotating .about-measure__copy.is-swapping {
-  opacity: 0;
-  transform: translateY(8px);
-}
-
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-.about-measure .accent {
-  color: #ff8c40;
-}
-
-/* ---------- "Our Values" — pinned while it is read ----------
-   The section is three screens tall and its content sticks to the viewport
-   for the whole of it, so scrolling through advances the value instead of
-   moving the page. Looping on a timer would restart the sequence behind the
-   reader's back; tying it to scroll means each value is reached once, in
-   order, at whatever pace they scroll. */
-/* 100vh of that is the sticky panel itself; the surplus is how long it
-   stays pinned, so the content holds centre for one screen of scrolling
-   before the section releases and moves on. */
-.about-values {
-  position: relative;
-  height: 200vh;
-  background: var(--ivory);
-  text-align: center;
-}
-
-/* The rise into centre is written by the script, once per scroll frame.
-   It must NOT be transitioned: the value is already a smooth, eased function
-   of scroll position, so a transition on top of it only makes the content
-   ease toward a target that has already moved again — the content ends up
-   trailing the scroll instead of tracking it. */
-.about-values__sticky {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  box-sizing: border-box;
-  padding: 0 10%;
-  overflow: hidden;
-}
-
-.about-values h2 {
-  color: #414141;
-  margin-bottom: 24px;
-}
-
-/* ---------- Value bars ----------
-   A short row of bars above the heading. The bar for the value on screen
-   widens, its neighbour sits at a middle width and anything further out
-   stays narrow, so the row reads as a position indicator without needing
-   separate dots.
-
-   They sit above the heading rather than in the text, which is the whole
-   point: an earlier version drew a block on top of the rotating word, so
-   the word was partly covered mid-transition. Up here nothing can overlap
-   the copy, and the bars are free to keep animating. */
-.about-values__bars {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  height: 30px;
-  margin-bottom: 20px;
-}
-
-.value-bar {
-  width: 10px;
-  height: 30px;
-  border-radius: 3px;
-  background: #72adad;
-  opacity: 0.45;
-  transition: width 0.6s cubic-bezier(0.65, 0, 0.35, 1),
-    background-color 0.45s ease,
-    opacity 0.45s ease;
-}
-
-.value-bar.is-near {
-  width: 16px;
-  opacity: 0.7;
-}
-
-.value-bar.is-active {
-  width: 46px;
-  background: #039999;
-  opacity: 1;
-}
-
-/* The value's own word, carried inside the copy and picked out in teal. */
-.value-hl {
-  color: #039999;
-  transition: color 0.45s ease;
-}
-
-/* Used for the one frame in which JS seeds or re-measures the row. */
-.about-values__bars.is-static .value-bar {
-  transition: none;
-}
-
-.about-values__copy {
-  transition: opacity 0.34s ease, transform 0.34s cubic-bezier(0.2, 0.8, 0.2, 1),
-    height 0.38s cubic-bezier(0.2, 0.8, 0.2, 1);
-  overflow: hidden;
-}
-
-.about-values__copy.is-swapping {
-  opacity: 0;
-  transform: translateY(8px);
-}
-
-.about-values p {
-  color: #797979;
-  letter-spacing: 0.5px;
-  max-width: 558px;
-  margin: 0 auto;
-}
-
-.about-values .accent {
-  color: #ff8c40;
-}
-
-/* ---------- Industries We Serve ----------
-   COLOUR LOG — values before the 2026-09-22 pass, to undo if wanted:
-     .industries          background #1a4146   (unchanged)
-     .industries h2       color      #f4f4e9   (unchanged)
-     .industries > p      color      #95c3c3   (unchanged)
-     .industries__grid    background #f8f8f2   -> #f4f4e9
-                          border     1px solid #505050 -> 1px solid #2d5a5f
-                          box-shadow (none)    -> 0 18px 44px rgba(0,0,0,0.28)
-     .industries__cell    color      #222831   -> #1a1c16
-                          border     1px solid #dadbd0 -> 1px solid #cdd6d1
-     (new) .industries__cell:hover   background #ffffff, color #006a65
-
-   Why: it was one opaque near-white slab outlined in a grey that appears
-   nowhere else in the palette, with text in a blue-grey (#222831) that also
-   appears nowhere else. Warming the slab to the site cream ties it to the
-   rest of the pages, the outer border becomes a lighter teal so the block
-   sits inside the section rather than being cut out of it, and a shadow
-   gives it something to sit on. */
-.industries {
-  background: #1a4146;
-  text-align: center;
-  padding: 100px 10%;
-}
-
-.industries h2 {
-  color: #f4f4e9;
-  margin-bottom: 12px;
-}
-
-.industries > p {
-  color: #95c3c3;
-  margin-bottom: 48px;
-}
-
-.industries__grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(160px, 251px));
-  border: 1px solid #2d5a5f;
-  border-radius: 10px;
-  overflow: hidden;
-  max-width: 754px;
-  margin: 0 auto;
-  background: var(--ivory);
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
-}
-
-.industries__cell {
-  padding: 40px 24px;
-  border-right: 1px solid #cdd6d1;
-  border-bottom: 1px solid #cdd6d1;
-  color: #1a1c16;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-/* A quiet lift on hover, so the grid is not completely inert. */
-.industries__cell:hover {
-  background: #ffffff;
-  color: #006a65;
-}
-
-.industries__cell:nth-child(3n) {
-  border-right: none;
-}
-
-.industries__cell:nth-child(n+4) {
-  border-bottom: none;
-}
-
-.faq {
-  background: var(--ivory);
-  padding: 45px 10% 96px;
-}
-
-.faq__inner {
+.contact-body__inner {
   max-width: 1152px;
   margin: 0 auto;
   display: flex;
-  gap: 64px;
+  gap: 80px;
+  align-items: stretch;
   flex-wrap: wrap;
 }
 
-.faq__header {
-  flex: 1 1 300px;
-  max-width: 393px;
-}
-
-.faq__header h2 {
-  letter-spacing: -1px;
-  color: #221c1c;
-  margin-bottom: 15px;
-}
-
-.faq__header .accent {
-  color: #ff8c40;
-}
-
-.faq__header p {
-  color: #5c5c5c;
-}
-
-.faq__list {
-  flex: 2 1 500px;
-  border-top: 1px solid #ffffff;
-}
-
-.faq__item {
-  border-bottom: 1px solid #ffffff;
-  padding: 20px 0;
-}
-
-.faq__item summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  cursor: pointer;
-  list-style: none;
-}
-
-.faq__item summary::-webkit-details-marker {
-  display: none;
-}
-
-.faq__num {
-  color: #94a3b8;
-  margin-right: 16px;
-}
-
-.faq__question {
-  letter-spacing: -0.5px;
-  color: #221c1c;
-  flex: 1;
-}
-
-.faq__chevron {
-  width: 20px;
-  height: 20px;
-  transition: transform 0.2s ease;
-  flex-shrink: 0;
-}
-
-.faq__item[open] .faq__chevron {
-  transform: rotate(180deg);
-}
-
-.faq__answer {
-  margin-top: 16px;
-  padding-left: 46px;
-  color: #475569;
-  line-height: 1.5;
-  max-width: 558px;
+.contact-map {
+  flex: 1 1 400px;
+  min-height: 500px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
   overflow: hidden;
 }
 
-/* The script adds .is-animated to an item the moment it drives it, so an
-   answer only gains a transition once something is actually animating it -
-   with no JS these are plain paragraphs inside a plain <details>.
-
-   Height, gap and opacity move together: without the margin the answer would
-   jump its own gap into place at the start of the open. */
-.faq__item.is-animated .faq__answer {
-  transition: height 0.42s cubic-bezier(0.22, 0.61, 0.36, 1),
-    margin-top 0.42s cubic-bezier(0.22, 0.61, 0.36, 1),
-    opacity 0.32s ease;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .faq__item.is-animated .faq__answer {
-    transition: none;
-  }
-}
-
-@media (max-width: 900px) {
-  .about-statement {
-    padding: 80px 32px;
-  }
-
-  .industries__grid {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .industries__cell:nth-child(3n) {
-    border-right: 1px solid #dadbd0;
-  }
-
-  .industries__cell:nth-child(2n) {
-    border-right: none;
-  }
-
-  .about-hero__decor {
-    display: none;
-  }
-}
-
-@media (max-width: 560px) {
-  .industries__grid {
-    grid-template-columns: 1fr;
-  }
-
-  .industries__cell {
-    border-right: none !important;
-  }
-
-}
-
-/* ---------- Solution page ---------- */
-.solution-hero {
-  background: var(--ivory);
-  text-align: center;
-  padding: 100px 10% 130px;
-}
-
-.solution-hero h1 {
-  color: #006a65;
-  margin-bottom: 16px;
-}
-
-.solution-hero p {
-  color: #5c5c5c;
-  line-height: 1.5;
-}
-
-/* ---------- What Generates Power Quality Problems ----------
-   COLOUR LOG — values before the 2026-09-21 pass, to undo if wanted:
-     .generates              background #fafaef   (unchanged)
-     .generates h2           color      #6b6b6b   (unchanged)
-     .generates h2 .bold     color      #1a1c16   (unchanged)
-     .generates > p          color      #8a8a8a   -> #505050
-     .generates__card        background #eeeee1   -> #f1f1e6 + 1px solid #bcc9c7
-     .generates__card h3     color      #1a1c16   (unchanged)
-     .generates__card p      color      #8a8a8a   -> #3d4948
-     .generates__card--cta   background #fafaef   (unchanged)
-                             border     1.5px dashed #7ecfc9 -> 1.5px solid #ff8c40
-
-   Why: the cards sat four points off the section behind them in a slightly
-   different hue, so they read as a smudge rather than as cards. They now use
-   the same cream-on-cream-with-a-border treatment as .why-card. The body
-   greys were lifted to the site's own text colours, and the CTA's dashed
-   teal outline (which read as an empty dropzone) became a solid orange one
-   to match the button it contains. */
-.generates {
-  background: #fafaef;
-  padding: 112px 10%;
-  text-align: center;
-}
-
-.generates h2 {
-  color: #6b6b6b;
-  margin-bottom: 16px;
-}
-
-.generates h2 .bold {
-  color: #1a1c16;
-  font-weight: bold;
-}
-
-.generates > p {
-  color: #505050;
-  margin-bottom: 64px;
-  line-height: 1.5;
-}
-
-.generates__grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(200px, 1fr));
-  gap: 28px;
-  max-width: 1152px;
-  margin: 0 auto;
-  text-align: left;
-}
-
-.generates__card {
-  background: var(--ivory-card);
-  border: 1px solid #bcc9c7;
-  border-radius: 8px;
-  padding: 36px 32px;
-}
-
-/* The icons have different aspect ratios (223x127 through 200x200), so they
-   are sized by height and left to find their own width. Their fills are
-   currentColor, so the accent is set once here. */
-.generates__icon {
-  height: 34px;
-  width: auto;
-  margin-bottom: 28px;
-  color: #ff8c40;
-  display: block;
-  overflow: visible;
-}
-
-.generates__card h3 {
-  color: #1a1c16;
-  margin-bottom: 14px;
-}
-
-.generates__card p {
-  color: #3d4948;
-  line-height: 1.5;
-}
-
-.generates__card--cta {
-  background: #fafaef;
-  border: 1.5px solid #ff8c40;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.generates__card--cta .btn {
-  align-self: flex-start;
-  padding: 10px 22px;
-  margin-top: 12px;
-}
-
-/* ---------- "The Problems These Loads Create." — pinned while read ----------
-   Same treatment as Our Values: three screens tall with the content stuck to
-   the viewport, so scrolling deals the cards instead of moving the page. The
-   front card lifts and fades out, and the one behind it steps forward into
-   its place. */
-/* Only as tall as its content and never pinned: a pinned panel filled the
-   whole screen with dark teal for the length of the flip. The cards are dealt
-   by scroll position as the section passes the middle of the viewport. */
-.problems {
-  position: relative;
-  padding: 0 10%;
-  background: #1a4146;
-  text-align: center;
-}
-
-.problems__sticky {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  box-sizing: border-box;
-  padding: 80px 0;
-  overflow: hidden;
-}
-
-.problems h2 {
-  color: #f1f1e6;
-  margin-bottom: 48px;
-}
-
-.problems .accent {
-  color: #ff8c40;
-}
-
-/* One grid cell holds all three cards, so they overlap exactly and the stack
-   takes the height of the tallest without any card being taken out of flow —
-   a shorter card can never let the section collapse around it. */
-.problems__stack {
-  position: relative;
-  display: grid;
-  width: 100%;
-  max-width: 820px;
-  /* bottom margin leaves room for the two layers cascading below */
-  margin: 0 auto 104px;
-}
-
-.problem-card {
-  grid-area: 1 / 1;
-  background: #ff8c40;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  gap: 32px;
-  padding: 36px 40px;
-  text-align: left;
-  will-change: transform, opacity;
-  transition: transform 0.62s cubic-bezier(0.4, 0, 0.2, 1),
-    opacity 0.5s ease;
-}
-
-/* Only the front card shows its contents; the ones behind read as the plain
-   stacked blocks of the design, and their copy fades up as they arrive. */
-.problem-card > * {
-  transition: opacity 0.42s ease;
-}
-
-.problem-card:not(.is-front) {
-  pointer-events: none;
-}
-
-.problem-card:not(.is-front) > * {
-  opacity: 0;
-}
-
-.problem-card.is-front {
-  transform: translate(0, 0);
-  opacity: 1;
-  z-index: 3;
-}
-
-.problem-card.is-next {
-  transform: translate(30px, 52px);
-  opacity: 0.85;
-  z-index: 2;
-}
-
-.problem-card.is-later {
-  transform: translate(60px, 104px);
-  opacity: 0.7;
-  z-index: 1;
-}
-
-/* Dealt: lifts clear of the stack on its way out, above the card it is
-   uncovering rather than behind it. */
-.problem-card.is-past {
-  transform: translate(-18px, -70px) scale(1.03);
-  opacity: 0;
-  z-index: 4;
-}
-
-/* Seeding frame — position the cards without animating them in. */
-.problems__stack.is-static .problem-card,
-.problems__stack.is-static .problem-card > * {
-  transition: none;
-}
-
-.problem-card__num {
-  font-weight: bold;
-  color: #1a4146;
-  flex-shrink: 0;
-}
-
-.problem-card__text h3 {
-  color: #1a4146;
-  margin-bottom: 8px;
-}
-
-.problem-card__text p {
-  color: #39383a;
-  max-width: 420px;
-}
-
-.problem-card__icon {
-  width: 150px;
-  height: 100px;
-  margin-left: auto;
-  flex-shrink: 0;
-  overflow: visible;
-}
-
-/* ---------- Problem card icons — entry animations ----------
-   From the YANSA icon-animation package (Part B). Each icon draws itself in
-   when its card is dealt to the front, and again whenever it comes back to
-   the front. .is-inview is set by the script once the section is on screen,
-   so the first card doesn't play its animation while it is still below the
-   fold. Keyframes are prefixed pq- so they can't clash with others.
-
-   Outside the animation the icons sit at rest. The one part whose rest pose
-   comes from its keyframe, the swung vector on Power Factor, gets that pose
-   set statically here. */
-.problem-card__icon .anim-swing {
-  transform: rotate(-38.9deg);
-  transform-origin: 85px 150px;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  @keyframes pqDraw    { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
-  @keyframes pqPopIn   { from { opacity: 0; transform: scale(0.4); } to { opacity: 1; transform: scale(1); } }
-  @keyframes pqExtend  { from { transform: scale(0); } to { transform: scale(1); } }
-  @keyframes pqFadeIn  { from { opacity: 0; } to { opacity: 1; } }
-  @keyframes pqStretch { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-  @keyframes pqSwingUp { from { transform: rotate(0deg); } to { transform: rotate(-38.9deg); } }
-
-  .problem-card__icon .anim-draw-wave,
-  .problem-card__icon .anim-dial,
-  .problem-card__icon .anim-pf-arc {
-    stroke-dasharray: 1;
-  }
-
-  /* Harmonic Distortion */
-  .problems.is-inview .is-front .anim-draw-wave { animation: pqDraw 1.6s cubic-bezier(0.35, 0, 0.5, 1) both; }
-
-  /* Voltage Instability */
-  .problems.is-inview .is-front .anim-dial   { animation: pqDraw 1.2s cubic-bezier(0.4, 0, 0.55, 1) both; }
-  .problems.is-inview .is-front .anim-band   { animation: pqFadeIn 0.3s ease-out 1.05s both; }
-  .problems.is-inview .is-front .anim-tick   { animation: pqPopIn 0.25s cubic-bezier(0.3, 1.5, 0.6, 1) both; }
-  .problems.is-inview .is-front .anim-tick-1 { animation-delay: 0.08s; }
-  .problems.is-inview .is-front .anim-tick-2 { animation-delay: 0.34s; }
-  .problems.is-inview .is-front .anim-tick-3 { animation-delay: 0.6s; }
-  .problems.is-inview .is-front .anim-tick-4 { animation-delay: 0.86s; }
-  .problems.is-inview .is-front .anim-tick-5 { animation-delay: 1.1s; }
-  .problems.is-inview .is-front .anim-hub    { animation: pqPopIn 0.3s cubic-bezier(0.3, 1.5, 0.6, 1) both; }
-  .problems.is-inview .is-front .anim-needle { animation: pqExtend 1s cubic-bezier(0.25, 1.15, 0.4, 1) 0.15s both; }
-
-  /* Power Factor */
-  .problems.is-inview .is-front .anim-origin { animation: pqPopIn 0.3s cubic-bezier(0.3, 1.5, 0.6, 1) both; }
-  .problems.is-inview .is-front .anim-h      { animation: pqStretch 0.55s cubic-bezier(0.3, 0, 0.4, 1) 0.1s both; }
-  .problems.is-inview .is-front .anim-h-head { animation: pqFadeIn 0.2s ease-out 0.6s both; }
-  .problems.is-inview .is-front .anim-swing  { animation: pqSwingUp 0.5s cubic-bezier(0.35, 0, 0.3, 1.1) 0.7s both; }
-  .problems.is-inview .is-front .anim-d-head { animation: pqFadeIn 0.2s ease-out 1.15s both; }
-  .problems.is-inview .is-front .anim-pf-arc { animation: pqDraw 0.4s ease-out 1.1s both; }
-  .problems.is-inview .is-front .anim-phi    { animation: pqPopIn 0.3s cubic-bezier(0.3, 1.5, 0.6, 1) 1.3s both; }
-}
-
-/* Origins: fill-box parts scale about their own centre; the needle and the
-   vectors pivot on fixed viewBox points (gauge hub, vector origin). */
-.problem-card__icon .anim-tick,
-.problem-card__icon .anim-hub,
-.problem-card__icon .anim-origin,
-.problem-card__icon .anim-phi {
-  transform-box: fill-box;
-  transform-origin: center;
-}
-
-.problem-card__icon .anim-needle { transform-origin: 150px 160px; }
-.problem-card__icon .anim-h      { transform-origin: 85px 150px; }
-
-.problems__dots {
-  position: absolute;
-  right: 5%;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: center;
-}
-
-.problems__dots .dot {
-  width: 6px;
-  height: 20px;
-  border-radius: 3px;
-  background: rgba(255, 255, 255, 0.25);
-  transition: background-color 0.4s ease, height 0.4s ease;
-}
-
-.problems__dots .dot.is-active {
-  background: #ff8c40;
-  height: 24px;
-}
-
-.solutions-row {
-  background: #fafaef;
-  padding: 56px 10%;
-}
-
-.solutions-row__inner {
-  max-width: 1152px;
-  margin: 0 auto;
-}
-
-.solutions-row h2 {
-  color: #1a1c16;
-  margin-bottom: 12px;
-}
-
-.solutions-row__inner > p {
-  color: #8a8a8a;
-  max-width: 700px;
-  margin-bottom: 32px;
-  line-height: 1.5;
-}
-
-.solutions-row__grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-}
-
-/* The card is the button that opens the dialog, so it is reset to look like
-   the panel it used to be. */
-.solution-card {
-  background: #1c1c1c;
-  border-radius: 8px;
-  aspect-ratio: 1;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: flex-end;
-  width: 100%;
-  padding: 0;
-  border: 0;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-  transition: opacity 0.2s ease;
-}
-
-.solution-card:focus-visible {
-  outline: 2px solid #ff8c40;
-  outline-offset: 3px;
-}
-
-.solution-card .plus {
-  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.solution-card:hover .plus {
-  transform: rotate(90deg) scale(1.1);
-}
-
-/* Hidden in the card; cloned into the dialog when it opens. Kept in the
-   markup rather than in a <template> so the copy is still real page content. */
-.solution-card__detail[hidden] {
-  display: none;
-}
-
-/* While its dialog is open the card itself is invisible, so the panel reads
-   as the card having grown rather than as a copy appearing on top of it. */
-.solution-card.is-morphing {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.solution-card--photo {
-  background: #ffffff;
-}
-
-.solution-card--photo img {
-  position: absolute;
-  inset: 0;
+.contact-map img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.solution-card__label {
-  position: relative;
-  width: 100%;
+.contact-form-col {
+  flex: 1 1 400px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 16px;
-  background: rgba(0,0,0,0.55);
-  color: #f1f1e6;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.solution-card__label .plus {
-  color: #ff8c40;
-}
-
-.inaction {
-  background: #1a4146;
-  padding: 90px 10%;
-}
-
-.inaction__inner {
-  max-width: 1152px;
-  margin: 0 auto;
-}
-
-.inaction h2 {
-  color: #f1f1e6;
+.contact-form-col h2 {
+  color: #00423f;
   margin-bottom: 8px;
 }
 
-.inaction__inner > p {
-  color: #95c3c3;
+.contact-form-col__sub {
+  color: var(--text);
   margin-bottom: 40px;
 }
 
-.inaction__grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(220px, 1fr));
+.contact-form {
+  display: flex;
+  flex-direction: column;
   gap: 24px;
 }
 
-.inaction-card__photo {
-  height: 160px;
-  border-radius: 6px 6px 0 0;
-  background: #2a4d51;
+.contact-form .btn {
+  align-self: flex-start;
+  padding: 12px 48px;
+  font-weight: bold;
+  letter-spacing: 0.7px;
+  margin-top: 8px;
 }
 
-.inaction-card__photo--1,
-.inaction-card__photo--2,
-.inaction-card__photo--3 {
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-.inaction-card__photo--1 { background-image: url("../images/inaction-bearing.jpg"); }
-.inaction-card__photo--2 { background-image: url("../images/inaction-penalties.jpg"); background-position: 30% center; }
-.inaction-card__photo--3 { background-image: url("../images/inaction-resonance.jpg"); background-position: 45% center; }
-
-.inaction-card {
-  background: #143338;
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.inaction-card__row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 16px 16px 8px;
-  flex-wrap: wrap;
-}
-
-.inaction-card__row h3 {
-  color: #f1f1e6;
-}
-
-.inaction-card__tag {
-  color: #ffb98a;
-  background: rgba(255, 140, 64, 0.15);
-  border: 1px solid rgba(255, 140, 64, 0.4);
-  padding: 3px 8px;
-  border-radius: 4px;
-  white-space: nowrap;
-}
-
-.inaction-card p {
-  color: #8fb0af;
-  padding: 0 16px 20px;
-  line-height: 1.5;
-}
-
-.results {
-  background: #fafaef;
-  padding: 90px 10%;
-}
-
-.results__inner {
-  max-width: 1152px;
-  margin: 0 auto;
-}
-
-.results h2 {
-  color: #1a1c16;
-  margin-bottom: 12px;
-}
-
-.results .accent-teal {
-  color: #039999;
-}
-
-.results__inner > p {
-  color: #5c5c5c;
-  max-width: 700px;
-  margin-bottom: 40px;
-}
-
-.results__list {
-  border-top: 1px solid #d8d8c8;
-  max-width: 1000px;
-}
-
-/* Each row is a button that morphs into the document panel, the same way a
-   solution card does. It was a <details> disclosure before, which could only
-   push the page open downwards. */
-.results__item {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  width: 100%;
-  padding: 24px 0;
-  border: 0;
-  border-bottom: 1px solid #d8d8c8;
-  background: none;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-  transition: opacity 0.2s ease;
-}
-
-.results__item:focus-visible {
-  outline: 2px solid #ff8c40;
-  outline-offset: 2px;
-}
-
-.results__plus {
-  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.results__item:hover .results__plus {
-  transform: rotate(90deg) scale(1.1);
-}
-
-/* Cloned into the dialog on open; kept in the markup so the copy is still
-   real page content. */
-.results__detail[hidden] {
-  display: none;
-}
-
-/* Invisible while its panel is open, so the panel reads as this row having
-   grown rather than as a copy appearing over it. */
-.results__item.is-morphing {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.results__num {
-  color: #7ecfc9;
-  width: 24px;
-  flex-shrink: 0;
-}
-
-.results__text {
+.form-field {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  flex: 1;
 }
 
-.results__title {
-  color: #1a1c16;
+.form-field label {
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text);
 }
 
-.results__desc {
-  color: #8a8a8a;
+.form-field input,
+.form-field textarea {
+  background: #ffffff;
+  border: 1px solid var(--mist);
+  border-radius: 8px;
+  padding: 16px 13px;
+  font-family: inherit;
+  color: #151515;
 }
 
-.results__plus {
-  color: #ff8c40;
-  flex-shrink: 0;
+.form-field textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.form-field input::placeholder,
+.form-field textarea::placeholder {
+  color: var(--line);
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+  outline: none;
+  border-color: var(--teal);
 }
 
 @media (max-width: 900px) {
-  .generates__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .solutions-row__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .inaction__grid {
-    grid-template-columns: 1fr;
-  }
-
-  .problem-card--active {
+  .contact-body__inner {
     flex-direction: column;
-    align-items: flex-start;
+  }
+
+  .contact-map {
+    min-height: 320px;
   }
 }
 
-@media (max-width: 560px) {
-  .generates__grid {
-    grid-template-columns: 1fr;
-  }
 
-  .solutions-row__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .results__item summary {
-    flex-wrap: wrap;
-  }
-}
-
-/* ---------- Footer ---------- */
+/* =========================================================
+   11. FOOTER
+   ========================================================= */
 .footer {
-  background: #1a4146;
-  color: #f1f1e6;
+  background: var(--petrol);
+  color: var(--text-on-dark);
 }
 
 .footer__cta {
   text-align: center;
-  padding: 64px 24px 32px;
-  max-width: 768px;
+  padding: 64px 16px 32px;
+  max-width: min(1040px, 94vw);
   margin: 0 auto;
 }
 
-/* Holds either the static mark or, once JS has mounted it, the rippling
-   version. Fixed box either way so the heading below never shifts. */
+/* Fixed box, so the heading never shifts when the script swaps the static
+   mark for the animated one. */
 .footer__icon {
   width: 56px;
   height: 56px;
@@ -2710,7 +2984,7 @@ ul {
 }
 
 .footer__cta p {
-  color: #a9d1d7;
+  color: var(--mist);
   margin-bottom: 20px;
 }
 
@@ -2748,7 +3022,7 @@ ul {
 }
 
 .footer__brand p {
-  color: #a9d1d7;
+  color: var(--mist);
   margin-bottom: 16px;
 }
 
@@ -2778,57 +3052,10 @@ ul {
 }
 
 .footer__col a {
-  color: #a9d1d7;
+  color: var(--mist);
 }
 
-/* ---------- Responsive ---------- */
 @media (max-width: 900px) {
-  .navbar__links {
-    display: none;
-  }
-
-  .diagnosis {
-    padding: 80px 32px;
-  }
-
-  .why__grid {
-    grid-template-columns: 1fr;
-  }
-
-  .symptoms__grid {
-    grid-template-columns: 1fr;
-  }
-
-  /* No peek-stack on small screens: the cards sit one under the other
-     at their natural height, so the negative margins are undone. */
-  .case-card {
-    flex-direction: column;
-    align-items: stretch;
-    text-align: left;
-    min-height: 0;
-  }
-
-  .case-card__text {
-    padding: 28px;
-  }
-
-  .case-card__photo {
-    width: 100%;
-    height: 180px;
-  }
-
-  .case-card--01,
-  .case-card--02,
-  .case-card--03 {
-    width: 100%;
-    border-radius: 8px;
-  }
-
-  .case-card--02,
-  .case-card--03 {
-    margin-top: 16px;
-  }
-
   .footer__bottom {
     flex-direction: column;
     align-items: flex-start;
@@ -2837,716 +3064,13 @@ ul {
 
 
 /* =========================================================
-   HERO OVERLAY — inner page heroes (about / contact /
-   solution / yanq intro). The hero image covers the whole
-   section full-bleed, with the heading + subtext centred
-   on top of it. The home page hero (.hero) is unchanged.
+   12. DIALOGS & FORMS
    ========================================================= */
-:root {
-  --nav-height: 89px;
-  --inner-hero-height: calc(100vh - var(--nav-height));
 
-  /* Home page rhythm. Every content section breathes the same amount above
-     and below, and every heading block sits the same distance from what it
-     introduces. These were hand-set per section and had drifted to five
-     different values each. */
-  --section-pad-y: 120px;
-  --header-gap: 48px;
-}
-
-.contact-hero,
-.yanq-hero-intro,
-.about-hero,
-.solution-hero {
-  padding: 0;
-  min-height: var(--inner-hero-height);
-  position: relative;
-  overflow: hidden;
-}
-
-/* Full-bleed hero image: edge to edge, full section height */
-.header-placeholder {
-  position: relative;
-  width: 100%;
-  max-width: none;
-  height: var(--inner-hero-height);
-  min-height: var(--inner-hero-height);
-  margin: 0;
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
-}
-
-.header-placeholder img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-/* Scrim so the type stays readable over any photo */
-.header-placeholder__overlay::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(4, 25, 23, 0.55) 0%,
-    rgba(4, 25, 23, 0.35) 50%,
-    rgba(4, 25, 23, 0.55) 100%
-  );
-}
-
-.header-placeholder__overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 40px 8%;
-}
-
-.header-placeholder__overlay > * {
-  position: relative;
-  z-index: 1;
-  max-width: 900px;
-}
-
-.contact-hero .header-placeholder__overlay h1,
-.yanq-hero-intro .header-placeholder__overlay h1,
-.about-hero .header-placeholder__overlay h1,
-.solution-hero .header-placeholder__overlay h1 {
-  color: #ffffff;
-  margin-bottom: 16px;
-  text-shadow: 0 2px 18px rgba(4, 25, 23, 0.45);
-}
-
-.contact-hero .header-placeholder__overlay p,
-.yanq-hero-intro .header-placeholder__overlay p,
-.about-hero .header-placeholder__overlay p,
-.solution-hero .header-placeholder__overlay p {
-  color: rgba(255, 255, 255, 0.92);
-  margin: 0 auto;
-  text-shadow: 0 1px 12px rgba(4, 25, 23, 0.45);
-}
-
-/* About-hero decor squares float above the full-bleed image */
-.about-hero__decor {
-  z-index: 3;
-}
-
-@media (max-width: 560px) {
-  .header-placeholder__overlay {
-    padding: 24px 6%;
-  }
-}
-
-/* =========================================================
-   FOOTER CTA HEADLINE
-   The headline is a single sentence that must stay on one
-   line. The block is widened to give it room, and the type
-   scales with the viewport so it never wraps on narrow
-   screens. 34px is the ceiling on desktop.
-   ========================================================= */
-.footer__cta {
-  max-width: min(1040px, 94vw);
-  padding-left: 16px;
-  padding-right: 16px;
-}
-
-/* nowrap keeps it on one line; the vw-based size is derived from the
-   sentence's own width so it always clears the container's inner width. */
-/* =========================================================
-   TYPEWRITER — about page statement
-   Vanilla port of the motion/react typewriter: characters
-   fade in one at a time while a caret glides along behind
-   them. Every character is in the DOM from the start (just
-   transparent), so the layout never shifts and the caret
-   never has to chase a reflow. The caret's glide is matched
-   to the typing interval so it always leads the text rather
-   than lagging behind characters that have already faded in.
-   ========================================================= */
-.about-statement p.tw {
-  position: relative;
-}
-
-.tw-char {
-  opacity: 0;
-  transition: opacity 120ms cubic-bezier(0.22, 0.61, 0.36, 1);
-}
-
-.tw-char.is-in {
-  opacity: 1;
-}
-
-/* The caret is positioned, not inline, so it can glide between
-   characters instead of snapping from one to the next. Its
-   transition matches TW_STEP in script.js: any longer and the
-   caret falls behind the characters it is meant to be typing. */
-.tw-caret {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 2px;
-  height: 1em;
-  background: #ff8c40;
-  border-radius: 1px;
-  transform: translate(0, 0);
-  transition: transform 30ms linear;
-  animation: tw-blink 0.7s linear infinite;
-  pointer-events: none;
-  will-change: transform;
-}
-
-/* Wrapping to a new line is a jump, not a glide. */
-.tw-caret.is-jump {
-  transition: none;
-}
-
-@keyframes tw-blink {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .tw-char {
-    opacity: 1;
-    transition: none;
-  }
-
-  .tw-caret {
-    display: none;
-  }
-}
-
-/* =========================================================
-   TYPOGRAPHY
-   The single source of font-size for the whole site. Nothing
-   above this block sets one; every size below comes from the
-   scale, so a tier is changed in one place and the responsive
-   steps are done by redefining the scale rather than by
-   restating every selector.
-
-   Display 84 · H1 52 · H2 42 · Statement 34 · H3 30 · H4 24
-   Lead 19 · Body 17 · Small 15 · Label 14
-
-   Every tier is multiplied by --fs-scale where it is used,
-   not where it is declared: a custom property substitutes its
-   own var()s at the element declaring it, so folding the
-   multiplier into the tokens here would bake in :root's scale
-   of 1 and inherit that everywhere. Applied at the font-size
-   instead, a section can set --fs-scale and re-size all of its
-   type without restating a single tier, and the responsive
-   steps below keep working because they only change the base.
-   ========================================================= */
-:root {
-  --fs-scale: 1;
-  --fs-display: 84px;
-  --fs-numeral: 76px;
-  --fs-h1: 52px;
-  --fs-h2: 42px;
-  --fs-statement: 34px;
-  --fs-h3: 30px;
-  --fs-h4: 24px;
-  --fs-copy-lg: 20px;
-  --fs-lead: 19px;
-  --fs-body: 17px;
-  --fs-small: 15px;
-  --fs-label: 14px;
-}
-
-/* ---------- About page ----------
-   Everything below the hero reads one step larger. 1.1 is the browser zoom
-   the page was judged at; the hero is deliberately left at 1 so its display
-   type and the floating decor keep the proportions they were placed to.
-
-   The shared navbar and footer are left alone too - scaling those here would
-   make them disagree with every other page. */
-.about-statement,
-.about-measure,
-.about-values,
-.industries,
-.faq {
-  --fs-scale: 1.1;
-}
-
-/* Display — the one oversized statement on the site */
-.diagnosis h2 {
-  font-size: calc(var(--fs-display) * var(--fs-scale, 1));
-  line-height: 1.05;
-  letter-spacing: -2px;
-}
-
-/* Numeral — the outsized figure on a problem card */
-.problem-card__num {
-  font-size: calc(var(--fs-numeral) * var(--fs-scale, 1));
-  line-height: 1;
-  letter-spacing: -2px;
-}
-
-/* H1 — page hero titles */
-.hero__heading h1,
-.contact-hero h1,
-.yanq-hero-intro h1,
-.about-hero h1,
-.solution-hero h1 {
-  font-size: calc(var(--fs-h1) * var(--fs-scale, 1));
-  line-height: 1.15;
-  letter-spacing: -1px;
-}
-
-/* H2 — section headings. Every section heading is this size,
-   including the closing call to action in the footer. */
-.diagnosis__eyebrow,
-.symptoms__header h2,
-.why__header h2,
-.cases__header h2,
-.contact-form-col h2,
-.yanq-hero h2,
-.yanq-works-intro h2,
-.yanq-step__title,
-.yanq-delivers h2,
-.about-measure h2,
-.about-values h2,
-.industries h2,
-.faq__header h2,
-.generates h2,
-.solutions-row h2,
-.problems h2,
-.inaction h2,
-.results h2,
-.footer__cta h2 {
-  font-size: calc(var(--fs-h2) * var(--fs-scale, 1));
-  line-height: 1.2;
-  letter-spacing: -0.5px;
-}
-
-/* Statement — pull quotes and standalone claims */
-.quote p,
-.yanq-works-intro__quote,
-.about-statement p {
-  font-size: calc(var(--fs-statement) * var(--fs-scale, 1));
-  line-height: 1.4;
-  letter-spacing: -0.3px;
-}
-
-/* H3 — sub-section headings and figure labels.
-   A step heading sits under a section heading, so it is a tier below it;
-   card titles are a tier below that again, in H4. Both are written as <h3>
-   because they are both third-level in their page's outline. */
-.yanq-step__text h3,
-.deliver-stat h3,
-.case-card__num,
-.case-card__title {
-  font-size: calc(var(--fs-h3) * var(--fs-scale, 1));
-  line-height: 1.25;
-  letter-spacing: -0.3px;
-}
-
-/* H4 — card titles */
-.why-card h3,
-.symptom-card__title,
-.inaction-card__row h3,
-.results__title,
-.problem-card__text h3,
-.generates__card h3,
-.faq__question {
-  font-size: calc(var(--fs-h4) * var(--fs-scale, 1));
-  line-height: 1.3;
-  letter-spacing: -0.2px;
-}
-
-/* The rotating statement's copy, a step above a normal lead */
-.about-measure p {
-  font-size: calc(var(--fs-copy-lg) * var(--fs-scale, 1));
-  line-height: 1.5;
-}
-
-/* Lead — the paragraph that introduces a section */
-.hero__heading p,
-.diagnosis__body,
-.symptoms__header p,
-.why__header p,
-.cases__header p,
-.case-card p,
-.case-card__more,
-.contact-hero p,
-.contact-form-col__sub,
-.yanq-hero-intro p,
-.yanq-hero__body,
-.about-hero p,
-.about-values__copy,
-.solution-hero p,
-.generates > p,
-.solutions-row__inner > p,
-.inaction__inner > p,
-.results__inner > p,
-.results__plus,
-.industries > p,
-.faq__header p,
-.footer__cta p {
-  font-size: calc(var(--fs-lead) * var(--fs-scale, 1));
-  line-height: 1.6;
-}
-
-/* Body — running copy, navigation, controls */
-.btn,
-.navbar__links a,
-.why-card p,
-.symptom-card__detail p,
-.yanq-step__text > p,
-.industries__cell,
-.faq__answer,
-.results__desc,
-.solution-card__label .plus,
-.form-field input,
-.form-field textarea,
-.footer__brand p,
-.footer__col a {
-  font-size: calc(var(--fs-body) * var(--fs-scale, 1));
-  line-height: 1.6;
-}
-
-/* Small — dense copy inside compact cards */
-.generates__card p,
-.problem-card__text p,
-.inaction-card p,
-.deliver-stat p,
-.solution-card__label {
-  font-size: calc(var(--fs-small) * var(--fs-scale, 1));
-  line-height: 1.55;
-}
-
-/* Label — eyebrows, tags, counters, form labels */
-.yanq-hero__label,
-.yanq-step__number,
-.yanq-step__tag,
-.yanq-step__sampling,
-.yanq-pill,
-.inaction-card__tag,
-.results__num,
-.faq__num,
-.form-field label {
-  font-size: calc(var(--fs-label) * var(--fs-scale, 1));
-  line-height: 1.4;
-}
-
-/* ---------- Responsive scale ----------
-   Last in the file so these actually win: the tiers above are
-   unconditional, and an earlier media query would lose to them
-   on specificity ties regardless of the viewport. */
-@media (max-width: 1100px) {
-  :root {
-    --fs-display: 64px;
-    --fs-numeral: 60px;
-    --fs-h1: 44px;
-    --fs-h2: 36px;
-    --fs-statement: 29px;
-    --fs-h3: 26px;
-    --fs-h4: 22px;
-    --fs-copy-lg: 19px;
-  }
-}
-
-@media (max-width: 820px) {
-  :root {
-    --fs-display: 46px;
-    --fs-numeral: 48px;
-    --fs-h1: 34px;
-    --fs-h2: 29px;
-    --fs-statement: 23px;
-    --fs-h3: 22px;
-    --fs-h4: 20px;
-    --fs-copy-lg: 18px;
-    --fs-lead: 17px;
-  }
-}
-
-@media (max-width: 560px) {
-  :root {
-    --fs-display: 36px;
-    --fs-numeral: 40px;
-    --fs-h1: 29px;
-    --fs-h2: 25px;
-    --fs-statement: 20px;
-    --fs-h3: 20px;
-    --fs-h4: 18px;
-    --fs-copy-lg: 17px;
-    --fs-lead: 16px;
-    --fs-body: 16px;
-  }
-}
-
-/* =========================================================
-   HOME HERO — scroll-driven video reveal
-
-   What is written here IS the settled design: heading, then
-   the framed media, then the buttons. It stands on its own
-   with no JavaScript, which is also what narrow screens and
-   reduced-motion users get.
-
-   The script opts into the animation by adding .is-scrolly,
-   which pins the stage and lifts the media out of the frame
-   so it can be driven from full bleed back into it. Because
-   the end state is the plain layout, progress 1 always
-   resolves to the real design rather than to numbers baked
-   into the script.
-   ========================================================= */
-:root {
-  /* Sized so the tallest step (one open card plus a strip for each of the
-     others) still clears the header inside a single viewport. */
-  --case-strip: 104px;
-  --case-full: 360px;
-  --cases-runway: 140vh;
-  --cases-stage-h: calc(100vh - var(--nav-height));
-  --hero-runway: 110vh;
-  --hero-stage-h: calc(100vh - var(--nav-height));
-  --hero-frame-w: 762px;
-}
-
-.hero {
-  background: var(--ivory);
-  display: block;
-  padding: 0;
-  min-height: 0;
-  position: relative;
-}
-
-.hero__stage {
-  position: relative;
-  padding: 77px 0 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Deliberately unpositioned: the media is positioned against the sticky
-   stage, so this must not become its containing block. Stacking order is
-   handled on the children instead. */
-.hero__layout {
-  width: 100%;
-  padding: 0 10%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.hero__heading {
-  position: relative;
-  z-index: 1;
-  transform-origin: 50% 50%;
-}
-
-.hero__heading h1 {
-  color: #007f7f;
-  letter-spacing: -1px;
-  margin-bottom: 16px;
-}
-
-.hero__heading p {
-  color: #151515;
-  opacity: 0.8;
-  margin-bottom: 0;
-}
-
-.hero__frame-slot {
-  width: 100%;
-  max-width: var(--hero-frame-w);
-  aspect-ratio: 16 / 9;
-  margin-top: 40px;
-}
-
-.hero__media {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background: #e3e3d8;
-  border: 10px solid #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.12);
-}
-
-.hero__media img,
-.hero__media video {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* Only needed over the full-bleed state, so it is off by default. */
-.hero__media-scrim {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  pointer-events: none;
-  background: linear-gradient(
-    180deg,
-    rgba(4, 25, 23, 0.5) 0%,
-    rgba(4, 25, 23, 0.32) 50%,
-    rgba(4, 25, 23, 0.5) 100%
-  );
-}
-
-.hero__ctas {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  gap: 24px;
-  margin-top: 40px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-/* ---- Animated mode (added by the script) ---- */
-
-/* The extra height past the stage is the scroll runway the
-   animation is played across. */
-.hero.is-scrolly {
-  height: calc(var(--hero-stage-h) + var(--hero-runway));
-}
-
-.hero.is-scrolly .hero__stage {
-  position: sticky;
-  top: var(--nav-height);
-  height: var(--hero-stage-h);
-  padding: 0;
-  overflow: hidden;
-}
-
-.hero.is-scrolly .hero__heading,
-.hero.is-scrolly .hero__ctas {
-  will-change: transform;
-}
-
-/* Lifted out of the frame so the script can size it freely.
-   Sizing it, rather than scaling it, keeps object-fit honest:
-   full bleed shows a wide crop and the box shows the framed
-   composition, instead of one being a stretched copy. */
-.hero.is-scrolly .hero__media {
-  position: absolute;
-  z-index: 0;
-  left: 0;
-  top: 0;
-  border-width: 0;
-  border-radius: 0;
-  box-shadow: none;
-  will-change: width, height, left, top;
-}
-
-@media (max-width: 768px) {
-  .hero__stage {
-    padding: 48px 0 64px;
-  }
-}
-/* =========================================================
-   SCROLL REVEAL — site-wide entrance motion
-
-   One entrance treatment shared by every section: an element
-   starts a little low and transparent and eases into place the
-   first time it reaches the viewport. Sections used to arrive
-   fully formed, which read as rigid; this gives the page a
-   settling motion as it is scrolled.
-
-   Nothing here applies until the script adds .js-reveal to
-   <html>, so with JavaScript off the page is simply the page.
-   The script also strips the data-reveal attribute once an
-   element has finished arriving, which hands it back to its own
-   stylesheet rules — without that, the `transform: none` below
-   would outrank the hover transforms and the bespoke section
-   animations for the rest of the visit.
-   ========================================================= */
-.js-reveal [data-reveal] {
-  opacity: 0;
-  transform: translateY(var(--reveal-shift, 24px));
-  transition: opacity var(--reveal-dur, 0.7s) cubic-bezier(0.22, 0.61, 0.36, 1),
-    transform var(--reveal-dur, 0.7s) cubic-bezier(0.22, 0.61, 0.36, 1);
-  transition-delay: var(--reveal-delay, 0ms);
-  will-change: opacity, transform;
-}
-
-/* Cards whose transform is written by another script (the tilting
-   symptom/why cards, the dealt problem cards, the overlapped case
-   stack) fade only, so nothing fights over the property. */
-.js-reveal [data-reveal="fade"] {
-  transform: none;
-}
-
-.js-reveal [data-reveal].is-revealed {
-  opacity: 1;
-  transform: none;
-}
-
-/* ---------- Our Values — the heading settles before the panel lands ----------
-   The panel is pinned, so without an entrance the heading is simply
-   already there the moment the previous section clears. Arming it
-   while that section still fills the screen means the heading rises
-   into its fixed position and is settled by the time the reader
-   arrives, with the tag and copy following a beat behind.
-
-   Both classes come off again once the entrance has played: the
-   rules below would otherwise keep overriding .about-values__copy's
-   own swap transition every time a value changes. */
-.about-values.is-armed .about-values__bars,
-.about-values.is-armed .about-values__sticky > h2,
-.about-values.is-armed .about-values__copy {
-  opacity: 0;
-  transform: translateY(36px);
-  transition: opacity 0.72s cubic-bezier(0.22, 0.61, 0.36, 1),
-    transform 0.72s cubic-bezier(0.22, 0.61, 0.36, 1);
-}
-
-.about-values.is-armed.is-visible .about-values__bars,
-.about-values.is-armed.is-visible .about-values__sticky > h2,
-.about-values.is-armed.is-visible .about-values__copy {
-  opacity: 1;
-  transform: none;
-}
-
-/* Top to bottom, a beat apart: bars, heading, copy. */
-.about-values.is-armed.is-visible .about-values__sticky > h2 {
-  transition-delay: 0.12s;
-}
-
-.about-values.is-armed.is-visible .about-values__copy {
-  transition-delay: 0.2s;
-}
-
-/* The script opts out of all of this when motion is reduced; this is
-   the belt-and-braces half, in case a class is ever left behind. */
-@media (prefers-reduced-motion: reduce) {
-  .js-reveal [data-reveal],
-  .about-values.is-armed .about-values__bars,
-  .about-values.is-armed .about-values__sticky > h2,
-  .about-values.is-armed .about-values__copy {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-}
-
-/* =========================================================
-   SOLUTION DIALOG — the card grows into the panel
-   A vanilla port of the morphing-dialog: instead of a shared
-   layout engine, the panel is fixed-positioned and its
-   top/left/width/height are animated from the card's own
-   rect to the panel's resting rect. Geometry rather than a
-   scale transform, so nothing inside is ever distorted.
-   ========================================================= */
-.sol-dialog[hidden] {
-  display: none;
-}
-
+/* ---------- Solution dialog: the card grows into the panel ----------
+   The panel is fixed-positioned and its top/left/width/height are animated
+   from the card's rect to the resting rect. Geometry rather than a scale
+   transform, so nothing inside is ever distorted. */
 .sol-dialog {
   position: fixed;
   inset: 0;
@@ -3573,8 +3097,6 @@ ul {
   display: flex;
   flex-direction: column;
   box-shadow: 0 40px 90px rgba(0, 0, 0, 0.45);
-  /* Eased at both ends rather than launching hard out of the card: the
-     previous curve left at full speed, which read as a snap. */
   transition: top 0.52s cubic-bezier(0.4, 0, 0.2, 1),
     left 0.52s cubic-bezier(0.4, 0, 0.2, 1),
     width 0.52s cubic-bezier(0.4, 0, 0.2, 1),
@@ -3582,19 +3104,14 @@ ul {
     border-radius 0.52s ease;
 }
 
-/* The frame is placed before the transition is armed. */
+/* The frame is placed before the transition is armed */
 .sol-dialog.is-seeding .sol-dialog__panel {
   transition: none;
 }
 
-/* flex rather than height:100% so the panel can also be laid out at
-   height:auto — that is how its natural height is measured before the morph,
-   and a percentage height would not resolve against an auto-height parent. */
-/* The script pins this to the panel's resting width for the whole morph.
-   Without that the copy re-wraps and the image re-crops on every frame as
-   the frame's width animates, which is what made the open and close look
-   like the content was being stretched. Held at its final width it is simply
-   revealed by the growing frame, and clipped by it on the way back. */
+/* flex rather than height:100% so the panel can be measured at height:auto.
+   The script pins its width to the resting width for the whole morph, so the
+   copy is laid out once instead of re-wrapping every frame. */
 .sol-dialog__scroll {
   flex: 1 1 auto;
   min-height: 0;
@@ -3603,8 +3120,7 @@ ul {
   -webkit-overflow-scrolling: touch;
 }
 
-/* Fixed height for the same reason: a percentage here would collapse during
-   that measuring pass. */
+/* Fixed height: a percentage would collapse during the measuring pass */
 .sol-dialog__media {
   position: relative;
   width: 100%;
@@ -3624,8 +3140,7 @@ ul {
   display: none;
 }
 
-/* Everything except the frame itself fades, a beat after the move starts, so
-   the growth reads first and the copy arrives into a settled panel. */
+/* Everything but the frame fades in a beat after the move starts */
 .sol-dialog__content {
   padding: 32px 36px 40px;
   opacity: 0;
@@ -3640,7 +3155,7 @@ ul {
 }
 
 .sol-dialog__title {
-  color: #f1f1e6;
+  color: var(--text-on-dark);
   margin-bottom: 16px;
 }
 
@@ -3654,7 +3169,7 @@ ul {
 }
 
 .sol-dialog__body strong {
-  color: #f1f1e6;
+  color: var(--text-on-dark);
   font-weight: 400;
 }
 
@@ -3668,7 +3183,7 @@ ul {
   border: 0;
   border-radius: 50%;
   background: rgba(20, 20, 20, 0.72);
-  color: #f1f1e6;
+  color: var(--text-on-dark);
   font: inherit;
   line-height: 1;
   cursor: pointer;
@@ -3688,44 +3203,41 @@ ul {
 }
 
 .sol-dialog__close:focus-visible {
-  outline: 2px solid #ff8c40;
+  outline: 2px solid var(--orange);
   outline-offset: 2px;
 }
 
-/* Scroll is locked while a dialog is open so the panel cannot drift away
-   from the card it has to return to. Hiding the scrollbar narrows the
-   viewport, which would shunt the whole page sideways, so its width is
-   handed back as padding: the script measures it into --sol-scrollbar. */
-body.sol-dialog-open {
-  overflow: hidden;
-  padding-right: var(--sol-scrollbar, 0px);
-}
-
-/* Document variant — used when the source is a case study row rather than a
-   product card. Same morph, but light so it reads as a page of writing. */
+/* Light skin for the Results rows */
 .sol-dialog__panel--doc {
-  background: #fafaef;
+  background: var(--cream);
 }
 
 .sol-dialog__panel--doc .sol-dialog__title {
-  color: #1a1c16;
+  color: var(--ink);
 }
 
 .sol-dialog__panel--doc .sol-dialog__body {
-  color: #3d4948;
+  color: var(--text);
 }
 
 .sol-dialog__panel--doc .sol-dialog__body strong {
-  color: #1a1c16;
+  color: var(--ink);
 }
 
 .sol-dialog__panel--doc .sol-dialog__close {
   background: rgba(26, 65, 70, 0.12);
-  color: #1a1c16;
+  color: var(--ink);
 }
 
 .sol-dialog__panel--doc .sol-dialog__close:hover {
   background: rgba(26, 65, 70, 0.2);
+}
+
+/* Scroll is locked while a dialog is open; the scrollbar's width is handed
+   back as padding (measured by the script) so the page does not shift. */
+body.sol-dialog-open {
+  overflow: hidden;
+  padding-right: var(--sol-scrollbar, 0px);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3748,192 +3260,7 @@ body.sol-dialog-open {
   }
 }
 
-
-/* =========================================================
-   SOLUTION ICON HOVER ANIMATIONS
-   Each icon plays a short, one-shot animation while its card
-   is hovered, and returns to its exact resting state.
-
-   data-anim sits on .generates__card rather than on the <svg>
-   itself: the icons are ~34px in the corner of a large card,
-   so the card is the honest hover target. The selectors are
-   unchanged either way, since the animated parts are
-   descendants in both cases.
-   ========================================================= */
-@media (prefers-reduced-motion: no-preference) {
-  /* ---------- Variable Frequency Drives ---------- */
-  @keyframes vfdTravel {
-    from { transform: translateX(0); }
-    to { transform: translateX(-78px); }
-  }
-
-  [data-anim="vfd"]:hover .anim-wave {
-    animation: vfdTravel 0.9s cubic-bezier(0.4, 0, 0.6, 1);
-  }
-
-  @keyframes vfdBar {
-    0%, 100% { transform: scaleY(1); }
-    45%, 55% { transform: scaleY(1.1); }
-  }
-
-  [data-anim="vfd"]:hover .anim-bar {
-    animation: vfdBar 0.9s ease-in-out;
-    transform-box: fill-box;
-    transform-origin: center;
-  }
-
-  [data-anim="vfd"]:hover .anim-bar-b { animation-delay: 0.08s; }
-  [data-anim="vfd"]:hover .anim-bar-c { animation-delay: 0.16s; }
-
-  /* ---------- Switched Mode Power Supplies ---------- */
-  @keyframes smpsJoin {
-    0%, 100% { stroke-width: 16px; }
-    45%, 55% { stroke-width: 0px; }
-  }
-
-  [data-anim="smps"]:hover .anim-gap {
-    animation: smpsJoin 0.9s ease-in-out;
-  }
-
-  @keyframes smpsPin {
-    0%, 100% { transform: translateX(0); opacity: 1; }
-    50% { transform: translateX(9px); opacity: 0.5; }
-  }
-
-  [data-anim="smps"]:hover .anim-pin {
-    animation: smpsPin 0.9s ease-in-out;
-  }
-
-  [data-anim="smps"]:hover .anim-pin-b { animation-delay: 0.1s; }
-
-  @keyframes smpsBody {
-    0%, 100% { transform: scale(1); }
-    45%, 55% { transform: scale(1.04); }
-  }
-
-  [data-anim="smps"]:hover .anim-body {
-    animation: smpsBody 0.9s ease-in-out;
-    transform-box: fill-box;
-    transform-origin: center;
-  }
-
-  /* ---------- Paint Shops ---------- */
-  @keyframes paintSpray {
-    0% { transform: translateX(0); opacity: 0.85; }
-    55% { opacity: 1; }
-    100% { transform: translateX(14px); opacity: 0; }
-  }
-
-  [data-anim="paint"]:hover .anim-p {
-    animation: paintSpray 0.9s ease-out;
-  }
-
-  [data-anim="paint"]:hover .anim-p2 { animation-delay: 0.08s; }
-  [data-anim="paint"]:hover .anim-p3 { animation-delay: 0.16s; }
-
-  @keyframes paintRecoil {
-    0%, 100% { transform: translateX(0); }
-    45%, 55% { transform: translateX(-5px); }
-  }
-
-  [data-anim="paint"]:hover .anim-gun {
-    animation: paintRecoil 0.9s ease-in-out;
-  }
-
-  @keyframes paintNozzle {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    45%, 55% { transform: scaleX(1.25); opacity: 0.6; }
-  }
-
-  [data-anim="paint"]:hover .anim-nozzle {
-    animation: paintNozzle 0.9s ease-in-out;
-    transform-box: fill-box;
-    transform-origin: left center;
-  }
-
-  /* ---------- Heavy Switching Loads ---------- */
-  @keyframes heavyAmp {
-    0%, 100% { transform: scaleY(1); }
-    35% { transform: scaleY(1.2); }
-    70% { transform: scaleY(0.84); }
-  }
-
-  /* The spec asked for vector-effect="non-scaling-stroke" here so scaleY
-     would not thicken the line. That holds at the icon's native size, but
-     these render at 34px tall — a 0.3 scale — and non-scaling-stroke pins
-     the stroke to 16 screen pixels, which filled the whole icon solid. The
-     attribute is removed so the stroke scales with the artwork; at the
-     ~5px it actually draws, the 1.2 scaleY thickens it by under a pixel. */
-  [data-anim="heavy"]:hover .anim-square {
-    animation: heavyAmp 0.9s ease-in-out;
-    transform-origin: 0px 90px;
-  }
-
-  @keyframes heavyBolt {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    30% { transform: scale(1.12); opacity: 0.55; }
-    60% { transform: scale(0.94); opacity: 1; }
-  }
-
-  [data-anim="heavy"]:hover .anim-bolt {
-    animation: heavyBolt 0.9s ease-in-out;
-    transform-box: fill-box;
-    transform-origin: center;
-  }
-
-  /* ---------- Arc Furnaces ---------- */
-  @keyframes arcLift {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-  }
-
-  [data-anim="arc"]:hover .anim-dome {
-    animation: arcLift 0.9s ease-in-out;
-  }
-
-  @keyframes arcDip {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(4px); }
-  }
-
-  [data-anim="arc"]:hover .anim-rod {
-    animation: arcDip 0.9s ease-in-out;
-  }
-
-  [data-anim="arc"]:hover .anim-rod-mid { animation-delay: 0.12s; }
-
-  @keyframes arcSpark {
-    0%, 100% { opacity: 0.25; transform: scale(0.85); }
-    50% { opacity: 1; transform: scale(1.1); }
-  }
-
-  [data-anim="arc"]:hover .anim-spark {
-    animation: arcSpark 0.45s steps(2, end) 2;
-    transform-box: fill-box;
-    transform-origin: center;
-  }
-
-  [data-anim="arc"]:hover .anim-spark-b { animation-delay: 0.17s; }
-  [data-anim="arc"]:hover .anim-spark-c { animation-delay: 0.31s; }
-  [data-anim="arc"]:hover .anim-spark-d { animation-delay: 0.09s; }
-
-  @keyframes arcShell {
-    0%, 100% { transform: scaleX(1); }
-    50% { transform: scaleX(1.025); }
-  }
-
-  [data-anim="arc"]:hover .anim-shell {
-    animation: arcShell 0.9s ease-in-out;
-    transform-box: fill-box;
-    transform-origin: center;
-  }
-}
-
-/* =========================================================
-   BROCHURE DIALOG
-   Small details popup shown from every "Download Brochure"
-   button. Built by script.js.
-   ========================================================= */
+/* ---------- Brochure dialog ---------- */
 .brochure-dialog {
   position: fixed;
   inset: 0;
@@ -3953,7 +3280,7 @@ body.sol-dialog-open {
 }
 
 .brochure-dialog h2 {
-  color: #006a65;
+  color: var(--teal-deep);
   font-size: 22px;
   line-height: 1.2;
   margin: 0 0 4px;
@@ -3969,7 +3296,7 @@ body.sol-dialog-open {
   background: none;
   font-size: 24px;
   line-height: 1;
-  color: #3d4948;
+  color: var(--text);
   cursor: pointer;
   border-radius: 50%;
 }
@@ -3986,14 +3313,9 @@ body.sol-dialog-open {
   gap: 10px;
 }
 
-/* display:flex above would otherwise beat the hidden attribute */
-.brochure-form[hidden] {
-  display: none;
-}
-
 .brochure-form input {
   background: #ffffff;
-  border: 1px solid #a9d1d7;
+  border: 1px solid var(--mist);
   border-radius: 8px;
   padding: 11px 12px;
   font-family: inherit;
@@ -4007,13 +3329,12 @@ body.sol-dialog-open {
 
 .brochure-form input:focus {
   outline: none;
-  border-color: #34b6af;
+  border-color: var(--teal);
 }
 
 .brochure-form .btn {
   padding: 12px 24px;
   font-weight: bold;
-  cursor: pointer;
   margin-top: 6px;
 }
 
@@ -4022,10 +3343,10 @@ body.sol-dialog-open {
   margin: 8px 0 0;
 }
 
-/* Form submission feedback (contact + brochure) */
+/* ---------- Form feedback (contact + brochure) ---------- */
 .form-status {
   margin: 0;
-  color: #006a65;
+  color: var(--teal-deep);
 }
 
 .form-status:empty {
@@ -4051,10 +3372,250 @@ body.sol-dialog-open {
   opacity: 0;
 }
 
-/* In-page targets for the site's links (contact form, case studies, FAQs).
-   The margin keeps a jumped-to target clear of the sticky navbar. */
-#contact-form,
-#case-studies,
-#faq {
-  scroll-margin-top: 110px;
+
+/* =========================================================
+   13. MOTION
+   ========================================================= */
+
+/* ---------- Scroll reveal ----------
+   Elements start a little low and transparent and ease into place the first
+   time they reach the viewport. Nothing applies until the script adds
+   .js-reveal to <html>, and it strips data-reveal once an element has
+   arrived so the element's own hover transforms take over again. */
+.js-reveal [data-reveal] {
+  opacity: 0;
+  transform: translateY(var(--reveal-shift, 24px));
+  transition: opacity var(--reveal-dur, 0.7s) cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform var(--reveal-dur, 0.7s) cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+/* For elements whose transform belongs to another script */
+.js-reveal [data-reveal="fade"] {
+  transform: none;
+}
+
+.js-reveal [data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js-reveal [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---------- Problem card icons: draw-in ----------
+   Each icon draws itself in when its card is dealt to the front. The
+   script sets .is-inview once the section is on screen, so the first card
+   does not animate unseen below the fold. */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes pqDraw    { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+  @keyframes pqPopIn   { from { opacity: 0; transform: scale(0.4); } to { opacity: 1; transform: scale(1); } }
+  @keyframes pqExtend  { from { transform: scale(0); } to { transform: scale(1); } }
+  @keyframes pqFadeIn  { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes pqStretch { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes pqSwingUp { from { transform: rotate(0deg); } to { transform: rotate(-38.9deg); } }
+
+  .problem-card__icon .anim-draw-wave,
+  .problem-card__icon .anim-dial,
+  .problem-card__icon .anim-pf-arc {
+    stroke-dasharray: 1;
+  }
+
+  /* Harmonics */
+  .problems.is-inview .is-front .anim-draw-wave { animation: pqDraw 1.6s cubic-bezier(0.35, 0, 0.5, 1) both; }
+
+  /* Voltage Instability */
+  .problems.is-inview .is-front .anim-dial   { animation: pqDraw 1.2s cubic-bezier(0.4, 0, 0.55, 1) both; }
+  .problems.is-inview .is-front .anim-band   { animation: pqFadeIn 0.3s ease-out 1.05s both; }
+  .problems.is-inview .is-front .anim-tick   { animation: pqPopIn 0.25s cubic-bezier(0.3, 1.5, 0.6, 1) both; }
+  .problems.is-inview .is-front .anim-tick-1 { animation-delay: 0.08s; }
+  .problems.is-inview .is-front .anim-tick-2 { animation-delay: 0.34s; }
+  .problems.is-inview .is-front .anim-tick-3 { animation-delay: 0.6s; }
+  .problems.is-inview .is-front .anim-tick-4 { animation-delay: 0.86s; }
+  .problems.is-inview .is-front .anim-tick-5 { animation-delay: 1.1s; }
+  .problems.is-inview .is-front .anim-hub    { animation: pqPopIn 0.3s cubic-bezier(0.3, 1.5, 0.6, 1) both; }
+  .problems.is-inview .is-front .anim-needle { animation: pqExtend 1s cubic-bezier(0.25, 1.15, 0.4, 1) 0.15s both; }
+
+  /* Power Factor */
+  .problems.is-inview .is-front .anim-origin { animation: pqPopIn 0.3s cubic-bezier(0.3, 1.5, 0.6, 1) both; }
+  .problems.is-inview .is-front .anim-h      { animation: pqStretch 0.55s cubic-bezier(0.3, 0, 0.4, 1) 0.1s both; }
+  .problems.is-inview .is-front .anim-h-head { animation: pqFadeIn 0.2s ease-out 0.6s both; }
+  .problems.is-inview .is-front .anim-swing  { animation: pqSwingUp 0.5s cubic-bezier(0.35, 0, 0.3, 1.1) 0.7s both; }
+  .problems.is-inview .is-front .anim-d-head { animation: pqFadeIn 0.2s ease-out 1.15s both; }
+  .problems.is-inview .is-front .anim-pf-arc { animation: pqDraw 0.4s ease-out 1.1s both; }
+  .problems.is-inview .is-front .anim-phi    { animation: pqPopIn 0.3s cubic-bezier(0.3, 1.5, 0.6, 1) 1.3s both; }
+}
+
+/* ---------- Solution icons: hover ----------
+   Each icon plays a short one-shot animation while its card is hovered and
+   returns to its exact resting state. data-anim sits on the card, since the
+   small icon alone would be a poor hover target. */
+@media (prefers-reduced-motion: no-preference) {
+  /* Variable Frequency Drives */
+  @keyframes vfdTravel {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-78px); }
+  }
+
+  @keyframes vfdBar {
+    0%, 100% { transform: scaleY(1); }
+    45%, 55% { transform: scaleY(1.1); }
+  }
+
+  [data-anim="vfd"]:hover .anim-wave {
+    animation: vfdTravel 0.9s cubic-bezier(0.4, 0, 0.6, 1);
+  }
+
+  [data-anim="vfd"]:hover .anim-bar {
+    animation: vfdBar 0.9s ease-in-out;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  [data-anim="vfd"]:hover .anim-bar-b { animation-delay: 0.08s; }
+  [data-anim="vfd"]:hover .anim-bar-c { animation-delay: 0.16s; }
+
+  /* Switched Mode Power Supplies */
+  @keyframes smpsJoin {
+    0%, 100% { stroke-width: 16px; }
+    45%, 55% { stroke-width: 0px; }
+  }
+
+  @keyframes smpsPin {
+    0%, 100% { transform: translateX(0); opacity: 1; }
+    50%      { transform: translateX(9px); opacity: 0.5; }
+  }
+
+  @keyframes smpsBody {
+    0%, 100% { transform: scale(1); }
+    45%, 55% { transform: scale(1.04); }
+  }
+
+  [data-anim="smps"]:hover .anim-gap {
+    animation: smpsJoin 0.9s ease-in-out;
+  }
+
+  [data-anim="smps"]:hover .anim-pin {
+    animation: smpsPin 0.9s ease-in-out;
+  }
+
+  [data-anim="smps"]:hover .anim-pin-b { animation-delay: 0.1s; }
+
+  [data-anim="smps"]:hover .anim-body {
+    animation: smpsBody 0.9s ease-in-out;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  /* Paint Shops */
+  @keyframes paintSpray {
+    0%   { transform: translateX(0); opacity: 0.85; }
+    55%  { opacity: 1; }
+    100% { transform: translateX(14px); opacity: 0; }
+  }
+
+  @keyframes paintRecoil {
+    0%, 100% { transform: translateX(0); }
+    45%, 55% { transform: translateX(-5px); }
+  }
+
+  @keyframes paintNozzle {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    45%, 55% { transform: scaleX(1.25); opacity: 0.6; }
+  }
+
+  [data-anim="paint"]:hover .anim-p {
+    animation: paintSpray 0.9s ease-out;
+  }
+
+  [data-anim="paint"]:hover .anim-p2 { animation-delay: 0.08s; }
+  [data-anim="paint"]:hover .anim-p3 { animation-delay: 0.16s; }
+
+  [data-anim="paint"]:hover .anim-gun {
+    animation: paintRecoil 0.9s ease-in-out;
+  }
+
+  [data-anim="paint"]:hover .anim-nozzle {
+    animation: paintNozzle 0.9s ease-in-out;
+    transform-box: fill-box;
+    transform-origin: left center;
+  }
+
+  /* Heavy Switching Loads. The stroke scales with the artwork on purpose:
+     non-scaling-stroke at this 0.3x render size filled the icon solid. */
+  @keyframes heavyAmp {
+    0%, 100% { transform: scaleY(1); }
+    35%      { transform: scaleY(1.2); }
+    70%      { transform: scaleY(0.84); }
+  }
+
+  @keyframes heavyBolt {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    30%      { transform: scale(1.12); opacity: 0.55; }
+    60%      { transform: scale(0.94); opacity: 1; }
+  }
+
+  [data-anim="heavy"]:hover .anim-square {
+    animation: heavyAmp 0.9s ease-in-out;
+    transform-origin: 0px 90px;
+  }
+
+  [data-anim="heavy"]:hover .anim-bolt {
+    animation: heavyBolt 0.9s ease-in-out;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  /* Arc Furnaces */
+  @keyframes arcLift {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-10px); }
+  }
+
+  @keyframes arcDip {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(4px); }
+  }
+
+  @keyframes arcSpark {
+    0%, 100% { opacity: 0.25; transform: scale(0.85); }
+    50%      { opacity: 1; transform: scale(1.1); }
+  }
+
+  @keyframes arcShell {
+    0%, 100% { transform: scaleX(1); }
+    50%      { transform: scaleX(1.025); }
+  }
+
+  [data-anim="arc"]:hover .anim-dome {
+    animation: arcLift 0.9s ease-in-out;
+  }
+
+  [data-anim="arc"]:hover .anim-rod {
+    animation: arcDip 0.9s ease-in-out;
+  }
+
+  [data-anim="arc"]:hover .anim-rod-mid { animation-delay: 0.12s; }
+
+  [data-anim="arc"]:hover .anim-spark {
+    animation: arcSpark 0.45s steps(2, end) 2;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  [data-anim="arc"]:hover .anim-spark-b { animation-delay: 0.17s; }
+  [data-anim="arc"]:hover .anim-spark-c { animation-delay: 0.31s; }
+  [data-anim="arc"]:hover .anim-spark-d { animation-delay: 0.09s; }
+
+  [data-anim="arc"]:hover .anim-shell {
+    animation: arcShell 0.9s ease-in-out;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
 }
