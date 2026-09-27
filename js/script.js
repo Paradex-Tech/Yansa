@@ -1084,6 +1084,17 @@
   }
 
 
+  /* ---------- Home hero: film ----------
+     The hero video autoplays muted and loops. With reduced motion it is
+     held on its poster (its first frame) instead. */
+  function initHeroVideo() {
+    var video = document.querySelector('.hero__media video');
+    if (!video || !reduceMotion) return;
+    video.removeAttribute('autoplay');
+    video.pause();
+  }
+
+
   /* ---------- Home hero: scroll-driven reveal ----------
      Adds .is-scrolly, which pins the stage and lifts the media out of its
      frame, then drives it from full bleed back into the frame as the page
@@ -1101,7 +1112,6 @@
     var sub = heading.querySelector('p');
     var slot = hero.querySelector('.hero__frame-slot');
     var media = hero.querySelector('.hero__media');
-    var scrim = hero.querySelector('.hero__media-scrim');
     var ctas = hero.querySelector('.hero__ctas');
 
     var HEAD_SCALE = 1.55; // heading size at full bleed, relative to final
@@ -1171,8 +1181,6 @@
       h1.style.color = mix([255, 255, 255], [0, 127, 127], e);
       sub.style.color = mix([255, 255, 255], [21, 21, 21], e);
 
-      scrim.style.opacity = 1 - clamp01(e / 0.75);
-
       // The buttons belong to the settled state, so they arrive late
       var c = clamp01((e - 0.45) / 0.55);
       ctas.style.opacity = c;
@@ -1181,7 +1189,7 @@
 
     // Hand every property back to the stylesheet
     function reset() {
-      [media.style, heading.style, h1.style, sub.style, scrim.style, ctas.style].forEach(function (style) {
+      [media.style, heading.style, h1.style, sub.style, ctas.style].forEach(function (style) {
         style.left = '';
         style.top = '';
         style.width = '';
@@ -2296,6 +2304,7 @@
   initSymptomFocus();
   initFaq();
   initTypewriter();
+  initHeroVideo();
   initHero();
   initScrollReveal();
   initQuote();

@@ -66,7 +66,6 @@
         <a href="about.html">About Us</a>
         <a href="yanq.html">YanQ</a>
         <a href="contact.html">Contact</a>
-        <a href="contact.html#contact-form">Career</a>
       </nav>
       <a href="contact.html#contact-form" class="btn btn--orange navbar__cta">Book a Diagnosis</a>
       <button class="navbar__toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
@@ -88,11 +87,15 @@
             <p>An end to end power quality engineering company.</p>
           </div>
           <div class="hero__frame-slot">
-            <!-- Swap the <img> for a <video autoplay muted loop playsinline
-                 poster="images/hero-plant.jpg"> and nothing else changes. -->
+            <!-- Hero film: muted, looping, no audio track. The 1920 cut is for
+                 wide screens, 1280 for the rest; the poster is its first frame,
+                 so the switch from still to motion is seamless. With reduced
+                 motion the script pauses it on the poster. -->
             <div class="hero__media">
-              <img src="images/hero-plant.jpg" alt="Industrial power plant facility" width="1672" height="941" fetchpriority="high">
-              <span class="hero__media-scrim" aria-hidden="true"></span>
+              <video autoplay muted loop playsinline preload="auto" poster="images/hero-poster.jpg" width="1920" height="1080" aria-hidden="true">
+                <source src="videos/hero-1920.mp4" type="video/mp4" media="(min-width: 1400px)">
+                <source src="videos/hero-1280.mp4" type="video/mp4">
+              </video>
             </div>
           </div>
           <div class="hero__ctas">

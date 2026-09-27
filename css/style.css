@@ -1058,20 +1058,6 @@ ul {
   object-fit: cover;
 }
 
-/* Only needed over the full-bleed state, so off by default */
-.hero__media-scrim {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  pointer-events: none;
-  background: linear-gradient(
-    180deg,
-    rgba(4, 25, 23, 0.5) 0%,
-    rgba(4, 25, 23, 0.32) 50%,
-    rgba(4, 25, 23, 0.5) 100%
-  );
-}
-
 .hero__ctas {
   position: relative;
   z-index: 1;
@@ -2054,10 +2040,27 @@ ul {
   margin-bottom: 32px;
 }
 
+/* Every row shows four cards at a time; longer rows scroll sideways.
+   The padding keeps the focus ring clear of the scroller's clipping edge,
+   and the negative margin pulls the cards back onto the text column. */
 .solutions-row__grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  --cards-visible: 4;
+  --card-gap: 24px;
+  display: flex;
+  gap: var(--card-gap);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 6px;
+  overscroll-behavior-x: contain;
+  padding: 6px 6px 14px;
+  margin: -6px -6px -14px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+
+.solutions-row__grid > .solution-card {
+  flex: 0 0 calc((100% - var(--card-gap) * (var(--cards-visible) - 1)) / var(--cards-visible));
+  scroll-snap-align: start;
 }
 
 /* Each card is the button that opens the solution dialog */
@@ -2127,7 +2130,7 @@ ul {
 
 @media (max-width: 900px) {
   .solutions-row__grid {
-    grid-template-columns: repeat(2, 1fr);
+    --cards-visible: 2;
   }
 }
 
