@@ -2063,6 +2063,57 @@ ul {
   scroll-snap-align: start;
 }
 
+/* Arrows for rows that scroll, added by initSolutionScroll. They sit on
+   the heading's line so they read as part of the row's title. */
+.solutions-row__inner {
+  position: relative;
+}
+
+.solutions-row__nav {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  gap: 10px;
+}
+
+.solutions-row__nav[hidden] {
+  display: none;
+}
+
+.solutions-row__arrow {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+}
+
+.solutions-row__arrow--prev svg {
+  transform: scaleX(-1);
+}
+
+.solutions-row__arrow:hover:not(:disabled) {
+  color: var(--orange);
+  border-color: var(--orange);
+}
+
+.solutions-row__arrow:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 3px;
+}
+
+.solutions-row__arrow:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
 /* Each card is the button that opens the solution dialog */
 .solution-card {
   background: #1c1c1c;
@@ -2131,6 +2182,15 @@ ul {
 @media (max-width: 900px) {
   .solutions-row__grid {
     --cards-visible: 2;
+  }
+}
+
+/* Too narrow to share the heading's line: the arrows drop below the intro */
+@media (max-width: 600px) {
+  .solutions-row__nav {
+    position: static;
+    justify-content: flex-end;
+    margin: -16px 0 16px;
   }
 }
 

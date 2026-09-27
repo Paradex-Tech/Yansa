@@ -1,0 +1,18 @@
+# Cloudflare Pages response headers (replaces the old netlify.toml).
+
+# Basic hardening for every page
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+
+# File names aren't fingerprinted, so media is cached for a week rather than
+# forever; fonts never change, so they're cached for a year.
+/videos/*
+  Cache-Control: public, max-age=604800
+
+/images/*
+  Cache-Control: public, max-age=604800
+
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable

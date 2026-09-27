@@ -59,17 +59,25 @@ after CSS/JS changes.
 - Branches: `main` (final), `dev` (working), `site-wide-updates` (feature
   work), `seo` (stale, can be deleted). `main`, `dev` and
   `site-wide-updates` were all at `5c1d16d` at handoff.
-- **No auto-deploy**: no GitHub Pages, workflows or host connected. Pushing
-  `main` publishes nothing. Hosting isn't chosen yet.
+- **Hosting: Cloudflare Pages** (being connected to the repo; no build
+  command, output directory = repo root). Config lives in `_headers`
+  (security + cache headers) and `_redirects` (sends AGENTS.md, backend/
+  and the config files themselves to /404). Pages serves `/about.html` as
+  `/about`, so absolute URLs (canonical, og:url, sitemap) are extensionless;
+  relative links keep `.html` so the local python server still works.
+  Once connected, a push to `main` deploys.
 - **Never push without the user's explicit OK.**
 - `.claude/` is gitignored; `.claude/worktrees/homepage` is a stale worktree
   (branch `worktree-homepage`). Don't merge it. Delete it only if the user
   agrees.
 
 ## Uncommitted at handoff (the user is reviewing on localhost)
-1. **Home hero video**: `videos/hero-1920.mp4` (6.9 MB, for ≥1400px) and
-   `videos/hero-1280.mp4` (5 MB), compressed from the user's 32 MB original
-   with no audio track. The poster is `images/hero-poster.jpg` (first frame).
+1. **Home hero video** (replaced 2026-09-27 with `YANSA_HERO_VIDEO.mp4`):
+   `videos/hero-1920.mp4` (25.8 MB, for ≥1400px) is the user's file
+   remuxed only (no re-encode: the user found compressed cuts too soft), and
+   `videos/hero-1280.mp4` (10.8 MB) is a CRF 19 encode. No audio track.
+   Cloudflare Pages caps a file at 25 MiB; hero-1920 is just under, so a
+   longer or higher-bitrate replacement will need a light re-encode. The poster is `images/hero-poster.jpg` (first frame).
    The `<video>` in `index.html` replaced the `<img>` inside `.hero__media`.
    `initHeroVideo()` holds it on the poster under reduced motion.
 2. **Hero overlay removed completely** at the user's request (the
@@ -144,7 +152,7 @@ Commit these once the user confirms they look right.
 3. New **"Why Yansa"** copy for `index.html` (the section `.why`: the
    "Data Before Direction" / "System Level Thinking" / "We Stay Until It's
    Solved" cards are old copy). Wait for the user's text.
-4. Choose a host and go live.
+4. Connect Cloudflare Pages and add the yansa.in domain.
 5. Optionally delete the stale worktree and the `seo` branch.
 
 ## Working with this user

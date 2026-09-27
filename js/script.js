@@ -738,6 +738,51 @@
   }
 
 
+  /* ---------- Solutions: row arrows ----------
+     Each solution row shows four cards and scrolls sideways past that.
+     Rows that overflow get a pair of arrows by the heading; each press
+     moves a screenful and the snap points settle it on a card edge.
+     Rows that fit show no arrows at all. */
+  function initSolutionScroll() {
+    var CHEVRON = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">' +
+      '<path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" ' +
+      'stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+    toArray(document.querySelectorAll('.solutions-row__grid')).forEach(function (grid) {
+      var nav = document.createElement('div');
+      nav.className = 'solutions-row__nav';
+      nav.innerHTML =
+        '<button class="solutions-row__arrow solutions-row__arrow--prev" type="button" aria-label="Previous solutions">' + CHEVRON + '</button>' +
+        '<button class="solutions-row__arrow" type="button" aria-label="Next solutions">' + CHEVRON + '</button>';
+      grid.parentNode.insertBefore(nav, grid);
+
+      var prev = nav.firstChild;
+      var next = nav.lastChild;
+      var frame = null;
+
+      function update() {
+        frame = null;
+        var max = grid.scrollWidth - grid.clientWidth;
+        nav.hidden = max <= 1;
+        prev.disabled = grid.scrollLeft <= 1;
+        next.disabled = grid.scrollLeft >= max - 1;
+      }
+
+      function step(dir) {
+        grid.scrollBy({ left: dir * grid.clientWidth, behavior: reduceMotion ? 'auto' : 'smooth' });
+      }
+
+      prev.addEventListener('click', function () { step(-1); });
+      next.addEventListener('click', function () { step(1); });
+      grid.addEventListener('scroll', function () {
+        if (!frame) frame = window.requestAnimationFrame(update);
+      }, { passive: true });
+      onResizeEnd(update, 120);
+      update();
+    });
+  }
+
+
   /* ---------- Navbar: phone menu ----------
      Below 900px the links live in a drop-down panel behind the menu
      button. It closes when a link is chosen, on Escape (returning focus to
@@ -1181,6 +1226,14 @@
       h1.style.color = mix([255, 255, 255], [0, 127, 127], e);
       sub.style.color = mix([255, 255, 255], [21, 21, 21], e);
 
+      // A soft shadow lifts the white type off bright frames of the film,
+      // and is gone by the time the type has turned dark on cream
+      var shade = 1 - clamp01(e / 0.75);
+      heading.style.textShadow = shade > 0
+        ? '0 1px 3px rgba(0, 0, 0, ' + (0.35 * shade).toFixed(3) + '), ' +
+          '0 2px 24px rgba(0, 0, 0, ' + (0.45 * shade).toFixed(3) + ')'
+        : '';
+
       // The buttons belong to the settled state, so they arrive late
       var c = clamp01((e - 0.45) / 0.55);
       ctas.style.opacity = c;
@@ -1200,6 +1253,7 @@
         style.transform = '';
         style.color = '';
         style.opacity = '';
+        style.textShadow = '';
       });
     }
 
@@ -2299,6 +2353,7 @@
   initProblems();
   initFooterMark();
   initSolutionDialog();
+  initSolutionScroll();
   initMobileNav();
   initNavIndicator();
   initSymptomFocus();

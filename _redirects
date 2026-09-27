@@ -1,0 +1,7 @@
+# Cloudflare Pages redirects. Pages publishes the whole repo, and can't
+# answer 404 for a file that exists, so repo-only files are sent to the
+# 404 page instead (redirects win over matching files).
+/AGENTS.md   /404   302
+/backend/*   /404   302
+/_headers    /404   302
+/_redirects  /404   302
