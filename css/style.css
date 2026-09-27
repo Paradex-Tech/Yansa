@@ -151,7 +151,7 @@
    ========================================================= */
 @font-face {
   font-family: 'Liberation Sans';
-  src: url('../fonts/LiberationSans-Regular.ttf') format('truetype');
+  src: url('../fonts/LiberationSans-Regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -159,7 +159,7 @@
 
 @font-face {
   font-family: 'Liberation Sans';
-  src: url('../fonts/LiberationSans-Bold.ttf') format('truetype');
+  src: url('../fonts/LiberationSans-Bold.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -187,9 +187,12 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 400;
 }
 
+/* height:auto lets the width/height attributes reserve the right space
+   without fixing the rendered height */
 img {
   display: block;
   max-width: 100%;
+  height: auto;
 }
 
 a {
@@ -551,6 +554,7 @@ ul {
 
 .navbar__logo img {
   height: 26px;
+  width: auto;
 }
 
 .navbar__links {
@@ -942,6 +946,46 @@ ul {
   .header-placeholder__overlay {
     padding: 24px 6%;
   }
+}
+
+/* ---------- 404 page ---------- */
+.not-found {
+  min-height: calc(80vh - var(--nav-height));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--section-pad-y) var(--gutter);
+}
+
+.not-found__code {
+  color: var(--orange);
+  font-size: calc(var(--fs-label) * var(--fs-scale, 1));
+  letter-spacing: 2.8px;
+  margin-bottom: 16px;
+}
+
+.not-found h1 {
+  color: var(--teal-brand);
+  font-size: calc(var(--fs-h2) * var(--fs-scale, 1));
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+
+.not-found > p:not(.not-found__code) {
+  color: var(--text);
+  max-width: 560px;
+  font-size: calc(var(--fs-lead) * var(--fs-scale, 1));
+  line-height: 1.6;
+  margin-bottom: 40px;
+}
+
+.not-found__links {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 
@@ -2297,7 +2341,7 @@ ul {
   height: 187px;
   left: 13%;
   top: 30%;
-  background-image: url('../images/case-01-photo.png');
+  background-image: url('../images/case-01-photo.jpg');
 }
 
 .about-hero__decor--2 {
@@ -2305,7 +2349,7 @@ ul {
   height: 238px;
   left: 5%;
   bottom: 10%;
-  background-image: url('../images/case-02-photo.png');
+  background-image: url('../images/case-02-photo.jpg');
 }
 
 .about-hero__decor--3 {
@@ -2313,7 +2357,7 @@ ul {
   height: 130px;
   right: 28%;
   bottom: 22%;
-  background-image: url('../images/case-03-photo.png');
+  background-image: url('../images/case-03-photo.jpg');
 }
 
 .about-hero__decor--4 {
@@ -2321,7 +2365,7 @@ ul {
   height: 288px;
   right: 6%;
   top: 20%;
-  background-image: url('../images/hero-plant.png');
+  background-image: url('../images/hero-plant.jpg');
 }
 
 /* ---------- Statement (typewriter) ----------
@@ -3322,6 +3366,7 @@ ul {
 
 .footer__brand img {
   height: 32px;
+  width: auto;
   margin-bottom: 20px;
   filter: brightness(0) invert(1);
 }
