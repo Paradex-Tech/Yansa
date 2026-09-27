@@ -1983,7 +1983,7 @@
   var FORMS_ENDPOINT = 'https://script.google.com/macros/s/AKfycby1FseYxoZf98idb1vlxApBTynyOCM12i5B3SKHmHeEEYV1xkUWQpcnin7PoLonbN95UA/exec'; // Apps Script "Web app" URL, ends in /exec
 
   // Brochure PDF to download after the form. Empty = thank-you only.
-  var BROCHURE_URL = '';
+  var BROCHURE_URL = 'assets/yansa-brochure.pdf';
 
   function sendForm(formName, form) {
     var data = new URLSearchParams(new FormData(form));
@@ -2061,7 +2061,7 @@
       '<div class="brochure-thanks" hidden>' +
         '<h2>Thank you!</h2>' +
         '<p>' + (BROCHURE_URL
-          ? 'Your brochure download will begin shortly.'
+          ? 'Your download will begin shortly. We’ve also emailed you a copy.'
           : 'We’ll send the brochure to your email shortly.') + '</p>' +
       '</div>';
     document.body.appendChild(bDialog);
@@ -2105,7 +2105,7 @@
           if (BROCHURE_URL) {
             var a = document.createElement('a');
             a.href = BROCHURE_URL;
-            a.download = '';
+            a.download = 'Yansa Brochure.pdf';
             document.body.appendChild(a);
             a.click();
             a.remove();
