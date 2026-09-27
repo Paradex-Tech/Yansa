@@ -419,51 +419,16 @@
       }
     }
 
-    /* The panel rides in with the page, locks once it is centred, flips the
-       three cards in place, then releases. Locking is what stops the cards
-       changing while the section is still sliding past.
-
-       The panel's height decides both the lock offset and how long the lock
-       lasts, and it depends on how the copy wraps, so it is measured here and
-       handed to the stylesheet rather than guessed at. */
-    var problemsPanel = problems.querySelector('.problems__sticky');
-    var problemsLocked = false;
-
-    function problemsMeasure() {
-      // Lock only if the panel actually fits on screen with room to spare;
-      // otherwise a pin would trap content off the top of the viewport.
-      var h = problemsPanel.offsetHeight;
-      var fits = h > 0 && h + 80 <= window.innerHeight;
-      var want = fits && !reduceMotion && window.innerWidth > 768;
-
-      if (want) {
-        problems.style.setProperty('--problems-panel', h + 'px');
-      } else {
-        problems.style.removeProperty('--problems-panel');
-      }
-
-      problems.classList.toggle('is-locked', want);
-      problemsLocked = want;
-    }
-
+    /* The section is only as tall as its content and scrolls with the page;
+       it is not pinned, since a pin filled the whole screen with the panel's
+       background for the length of the flip. The cards step through as the
+       section's middle travels from 70% to 30% of the viewport height, so all
+       three are dealt while it sits comfortably on screen. */
     function problemFromScroll() {
-      var top = problems.getBoundingClientRect().top;
-      var p;
-
-      if (problemsLocked) {
-        // Progress across the lock: 0 the moment it sticks, 1 as it releases.
-        var runway = problems.offsetHeight - problemsPanel.offsetHeight;
-        if (runway <= 0) return 0;
-        var stuckAt =
-          parseFloat(getComputedStyle(problemsPanel).top) || 0;
-        p = (stuckAt - top) / runway;
-      } else {
-        // Unlocked fallback: drive it off the section's travel up the screen.
-        var vh = window.innerHeight;
-        var from = vh * 0.52;
-        var to = vh * -0.1;
-        p = (from - top) / (from - to);
-      }
+      var r = problems.getBoundingClientRect();
+      var vh = window.innerHeight;
+      var mid = r.top + r.height / 2;
+      var p = (vh * 0.7 - mid) / (vh * 0.4);
 
       if (p < 0) p = 0;
       if (p > 1) p = 1;
@@ -484,7 +449,6 @@
       { passive: true }
     );
 
-    problemsMeasure();
     stack.classList.add('is-static');
     pIndex = -1;
     dealCards(problemFromScroll());
@@ -492,7 +456,6 @@
     stack.classList.remove('is-static');
 
     window.addEventListener('load', function () {
-      problemsMeasure();
       pIndex = -1;
       dealCards(problemFromScroll());
     });
@@ -501,7 +464,6 @@
     window.addEventListener('resize', function () {
       clearTimeout(pResizeTimer);
       pResizeTimer = setTimeout(function () {
-        problemsMeasure();
         pIndex = -1;
         dealCards(problemFromScroll());
       }, 200);
@@ -798,6 +760,56 @@
       },
       { passive: true }
     );
+  }
+
+  /* Nav underline. One cyan bar rests under the current page's link, slides
+     to whichever link is hovered or focused, and glides back on leave. The
+     slide itself is a CSS transition on transform/width; JS only measures. */
+  var navLinks = document.querySelector('.navbar__links');
+
+  if (navLinks) {
+    var navBar = document.createElement('span');
+    navBar.className = 'navbar__indicator';
+    navBar.setAttribute('aria-hidden', 'true');
+    navLinks.appendChild(navBar);
+
+    var navActive = navLinks.querySelector('a.is-active');
+
+    var moveNavBar = function (link, instant) {
+      if (!link) {
+        navBar.style.opacity = '0';
+        return;
+      }
+      if (instant) navBar.style.transition = 'none';
+      // Rects, not offsetLeft/offsetWidth, which round to whole pixels
+      var box = navLinks.getBoundingClientRect();
+      var r = link.getBoundingClientRect();
+      navBar.style.width = r.width + 'px';
+      navBar.style.transform =
+        'translate(' + (r.left - box.left) + 'px, ' + (r.bottom - box.top + 6) + 'px)';
+      navBar.style.opacity = '1';
+      if (instant) {
+        void navBar.offsetWidth; // commit the jump before restoring the slide
+        navBar.style.transition = '';
+      }
+    };
+
+    Array.prototype.forEach.call(navLinks.querySelectorAll('a'), function (link) {
+      link.addEventListener('mouseenter', function () { moveNavBar(link); });
+      link.addEventListener('focus', function () { moveNavBar(link); });
+    });
+    navLinks.addEventListener('mouseleave', function () { moveNavBar(navActive); });
+    navLinks.addEventListener('focusout', function (e) {
+      if (!navLinks.contains(e.relatedTarget)) moveNavBar(navActive);
+    });
+
+    // Start under the current page without sliding in from the left edge,
+    // and re-measure once the web font has settled the link widths
+    moveNavBar(navActive, true);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { moveNavBar(navActive, true); });
+    }
+    window.addEventListener('resize', function () { moveNavBar(navActive, true); });
   }
 
   /* Symptom cards reveal their detail on hover, which is pure CSS. The only
@@ -1649,7 +1661,9 @@
      JS this section is just a normal block. */
   var cases = document.querySelector('.cases');
 
-  if (cases && cases.querySelector('.cases__stage')) {
+  // Skipped while the section is hidden: pinning a display:none section
+  // would only measure zeros.
+  if (cases && !cases.hidden && cases.querySelector('.cases__stage')) {
     var cStage = cases.querySelector('.cases__stage');
     var cStack = cases.querySelector('.cases__stack');
     var cCards = Array.prototype.slice.call(

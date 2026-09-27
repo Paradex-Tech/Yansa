@@ -243,6 +243,7 @@ ul {
 }
 
 .navbar__links {
+  position: relative;
   display: flex;
   gap: 40px;
   flex-wrap: wrap;
@@ -250,10 +251,36 @@ ul {
 
 .navbar__links a {
   color: #3d4948;
+  transition: color 0.25s ease;
 }
 
-.navbar__links a.is-active {
+.navbar__links a.is-active,
+.navbar__links a:hover,
+.navbar__links a:focus-visible {
   color: #006a65;
+}
+
+/* Sliding underline; script.js sets its width and position */
+.navbar__indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: #34b6af;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.25s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navbar__indicator {
+    transition: opacity 0.25s ease;
+  }
 }
 
 .navbar__cta {
@@ -2107,41 +2134,23 @@ ul {
    the viewport, so scrolling deals the cards instead of moving the page. The
    front card lifts and fades out, and the one behind it steps forward into
    its place. */
-/* The panel is only as tall as its content, never 100vh: the old version was
-   three screens of dark teal with the card adrift in an empty panel.
-
-   It rides in with the page, locks once it is centred so the three cards can
-   be flipped in place, then releases. The lock is plain sticky with a top
-   offset of half the leftover viewport, which is what centres it. The script
-   writes --problems-panel because the panel's height depends on how the copy
-   wraps. */
+/* Only as tall as its content and never pinned: a pinned panel filled the
+   whole screen with dark teal for the length of the flip. The cards are dealt
+   by scroll position as the section passes the middle of the viewport. */
 .problems {
   position: relative;
-  height: auto;
   padding: 0 10%;
   background: #1a4146;
   text-align: center;
 }
 
 .problems__sticky {
-  position: static;
-  height: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   box-sizing: border-box;
-  padding: 96px 0;
+  padding: 80px 0;
   overflow: hidden;
-}
-
-/* ---- Locked mode (added by the script) ---- */
-.problems.is-locked {
-  height: calc(var(--problems-panel) + var(--problems-runway, 120vh));
-}
-
-.problems.is-locked .problems__sticky {
-  position: sticky;
-  top: calc(50vh - var(--problems-panel) / 2);
 }
 
 .problems h2 {
