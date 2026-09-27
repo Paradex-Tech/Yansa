@@ -786,7 +786,7 @@
       var r = link.getBoundingClientRect();
       navBar.style.width = r.width + 'px';
       navBar.style.transform =
-        'translate(' + (r.left - box.left) + 'px, ' + (r.bottom - box.top + 6) + 'px)';
+        'translate(' + (r.left - box.left) + 'px, ' + (r.bottom - box.top + 2) + 'px)';
       navBar.style.opacity = '1';
       if (instant) {
         void navBar.offsetWidth; // commit the jump before restoring the slide

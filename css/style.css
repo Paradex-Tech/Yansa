@@ -38,14 +38,28 @@
   box-sizing: border-box;
 }
 
+/* Surface colours. The greige (#f1f1e6 / #f4f4e9) that used to fill sections
+   and cards read as grey, so surfaces are ivory, and cards sitting on a cream
+   section are a step brighter so they still separate from it. */
+:root {
+  --ivory: #fdfbf3;
+  --ivory-card: #fffefa;
+}
+
 html {
   scroll-behavior: smooth;
+}
+
+/* The hidden attribute must win over section rules that set display
+   (e.g. the parked Case Studies section). */
+[hidden] {
+  display: none !important;
 }
 
 body {
   font-family: Arial, Helvetica, sans-serif;
   color: #151515;
-  background: #f1f1e6;
+  background: var(--ivory);
   line-height: 1.4;
 }
 
@@ -268,7 +282,7 @@ ul {
   width: 0;
   height: 2px;
   border-radius: 2px;
-  background: #34b6af;
+  background: #007f7f;
   opacity: 0;
   pointer-events: none;
   transition:
@@ -516,7 +530,7 @@ ul {
 
 /* ---------- Symptoms ---------- */
 .symptoms {
-  background: #f1f1e6;
+  background: var(--ivory);
   padding: var(--section-pad-y) 10%;
 }
 
@@ -747,7 +761,7 @@ ul {
 }
 
 .why-card {
-  background: #f1f1e6;
+  background: var(--ivory-card);
   border: 1px solid #a6cdd3;
   border-radius: 8px;
   padding: 25px;
@@ -778,12 +792,12 @@ ul {
 }
 
 .why-card p {
-  color: #9d9d9d;
+  color: #3d4948;
 }
 
 /* ---------- Case Studies ---------- */
 .cases {
-  background: #f1f1e6;
+  background: var(--ivory);
   padding: var(--section-pad-y) 10%;
 }
 
@@ -1022,7 +1036,7 @@ ul {
 
 /* ---------- Contact page ---------- */
 .contact-hero {
-  background: #f4f4e9;
+  background: var(--ivory);
   text-align: center;
   padding: 100px 10% 80px;
 }
@@ -1162,7 +1176,7 @@ ul {
 }
 
 .yanq-hero-intro {
-  background: #f4f4e9;
+  background: var(--ivory);
   text-align: center;
   padding: 100px 10% 80px;
 }
@@ -1451,7 +1465,7 @@ ul {
 
 /* ---------- About page ---------- */
 .about-hero {
-  background: #f4f4e9;
+  background: var(--ivory);
   position: relative;
   text-align: center;
   padding: 100px 10% 130px;
@@ -1525,7 +1539,7 @@ ul {
 }
 
 .about-statement {
-  background: #f4f4e9;
+  background: var(--ivory);
   padding: 100px 10%;
 }
 
@@ -1711,7 +1725,7 @@ ul {
 .about-values {
   position: relative;
   height: 200vh;
-  background: #f4f4e9;
+  background: var(--ivory);
   text-align: center;
 }
 
@@ -1853,7 +1867,7 @@ ul {
   overflow: hidden;
   max-width: 754px;
   margin: 0 auto;
-  background: #f4f4e9;
+  background: var(--ivory);
   box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
 }
 
@@ -1884,7 +1898,7 @@ ul {
 }
 
 .faq {
-  background: #f4f4e9;
+  background: var(--ivory);
   padding: 45px 10% 96px;
 }
 
@@ -2022,7 +2036,7 @@ ul {
 
 /* ---------- Solution page ---------- */
 .solution-hero {
-  background: #f4f4e9;
+  background: var(--ivory);
   text-align: center;
   padding: 100px 10% 130px;
 }
@@ -2057,7 +2071,7 @@ ul {
    to match the button it contains. */
 .generates {
   background: #fafaef;
-  padding: 80px 10%;
+  padding: 112px 10%;
   text-align: center;
 }
 
@@ -2073,24 +2087,24 @@ ul {
 
 .generates > p {
   color: #505050;
-  margin-bottom: 48px;
+  margin-bottom: 64px;
   line-height: 1.5;
 }
 
 .generates__grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(200px, 1fr));
-  gap: 16px;
+  gap: 28px;
   max-width: 1152px;
   margin: 0 auto;
   text-align: left;
 }
 
 .generates__card {
-  background: #f1f1e6;
+  background: var(--ivory-card);
   border: 1px solid #bcc9c7;
-  border-radius: 6px;
-  padding: 24px;
+  border-radius: 8px;
+  padding: 36px 32px;
 }
 
 /* The icons have different aspect ratios (223x127 through 200x200), so they
@@ -2099,7 +2113,7 @@ ul {
 .generates__icon {
   height: 34px;
   width: auto;
-  margin-bottom: 16px;
+  margin-bottom: 28px;
   color: #ff8c40;
   display: block;
   overflow: visible;
@@ -2107,7 +2121,7 @@ ul {
 
 .generates__card h3 {
   color: #1a1c16;
-  margin-bottom: 8px;
+  margin-bottom: 14px;
 }
 
 .generates__card p {
@@ -2120,13 +2134,13 @@ ul {
   border: 1.5px solid #ff8c40;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
 }
 
 .generates__card--cta .btn {
   align-self: flex-start;
-  padding: 8px 20px;
-  margin-top: 8px;
+  padding: 10px 22px;
+  margin-top: 12px;
 }
 
 /* ---------- "The Problems These Loads Create." — pinned while read ----------
@@ -3299,7 +3313,7 @@ ul {
 }
 
 .hero {
-  background: #f1f1e6;
+  background: var(--ivory);
   display: block;
   padding: 0;
   min-height: 0;
@@ -3930,7 +3944,7 @@ body.sol-dialog-open {
   padding: 28px 24px 24px;
   border: 0;
   border-radius: 10px;
-  background: #f4f4e9;
+  background: var(--ivory);
   box-shadow: 0 20px 50px rgba(4, 25, 23, 0.35);
 }
 
