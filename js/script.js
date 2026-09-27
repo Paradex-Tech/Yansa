@@ -274,15 +274,18 @@
 
 
   /* ---------- Our Values (about) ----------
-     The section is pinned and scroll position picks the value, so the
-     sequence runs once, in order, at the reader's pace. The active value's
-     bar widens and its neighbour takes a middle width; the copy fades out,
-     is swapped while invisible, and fades back in.
+     A compact panel, not a full screen. Once it sits in the middle of the
+     viewport, wheel, touch and keyboard scrolling step through the values
+     instead of moving the page (one value per gesture); past the last value
+     in either direction the page scrolls on as normal. The first gesture
+     that meets the panel only settles it in the centre.
 
-     The panel also gets an entrance: armed while the previous section still
-     fills the screen, so its contents rise into place as it arrives. The
-     classes come off once that has played, as they would otherwise override
-     the copy's own swap transition. */
+     The active value's bar widens; the label and copy fade out, are swapped
+     while invisible, and fade back in.
+
+     The panel also gets an entrance: its contents rise into place as it
+     arrives. The classes come off once that has played, as they would
+     otherwise override the copy's own swap transition. */
   function initValues() {
     var values = document.querySelector('.about-values');
     if (!values) return;
@@ -291,7 +294,7 @@
     var bars = toArray(values.querySelectorAll('.value-bar'));
     var valueCopy = values.querySelector('.about-values__copy');
     var valueLive = values.querySelector('.about-values__live');
-    var sticky = values.querySelector('.about-values__sticky');
+    var panel = values.querySelector('.about-values__panel');
 
     var VALUES = [
       {
@@ -314,19 +317,26 @@
       }
     ];
 
-    var FADE_MS = 300; // matches .about-values__copy's opacity transition
-    var index = -1;    // -1 so the first pass always paints
+    var FADE_MS = 300;  // matches .about-values__copy's opacity transition
+    var LOCK_MS = 700;  // least time between two values
+    var GAP_MS = 180;   // a pause this long ends a gesture (and its inertia)
+    var index = -1;     // -1 so the first pass always paints
     var swapTimer = null;
+    var lastStep = 0;
+    var lastInput = 0;
+    var spent = false;  // the current gesture has already moved the panel
 
     function layout(active) {
       for (var i = 0; i < bars.length; i++) {
-        var distance = Math.abs(i - active);
-        bars[i].classList.toggle('is-active', distance === 0);
-        bars[i].classList.toggle('is-near', distance === 1);
+        bars[i].classList.toggle('is-active', i === active);
       }
     }
 
     function swapCopy(active) {
+      if (valueLive) {
+        valueLive.textContent = VALUES[active].word;
+        valueLive.classList.remove('is-swapping');
+      }
       var prevHeight = valueCopy.offsetHeight;
       valueCopy.innerHTML = VALUES[active].copy;
       valueCopy.style.height = 'auto';
@@ -343,8 +353,6 @@
       index = active;
 
       layout(active);
-      if (valueLive) valueLive.textContent = VALUES[active].word;
-
       window.clearTimeout(swapTimer);
 
       if (first) {
@@ -353,42 +361,93 @@
       }
 
       valueCopy.classList.add('is-swapping');
+      if (valueLive) valueLive.classList.add('is-swapping');
       swapTimer = window.setTimeout(function () {
         swapCopy(active);
       }, FADE_MS);
     }
 
-    /* The section is taller than the viewport by exactly the distance it
-       stays pinned; that surplus divides evenly between the values. */
-    function fromScroll() {
-      var range = values.offsetHeight - window.innerHeight;
-      if (range <= 0) return 0;
-      var travelled = Math.min(Math.max(-values.getBoundingClientRect().top, 0), range);
-      return Math.min(VALUES.length - 1, Math.floor((travelled / range) * VALUES.length));
+    /* How far the panel's middle sits from the viewport's middle, or null
+       when it is too far off (or too tall) to take over the scroll. */
+    function offsetFromCentre() {
+      var rect = values.getBoundingClientRect();
+      if (rect.height > window.innerHeight) return null;
+      var offset = rect.top + rect.height / 2 - window.innerHeight / 2;
+      return Math.abs(offset) < window.innerHeight * 0.2 ? offset : null;
     }
 
-    // Seeded without transitions so the bars are in place on first view
-    function seed() {
-      track.classList.add('is-static');
-      index = -1;
-      show(fromScroll());
-      void track.offsetWidth;
-      track.classList.remove('is-static');
+    // True when the gesture was spent on the panel rather than the page
+    function jack(dir) {
+      var offset = offsetFromCentre();
+      if (offset === null) return false;
+
+      // A gesture keeps firing (trackpad inertia, held keys) until it pauses
+      var now = Date.now();
+      if (now - lastInput > GAP_MS) spent = false;
+      lastInput = now;
+      if (spent || now - lastStep < LOCK_MS) return true;
+
+      var next = index + dir;
+      if (next < 0 || next >= VALUES.length) return false;
+
+      lastStep = now;
+      spent = true;
+      if (Math.abs(offset) > 4) {
+        window.scrollBy({ top: offset, behavior: reduceMotion ? 'auto' : 'smooth' });
+        return true;
+      }
+      show(next);
+      return true;
     }
+
+    window.addEventListener('wheel', function (e) {
+      if (e.ctrlKey || !e.deltaY) return;
+      if (jack(e.deltaY > 0 ? 1 : -1)) e.preventDefault();
+    }, { passive: false });
+
+    var touchY = null;
+    var touchHeld = false;
+    window.addEventListener('touchstart', function (e) {
+      touchY = e.touches[0].clientY;
+      touchHeld = false;
+    }, { passive: true });
+    window.addEventListener('touchmove', function (e) {
+      if (touchY === null) return;
+      if (touchHeld) {
+        e.preventDefault();
+        return;
+      }
+      var dy = touchY - e.touches[0].clientY;
+      if (Math.abs(dy) < 12) return;
+      if (jack(dy > 0 ? 1 : -1)) {
+        touchHeld = true;
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    var KEYS = { ArrowDown: 1, PageDown: 1, ' ': 1, ArrowUp: -1, PageUp: -1 };
+    window.addEventListener('keydown', function (e) {
+      var dir = KEYS[e.key];
+      if (!dir || e.altKey || e.ctrlKey || e.metaKey) return;
+      if (e.key === ' ' && e.shiftKey) dir = -1;
+      var t = e.target;
+      if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT|BUTTON|SUMMARY)$/.test(t.tagName))) return;
+      if (jack(dir)) e.preventDefault();
+    });
+
+    // Seeded without transitions so the bars are in place on first view
+    track.classList.add('is-static');
+    show(0);
+    void track.offsetWidth;
+    track.classList.remove('is-static');
 
     onResizeEnd(function () {
       valueCopy.style.height = '';
-      seed();
     }, 200);
 
-    seed();
-    onScrollFrame(function () {
-      show(fromScroll());
-    });
-
-    if (sticky && !reduceMotion && hasObserver) {
+    if (panel && !reduceMotion && hasObserver) {
       values.classList.add('is-armed');
-      onFirstView(sticky, 0.35, function () {
+      onFirstView(panel, 0.35, function () {
         values.classList.add('is-visible');
         window.setTimeout(function () {
           values.classList.remove('is-armed', 'is-visible');
@@ -676,31 +735,6 @@
       void panel.offsetWidth;
       dialog.classList.remove('is-seeding');
     }, 120);
-  }
-
-
-  /* ---------- Navbar: away going down, back coming up ----------
-     Only the class is toggled; the slide is a CSS transition. Small
-     movements are ignored so trackpad jitter cannot flicker it, and it
-     always shows near the top of the page. */
-  function initNavbarAutoHide() {
-    var navbar = document.querySelector('.navbar');
-    if (!navbar) return;
-
-    var JITTER = 6;  // px of movement to ignore
-    var TOP = 90;    // above this the bar is always shown
-    var lastY = window.pageYOffset;
-
-    onScrollFrame(function () {
-      var y = window.pageYOffset;
-      var delta = y - lastY;
-      if (Math.abs(delta) < JITTER) return;
-
-      // Never slide away while the phone menu is open
-      var keep = y < TOP || delta < 0 || navbar.classList.contains('is-open');
-      navbar.classList.toggle('is-hidden', !keep);
-      lastY = y;
-    });
   }
 
 
@@ -1261,12 +1295,6 @@
 
       /* YanQ */
       { sel: '.yanq-hero__content > *', step: 90 },
-      { sel: '.yanq-works-intro__inner', step: 0 },
-      { sel: '.yanq-step__title', step: 0 },
-      { sel: '.yanq-step__text > *', step: 90 },
-      { sel: '.yanq-step__illustration', step: 140 },
-      { sel: '.yanq-delivers > h2, .yanq-delivers > p', step: 90 },
-      { sel: '.yanq-delivers__grid > *', step: 80 },
 
       /* contact */
       { sel: '.contact-map', step: 0 },
@@ -1325,16 +1353,23 @@
   }
 
 
-  /* ---------- Quote: scroll-driven read-along (home) ----------
+  /* ---------- Quote: scroll-driven read-along (home, YanQ) ----------
      As the paragraph travels from 75% to 28% of the viewport height, the
-     rail fills and the words light one at a time (never part-way). */
+     rail fills and the words light one at a time (never part-way). The
+     section gets .is-scrolly; the paragraph gets --quote-rail.
+     A pinned section can pass `opts` to supply its own progress (0 to 1),
+     its own on/off test and a damping of 1 for a pure scroll mapping; the
+     YanQ sequence does (initYanqFlow). */
   function initQuote() {
-    var quote = document.querySelector('.quote');
-    if (!quote || !quote.querySelector('.quote__stage')) return;
+    readAlong(document.querySelector('.quote'), '.quote__stage p');
+  }
 
-    var para = quote.querySelector('p');
+  function readAlong(quote, paraSel, opts) {
+    var para = quote && quote.querySelector(paraSel);
+    if (!para) return;
+    opts = opts || {};
 
-    var DAMP = 0.16;
+    var DAMP = opts.damp || 0.16;
     var LEAD = 1;       // one word of extra travel, so the last one lights
     var START = 0.75;   // viewport fraction where the reveal begins
     var END = 0.28;     // and where it is complete
@@ -1345,22 +1380,32 @@
     var raf = null;
     var on = false;
 
-    // One span per word; the spaces stay as text so wrapping is unchanged
-    var frag = document.createDocumentFragment();
-    para.textContent.split(/(\s+)/).forEach(function (part) {
-      if (part === '') return;
-      if (/^\s+$/.test(part)) {
-        frag.appendChild(document.createTextNode(' '));
-        return;
-      }
-      var span = document.createElement('span');
-      span.className = 'quote__word';
-      span.textContent = part;
-      frag.appendChild(span);
-      words.push(span);
-    });
-    para.innerHTML = '';
-    para.appendChild(frag);
+    // One span per word; the spaces stay as text so wrapping is unchanged.
+    // Text nodes are split in place, so inline colour spans survive.
+    (function split(node) {
+      toArray(node.childNodes).forEach(function (child) {
+        if (child.nodeType === 1) {
+          split(child);
+          return;
+        }
+        if (child.nodeType !== 3) return;
+
+        var frag = document.createDocumentFragment();
+        child.nodeValue.split(/(\s+)/).forEach(function (part) {
+          if (part === '') return;
+          if (/^\s+$/.test(part)) {
+            frag.appendChild(document.createTextNode(' '));
+            return;
+          }
+          var span = document.createElement('span');
+          span.className = 'quote__word';
+          span.textContent = part;
+          frag.appendChild(span);
+          words.push(span);
+        });
+        node.replaceChild(frag, child);
+      });
+    })(para);
 
     function apply(p) {
       para.style.setProperty('--quote-rail', p.toFixed(4));
@@ -1376,6 +1421,7 @@
     }
 
     function progress() {
+      if (opts.progress) return opts.progress();
       var top = para.getBoundingClientRect().top;
       var from = window.innerHeight * START;
       var to = window.innerHeight * END;
@@ -1397,7 +1443,8 @@
     }
 
     function sync() {
-      if (reduceMotion || window.innerWidth <= 768) {
+      var off = opts.enabled ? !opts.enabled() : (reduceMotion || window.innerWidth <= 768);
+      if (off) {
         if (on || quote.classList.contains('is-scrolly')) {
           quote.classList.remove('is-scrolly');
           reset();
@@ -1423,6 +1470,436 @@
 
     onResizeEnd(sync, 120);
     window.addEventListener('load', sync);
+  }
+
+
+  /* ---------- Process diagrams (YanQ step visuals) ----------
+     Adapted from the supplied process-diagrams.js (YANSA process diagrams
+     package): its per-element playback, without its own track and scroll
+     maths. Each <svg> is played from a local progress L (0 to 1) that the
+     caller works out; initYanqFlow passes each step's own progress.
+       [data-a="type,a,b,x,y"]  animates while L runs from a to b:
+         draw   stroke traces from its start (needs pathLength="1")
+         fade   opacity 0 to 1
+         pop    opacity 0 to 1, scale .6 to 1
+         grow   scaleY 0 to 1 from the bottom
+         slide  opacity 0 to 1, translate from (x, y) to rest
+         rise   as slide, plus scale .92 to 1
+         stream travels by (x, y) and fades out at the end
+         drift  travels by (x, y) and stays
+       [data-osc="period"]  slides left by `oscPhase` periods (wrapping)
+     Nothing is written until prepareDiagram runs, so without it the SVGs
+     show their finished state. */
+  function diagramEase(v) {
+    return v < 0.5 ? 4 * v * v * v : 1 - Math.pow(-2 * v + 2, 3) / 2;
+  }
+
+  function prepareDiagram(svg) {
+    var els = toArray(svg.querySelectorAll('[data-a]')).map(function (el) {
+      var p = el.getAttribute('data-a').split(',');
+      if (p[0] === 'draw') {
+        el.style.strokeDasharray = '1';
+      } else {
+        el.style.transformBox = 'fill-box';
+        el.style.transformOrigin = p[0] === 'grow' ? 'center bottom' : 'center';
+      }
+      return { el: el, type: p[0], a: +p[1], b: +p[2], x: +p[3] || 0, y: +p[4] || 0 };
+    });
+    return { svg: svg, els: els, osc: toArray(svg.querySelectorAll('[data-osc]')) };
+  }
+
+  function renderDiagram(d, L, oscPhase) {
+    d.els.forEach(function (o) {
+      var e = diagramEase(clamp01((L - o.a) / (o.b - o.a)));
+      var s = o.el.style;
+      switch (o.type) {
+        case 'draw':  s.strokeDashoffset = 1 - e; s.opacity = e > 0 ? 1 : 0; break;
+        case 'fade':  s.opacity = e; break;
+        case 'pop':   s.opacity = e; s.transform = 'scale(' + (0.6 + 0.4 * e) + ')'; break;
+        case 'grow':  s.transform = 'scaleY(' + e + ')'; s.opacity = e > 0 ? 1 : 0; break;
+        case 'slide': s.opacity = e; s.transform = 'translate(' + o.x * (1 - e) + 'px,' + o.y * (1 - e) + 'px)'; break;
+        case 'rise':  s.opacity = e; s.transform = 'translate(' + o.x * (1 - e) + 'px,' + o.y * (1 - e) + 'px) scale(' + (0.92 + 0.08 * e) + ')'; break;
+        case 'drift': s.opacity = clamp01(L / 0.1); s.transform = 'translate(' + o.x * e + 'px,' + o.y * e + 'px)'; break;
+        case 'stream': s.opacity = clamp01(L / 0.1) * (1 - clamp01((e - 0.75) / 0.25)); s.transform = 'translate(' + o.x * e + 'px,' + o.y * e + 'px)'; break;
+      }
+    });
+    d.osc.forEach(function (el) {
+      var period = +el.getAttribute('data-osc');
+      el.style.transform = 'translateX(' + (-(oscPhase * period % period)) + 'px)';
+    });
+  }
+
+  function resetDiagram(d) {
+    d.els.forEach(function (o) {
+      var s = o.el.style;
+      ['stroke-dasharray', 'stroke-dashoffset', 'opacity', 'transform', 'transform-box',
+        'transform-origin'].forEach(function (name) { s.removeProperty(name); });
+    });
+    d.osc.forEach(function (el) { el.style.removeProperty('transform'); });
+  }
+
+
+  /* ---------- How YanQ Works: pinned sequence (YanQ) ----------
+     One sticky stage over a runway, as on the Home hero. Every visual state
+     is a pure function of how far the stage has been pinned, measured in
+     stage heights:
+       0   to 0.6   the statement reads along under the pinned heading
+       0.6 to 1.4   cream turns to petrol and the heading to grey and
+                    orange; the statement rises and fades over the first
+                    half, the steps fade in over the second
+       1.0 on       the steps, STEP stages each: a step rises to the focus
+                    line (the stage's centre, beside the visual box), parks
+                    there, still, for HOLD of its share while its diagram
+                    builds, then moves up as the next arrives
+       last OUT     outro: the steps scroll out, What YanQ Delivers scrolls
+                    in beneath the pinned heading, whose side words swap
+                    round a fixed "YanQ"; the pin releases on its end state
+     Opacity falls off smoothly with a step's distance from the focus line,
+     the rail marker rides the wave (see apply), and the visual box stays put while
+     its slots crossfade. Nothing moves unless the page scrolls. The hook for
+     the supplied SVGs (--flow-progress, --flow-step, --step-progress,
+     .is-active) is described above the slots in yanq.html. Off, leaving the
+     stacked layout, under reduced motion, at 768px and below, and on
+     screens too short to pin. */
+  function initYanqFlow() {
+    var flow = document.querySelector('.yanq-flow');
+    if (!flow) return;
+
+    var stage = flow.querySelector('.yanq-flow__stage');
+    var body = flow.querySelector('.yanq-flow__body');
+    var intro = flow.querySelector('.yanq-flow__intro');
+    var win = flow.querySelector('.yanq-flow__window');
+    var list = flow.querySelector('.yanq-flow__list');
+    var dotBox = flow.querySelector('.yanq-flow__dots');
+    var visual = flow.querySelector('.yanq-flow__visual');
+    var spine = flow.querySelector('.yanq-flow__spine');
+    var steps = toArray(flow.querySelectorAll('.yanq-flow__step'));
+    if (!stage || !body || !intro || !win || !list || !steps.length) return;
+
+    // A step's slot is the .yanq-anim with the same data-step
+    var slots = steps.map(function (step) {
+      return flow.querySelector('.yanq-anim[data-step="' + step.getAttribute('data-step') + '"]');
+    });
+
+    // The process diagram in each slot, prepared only while pinned
+    var diagrams = slots.map(function (slot) {
+      return slot ? slot.querySelector('svg.yanq-diagram') : null;
+    });
+    var played = [];
+    var WAVE_CYCLES = 6;   // Measurement's screen wave, after it is built
+
+    var READ = 0.6;    // stage heights: the read-along is complete
+    var TURN = 1.4;    // the colour change is complete
+    var LIST = 1.0;    // the list starts to move
+    var ENTER = -0.6;  // list position when it starts (below the focus)
+    var LEAVE = 0.2;   // how far past the last step it travels by the end
+    var STEP = 2.4;    // stage heights of scroll per step (hold + move)
+    var HOLD = 0.45;   // share of a step's scroll spent parked at the focus
+    var BUILD_AT = 0.75;  // share of the hold by which its diagram is built
+    var OUT = 1;       // stage heights of outro into What YanQ Delivers
+    var CLEAR = 24;    // px the box and the focused step keep from the heading
+    var DIM = 0.62;    // opacity lost by the step one place below focus
+    var INSET = 6;     // px the marker keeps from the stage's top and bottom
+    // One period of the wave in yanq-wave-tile.svg, repeated down the spine
+    // (40 x 246px, see .yanq-flow__spine): centred on x 20, swinging 17.7
+    // either side, starting on the centre line and bulging right first
+    var WAVE = { cx: 20, amp: 17.7, period: 246 };
+    var CREAM = [250, 250, 239];    // --cream
+    var PETROL = [26, 65, 70];      // --petrol
+    var INK = [23, 23, 23];         // the heading on cream
+    var GREY = [152, 152, 152];     // the heading on petrol
+    var ORANGE = [255, 140, 64];    // --orange, for "YanQ"
+
+    var n = steps.length;
+    var dots = [];
+    var tops = [];     // each step's top within the list, px
+    // Focus line: the stage's vertical centre (where the rail marker parks),
+    // px below the list window's top, which is the heading's bottom edge.
+    // The step in focus and the visual box are both centred on it.
+    var focusY = 0;
+    var stageH = 1;
+    var runway = 1;
+    var paraTop = 0;   // the statement's viewport top while pinned
+    var gap = 0;       // space between steps in the list, px
+    var reach = 0;     // how far the spine reaches above the stage, px
+    var heights = [];  // each step's height, px
+    var boxH = 0;
+    var titleH = 0;
+    var on = false;
+
+    // The list's timeline, in step shares (STEP stage heights each): the
+    // first step's rise, then for each step a HOLD parked at the focus line
+    // and a move on to the next, then the last step's leave
+    var segs = [];
+    var holdAt = [];   // where each step's hold starts, in shares
+    var shares = 0;
+    function addSeg(len, from, to) {
+      segs.push({ x: shares, len: len, from: from, to: to });
+      shares += len;
+    }
+    addSeg(-ENTER * (1 - HOLD), ENTER, 0);
+    for (var h = 0; h < n; h++) {
+      holdAt.push(shares);
+      addSeg(HOLD, h, h);
+      if (h < n - 1) addSeg(1 - HOLD, h, h + 1);
+    }
+    addSeg(LEAVE * (1 - HOLD), n - 1, n - 1 + LEAVE);
+
+    function posAt(x) {
+      if (x <= 0) return ENTER;
+      for (var s = 0; s < segs.length; s++) {
+        var g = segs[s];
+        if (x <= g.x + g.len) {
+          return g.from === g.to ? g.from : lerp(g.from, g.to, smooth(clamp01((x - g.x) / g.len)));
+        }
+      }
+      return n - 1 + LEAVE;
+    }
+
+    for (var d = 0; d < n; d++) {
+      var dot = document.createElement('span');
+      dot.className = 'yanq-flow__dot';
+      if (dotBox) dotBox.appendChild(dot);
+      dots.push(dot);
+    }
+
+    function smooth(t) {
+      return t * t * (3 - 2 * t);
+    }
+
+    function mix(a, b, t, alpha) {
+      return 'rgba(' + Math.round(lerp(a[0], b[0], t)) + ', ' +
+        Math.round(lerp(a[1], b[1], t)) + ', ' +
+        Math.round(lerp(a[2], b[2], t)) + ', ' +
+        (alpha === undefined ? 1 : alpha.toFixed(4)) + ')';
+    }
+
+    function enabled() {
+      return !reduceMotion && window.innerWidth > 768 && window.innerHeight >= 560;
+    }
+
+    // Pixels scrolled since the stage stuck (negative on the way in)
+    function travelled() {
+      var stuckAt = parseFloat(getComputedStyle(stage).top) || 0;
+      return stuckAt - flow.getBoundingClientRect().top;
+    }
+
+    function measure() {
+      stageH = stage.getBoundingClientRect().height || 1;
+      runway = Math.max(flow.offsetHeight - stageH, 1);
+      tops = steps.map(function (step) {
+        return step.offsetTop;
+      });
+      heights = steps.map(function (step) {
+        return step.offsetHeight;
+      });
+      boxH = visual ? visual.offsetHeight : 0;
+      titleH = body.offsetTop;   // the body starts at the heading's bottom
+      // On a short stage the centre would put the box against the heading;
+      // then the pair drops just enough to clear it by CLEAR px
+      focusY = Math.max(stageH / 2 - titleH, boxH / 2 + CLEAR, Math.max.apply(null, heights) / 2 + CLEAR);
+      paraTop = (parseFloat(getComputedStyle(stage).top) || 0) + body.offsetTop + intro.offsetTop;
+      gap = parseFloat(getComputedStyle(list).rowGap) || 0;
+      reach = spine ? -spine.offsetTop : 0;
+    }
+
+    // Where in the list a (fractional) position falls, px. Past either end
+    // it carries on at the end step's spacing, so the first step can rise in
+    // and the last one leave.
+    function topAt(pos) {
+      if (pos <= 0) {
+        var first = n > 1 ? tops[1] - tops[0] : steps[0].offsetHeight + gap;
+        return tops[0] + pos * first;
+      }
+      if (pos >= n - 1) {
+        var last = n > 1 ? tops[n - 1] - tops[n - 2] : steps[0].offsetHeight + gap;
+        return tops[n - 1] + (pos - (n - 1)) * last;
+      }
+      var a = Math.floor(pos);
+      return lerp(tops[a], tops[a + 1], pos - a);
+    }
+
+    // Read-along: from the statement reaching 75% of the viewport on the
+    // way in, to READ stage heights into the pin
+    function readProgress() {
+      var t = travelled();
+      var start = paraTop - window.innerHeight * 0.75;
+      var end = READ * stageH;
+      if (end <= start) return 1;
+      return clamp01((t - start) / (end - start));
+    }
+
+    function apply(t) {
+      var u = t / stageH;
+      var half = (TURN - READ) / 2;
+      var turn = smooth(clamp01((u - READ) / (TURN - READ)));
+
+      // Outro: the last stage of the runway, while What YanQ Delivers rises
+      // into place. The steps scroll out with it (--yanq-flow-out), petrol
+      // turns back to cream, and the heading's side words swap round the
+      // fixed "YanQ", whose orange hands over to the Delivers gradient.
+      var runU = runway / stageH;
+      var out = clamp01((u - (runU - OUT)) / OUT);
+      var swap = smooth(clamp01((out - 0.15) / 0.55));
+
+      flow.style.setProperty('--yanq-flow-bg', out > 0 ?
+        mix(PETROL, CREAM, smooth(clamp01(out / 0.7))) : mix(CREAM, PETROL, turn));
+      flow.style.setProperty('--yanq-flow-title', mix(INK, GREY, turn));
+      flow.style.setProperty('--yanq-flow-brand', mix(INK, ORANGE, turn, 1 - swap));
+      flow.style.setProperty('--yanq-flow-intro', (1 - smooth(clamp01((u - READ) / half))).toFixed(4));
+      flow.style.setProperty('--yanq-flow-reveal', smooth(clamp01((u - READ - half) / half)).toFixed(4));
+      flow.style.setProperty('--yanq-flow-out', out.toFixed(4));
+      flow.style.setProperty('--yanq-flow-swap', swap.toFixed(4));
+
+      // The list's timeline runs over the runway between the colour change
+      // and the outro, so it ends as the outro begins
+      var span = Math.max(runU - LIST - OUT, 0.001);
+      var travel = clamp01((u - LIST) / span);
+      var x = travel * shares;
+      var pos = posAt(x);
+      var held = Math.min(Math.max(pos, 0), n - 1);
+      var active = Math.round(held);
+      var a = Math.floor(held);
+      var b = Math.min(n - 1, a + 1);
+      var hNow = lerp(heights[a], heights[b], held - a);
+
+      // The step at `pos` is centred on the focus line
+      var offset = focusY - hNow / 2 - topAt(pos);
+      list.style.transform = 'translate3d(0, ' + offset.toFixed(2) + 'px, 0)';
+      // The mask is fully opaque from just above the focused step's top
+      flow.style.setProperty('--yanq-flow-focus', (focusY - hNow / 2).toFixed(1) + 'px');
+
+      // Below the focus a step dims to 1 - DIM. Above it, it fades out as
+      // it rises, reaching 0 as its top meets the heading's bottom edge.
+      // A parked step stays perfectly still beside its diagram.
+      steps.forEach(function (step, i) {
+        var d = i - pos;
+        var parked = Math.max(focusY - heights[i] / 2, 1);
+        var op = d >= 0 ? 1 - DIM * Math.min(d, 1) : clamp01((tops[i] + offset) / parked);
+        step.style.opacity = op.toFixed(3);
+        step.classList.toggle('is-active', i === active);
+      });
+
+      // The box is centred on the same line
+      flow.style.setProperty('--yanq-flow-box-y', (focusY - boxH / 2).toFixed(2) + 'px');
+
+      if (visual) {
+        visual.style.setProperty('--flow-progress', travel.toFixed(4));
+        visual.style.setProperty('--flow-step', (held + 1).toFixed(4));
+      }
+
+      // --step-progress: 0 to 0.25 rising into focus, 0.25 to 0.75 over the
+      // hold (0.5 is mid-hold), 0.75 to 1 leaving. The diagram builds over
+      // the first BUILD_AT of the hold. Oscillators run from the first
+      // diagram's completion to the end of the list.
+      var oscFrom = holdAt[0] + BUILD_AT * HOLD;
+      var oscPhase = clamp01((x - oscFrom) / Math.max(shares - oscFrom, 0.001)) * WAVE_CYCLES;
+
+      slots.forEach(function (slot, i) {
+        if (!slot) return;
+        var hp = clamp01((x - holdAt[i]) / HOLD);
+        var stepP = hp <= 0 ? 0.25 * clamp01((pos - i + 0.5) / 0.5) :
+          hp < 1 ? 0.25 + 0.5 * hp :
+          0.75 + 0.25 * clamp01((pos - i) / 0.5);
+        slot.style.opacity = clamp01(1 - Math.abs(held - i)).toFixed(3);
+        slot.style.setProperty('--step-progress', stepP.toFixed(4));
+        slot.classList.toggle('is-active', i === active);
+        if (played[i]) renderDiagram(played[i], clamp01(hp / BUILD_AT), oscPhase);
+      });
+
+      dots.forEach(function (dot, i) {
+        dot.classList.toggle('is-active', i === active);
+      });
+
+      // Rail, in three parts:
+      //   entry  the marker runs from the top of the wave to the middle
+      //          while the first step rises to the focus line
+      //   steps  it stays in the middle and the wave slides up past it
+      //          steadily, holds included
+      //   exit   the wave stops and the marker runs on to the bottom
+      var mid = stageH / 2;
+      var holdEnd = holdAt[n - 1] + HOLD;
+      var markerY;
+      if (x < holdAt[0]) {
+        markerY = lerp(INSET, mid, clamp01(x / holdAt[0]));
+      } else if (x > holdEnd) {
+        markerY = lerp(mid, stageH - INSET, clamp01((x - holdEnd) / (shares - holdEnd)));
+      } else {
+        markerY = mid;
+      }
+      var slide = Math.max(topAt(n - 1) - topAt(0), topAt(1) - topAt(0));
+      var shift = clamp01((x - holdAt[0]) / Math.max(holdEnd - holdAt[0], 0.001)) * slide;
+      // The wave tiles from the spine's top, which sits `reach` above the stage
+      var phase = ((markerY + reach + shift) % WAVE.period) / WAVE.period;
+      var markerX = WAVE.cx + WAVE.amp * Math.sin(2 * Math.PI * phase);
+      flow.style.setProperty('--yanq-flow-marker-y', markerY.toFixed(2) + 'px');
+      flow.style.setProperty('--yanq-flow-marker-x', markerX.toFixed(2) + 'px');
+      flow.style.setProperty('--yanq-flow-wave-y', (-(shift % WAVE.period)).toFixed(2) + 'px');
+    }
+
+    function reset() {
+      ['--yanq-flow-runway', '--yanq-flow-bg', '--yanq-flow-title', '--yanq-flow-brand',
+        '--yanq-flow-intro', '--yanq-flow-reveal', '--yanq-flow-marker-y',
+        '--yanq-flow-marker-x', '--yanq-flow-wave-y', '--yanq-flow-focus',
+        '--yanq-flow-out', '--yanq-flow-swap', '--yanq-flow-box-y'].forEach(function (name) {
+        flow.style.removeProperty(name);
+      });
+      list.style.transform = '';
+      if (visual) {
+        visual.style.removeProperty('--flow-progress');
+        visual.style.removeProperty('--flow-step');
+      }
+      steps.forEach(function (step) {
+        step.style.opacity = '';
+        step.style.transform = '';
+        step.classList.remove('is-active');
+      });
+      slots.forEach(function (slot) {
+        if (!slot) return;
+        slot.style.opacity = '';
+        slot.style.removeProperty('--step-progress');
+        slot.classList.remove('is-active');
+      });
+      dots.forEach(function (dot) { dot.classList.remove('is-active'); });
+      played.forEach(function (d) { if (d) resetDiagram(d); });
+      played = [];
+    }
+
+    function sync() {
+      if (!enabled()) {
+        if (on || flow.classList.contains('is-scrolly')) {
+          flow.classList.remove('is-scrolly');
+          reset();
+        }
+        on = false;
+        return;
+      }
+
+      // Runway in stage heights: the statement and colour change, the
+      // list's timeline at STEP per share, then the outro
+      flow.style.setProperty('--yanq-flow-runway', LIST + shares * STEP + OUT);
+      flow.classList.add('is-scrolly');
+      on = true;
+      if (!played.length) {
+        played = diagrams.map(function (svg) { return svg ? prepareDiagram(svg) : null; });
+      }
+      measure();
+      apply(travelled());
+    }
+
+    sync();
+    onScrollFrame(function () {
+      if (on) apply(travelled());
+    });
+    onResizeEnd(sync, 120);
+    window.addEventListener('load', sync);
+
+    // The statement's read-along, mapped straight from the pin
+    readAlong(intro, '.yanq-flow__quote', {
+      damp: 1,
+      enabled: enabled,
+      progress: readProgress
+    });
   }
 
 
@@ -1814,7 +2291,6 @@
   initProblems();
   initFooterMark();
   initSolutionDialog();
-  initNavbarAutoHide();
   initMobileNav();
   initNavIndicator();
   initSymptomFocus();
@@ -1823,6 +2299,7 @@
   initHero();
   initScrollReveal();
   initQuote();
+  initYanqFlow();
   initCaseStudies();
   initAboutDecor();
   initContactForm();

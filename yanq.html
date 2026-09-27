@@ -117,43 +117,271 @@
       </div>
     </section>
 
-    <!-- HOW YANQ WORKS: INTRO -->
-    <section class="yanq-works-intro">
-      <div class="yanq-works-intro__inner">
-        <h2>How YanQ Works.</h2>
-        <p class="yanq-works-intro__quote">
-          <span class="yanq-works-intro__lead">Resolving power quality problems requires more than replacing components or resetting breakers.</span>
-          <span class="yanq-works-intro__rest"> It requires knowing exactly what the system is carrying. The harmonic signatures, the reactive power imbalances, the load behaviors and why they are happening in the first place.</span>
-        </p>
-      </div>
-    </section>
+    <!-- HOW YANQ WORKS: one pinned, scroll-driven sequence (initYanqFlow).
+         The intro statement reads along, the stage turns from cream to petrol
+         under the pinned heading, then the steps scroll past with a visual
+         per step. With no JS, reduced motion or a narrow screen it is a plain
+         stack: heading, statement, then each step followed by its visual.
 
-    <!-- HOW YANQ WORKS: STEP -->
-    <section class="yanq-step">
-      <img src="images/icons/yanq-sine-wave.svg" alt="" class="yanq-step__spine" aria-hidden="true">
-      <h2 class="yanq-step__title">How <span class="accent">YanQ</span> Works.</h2>
-      <div class="yanq-step__inner">
-        <div class="yanq-step__text">
-          <div class="yanq-step__tag-row">
-            <span class="yanq-step__number">Step 1</span>
-            <span class="yanq-step__tag">Calibration &amp; SLD</span>
+         Adding a step: copy one <li class="yanq-flow__step"> and one
+         <div class="yanq-anim">, and give both the next data-step and --i.
+         The runway and the progress dots follow the number of steps. -->
+    <section class="yanq-flow" aria-labelledby="yanq-flow-title">
+      <div class="yanq-flow__stage">
+        <!-- The dashed wave (images/icons/yanq-wave-tile.svg, repeated as a
+             mask) is orange above the marker, which rides it as you scroll -->
+        <span class="yanq-flow__spine" aria-hidden="true">
+          <span class="yanq-flow__marker"></span>
+        </span>
+
+        <!-- While pinned, the side words swap to "What ... Delivers." around a
+             fixed "YanQ" as the Delivers section scrolls in. The incoming
+             words and the gradient "YanQ" are visual duplicates only; the
+             section's real <h2> is in .yanq-delivers below. -->
+        <h2 class="yanq-flow__title" id="yanq-flow-title"><span class="yanq-flow__word">How</span> <span class="yanq-flow__brand">YanQ<span class="yanq-flow__brand-to accent-gradient" aria-hidden="true">YanQ</span><span class="yanq-flow__word-in yanq-flow__word-in--l" aria-hidden="true">What </span><span class="yanq-flow__word-in yanq-flow__word-in--r" aria-hidden="true"> Delivers.</span></span> <span class="yanq-flow__word">Works.</span></h2>
+
+        <div class="yanq-flow__body">
+          <div class="yanq-flow__intro">
+            <p class="yanq-flow__quote">
+              <span class="yanq-flow__lead">Resolving power quality problems requires more than replacing components or resetting breakers.</span>
+              <span class="yanq-flow__rest"> It requires knowing exactly what the system is carrying. The harmonic signatures, the reactive power imbalances, the load behaviors and why they are happening in the first place.</span>
+            </p>
           </div>
-          <h3>Measurement</h3>
-          <p>On site power quality data collection using a calibrated analyser mapped to the facility's Single Line Diagram.</p>
-          <div class="yanq-step__pills">
-            <span class="yanq-pill"><span class="yanq-pill__dot"></span>Live Acquisition</span>
-            <span class="yanq-step__sampling">Sampling: 10 kHz</span>
+
+          <div class="yanq-flow__steps">
+            <div class="yanq-flow__window">
+              <ol class="yanq-flow__list">
+                <li class="yanq-flow__step" data-step="1" style="--i: 1">
+                  <div class="yanq-flow__tag-row">
+                    <span class="yanq-flow__number">Step 1</span>
+                    <span class="yanq-flow__tag">Calibration &amp; SLD</span>
+                  </div>
+                  <h3>Measurement</h3>
+                  <p>On-site power quality data collection using a calibrated analyser mapped to the facility's Single Line Diagram.</p>
+                  <div class="yanq-flow__pills">
+                    <span class="yanq-pill"><span class="yanq-pill__dot"></span>Live Acquisition</span>
+                    <span class="yanq-flow__sampling">Sampling: 10 kHz</span>
+                  </div>
+                </li>
+                <li class="yanq-flow__step" data-step="2" style="--i: 2">
+                  <div class="yanq-flow__tag-row">
+                    <span class="yanq-flow__number">Step 2</span>
+                    <span class="yanq-flow__tag">Data Filtering</span>
+                  </div>
+                  <h3>Compilation</h3>
+                  <p>Raw data filtered and structured, removing noise and isolating the parameters that matter.</p>
+                  <div class="yanq-flow__pills">
+                    <span class="yanq-pill">THDi</span>
+                    <span class="yanq-pill">THDv</span>
+                    <span class="yanq-pill">Power Factor</span>
+                  </div>
+                </li>
+                <li class="yanq-flow__step" data-step="3" style="--i: 3">
+                  <div class="yanq-flow__tag-row">
+                    <span class="yanq-flow__number">Step 3</span>
+                    <span class="yanq-flow__tag">IEEE 519-2022 Benchmarking</span>
+                  </div>
+                  <h3>Report Generation</h3>
+                  <p>Relevant data collated into a structured Yansa Power Quality Report benchmarked against IEEE 519-2022.</p>
+                  <div class="yanq-flow__pills">
+                    <span class="yanq-pill">Standard Report Format</span>
+                    <span class="yanq-pill">Actionable Findings</span>
+                  </div>
+                </li>
+                <li class="yanq-flow__step" data-step="4" style="--i: 4">
+                  <div class="yanq-flow__tag-row">
+                    <span class="yanq-flow__number">Step 4</span>
+                    <span class="yanq-flow__tag">Solution Sizing</span>
+                  </div>
+                  <h3>Recommendations</h3>
+                  <p>Diagnosis translated into a specific, actionable solution, sized to what the site's data actually shows.</p>
+                  <div class="yanq-flow__pills">
+                    <span class="yanq-pill">AHF</span>
+                    <span class="yanq-pill">SVG</span>
+                    <span class="yanq-pill">Hybrid Systems</span>
+                    <span class="yanq-pill">Passive Correction</span>
+                  </div>
+                </li>
+              </ol>
+            </div>
+
+            <!-- STEP VISUALS. The framed box stays put while the list scrolls;
+                 what is inside it changes with the scroll. Two ways to fill it:
+
+                 1. One SVG that morphs across every step: paste it into
+                    .yanq-flow__morph. The script writes onto .yanq-flow__visual
+                    (so the morph and every slot inherit them):
+                      --flow-progress  0 to 1 across the whole pinned sequence
+                      --flow-step      the step in view as a fraction, 1 to the
+                                       number of steps (1.37 = a third of the
+                                       way from step 1 to step 2)
+                 2. One SVG per step: paste it into that step's .yanq-anim
+                    (matched to the step by data-step). Each slot also gets
+                      --step-progress  0 to 1 across that step's share of the
+                                       scroll: 0 to 0.25 while it rises into
+                                       focus, 0.25 to 0.75 while it is parked
+                                       there (0.5 = mid-hold, at focus), 0.75
+                                       to 1 as it leaves
+                      .is-active       while it is the step at the focus line
+                    Neighbouring slots crossfade by position, so an empty or
+                    per-step slot hands over smoothly.
+
+                 Drive the SVG from those in CSS, for example
+                   .yanq-anim[data-step="1"] .needle {
+                     transform: rotate(calc(var(--step-progress) * 90deg));
+                   }
+                 and it moves only while the page scrolls. Use no transitions
+                 or keyframes. Outside the pinned mode (no JS, reduced motion,
+                 narrow screens) the morph is hidden, each slot sits under its
+                 step, and every property is at its finished value.
+
+                 The four slots below hold the supplied process diagrams. Their
+                 data-a / data-osc attributes are played by renderDiagram in
+                 js/script.js: each builds over the first 75% of its step's
+                 hold (--step-progress 0.25 to 0.625); data-win is unused.
+                 Colours come from classes styled in css/style.css: linework
+                 is currentColor, yd-clean teal, yd-raw orange, yd-guide mist,
+                 yd-surface the box's own fill. -->
+            <div class="yanq-flow__visual">
+              <div class="yanq-flow__morph">
+                <!-- paste one morphing animation HTML/SVG here (optional) -->
+              </div>
+              <div class="yanq-anim" data-step="1" style="--i: 1">
+                <svg class="yanq-diagram" aria-hidden="true" focusable="false" data-win="0.02,0.24" viewBox="0 0 335 278" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                  <defs><clipPath id="m1-screen"><rect x="61" y="59" width="157" height="92"></rect></clipPath></defs>
+                  <path data-a="draw,0,0.7" pathLength="1" d="M47,40 H288 Q294,40 294,46 V202 Q294,208 288,208 H47 Q41,208 41,202 V46 Q41,40 47,40 Z"></path>
+                  <path data-a="draw,0.05,0.65" pathLength="1" d="M61,57 H218 Q220,57 220,59 V151 Q220,153 218,153 H61 Q59,153 59,151 V59 Q59,57 61,57 Z" stroke-width="2"></path>
+                  <path class="yd-guide" data-a="fade,0.45,0.7" d="M140,60 V150" stroke-width="1.2" stroke-dasharray="4 4"></path>
+                  <g clip-path="url(#m1-screen)">
+                    <g data-osc="75">
+                      <path class="yd-raw" data-a="fade,0.5,0.85" d="M-11,105 C-1.6,115.7 17.1,115.7 26.5,105 C35.9,94.3 54.6,94.3 64,105 C73.4,115.7 92.1,115.7 101.5,105 C110.9,94.3 129.6,94.3 139,105 C148.4,115.7 167.1,115.7 176.5,105 C185.9,94.3 204.6,94.3 214,105 C223.4,115.7 242.1,115.7 251.5,105 C260.9,94.3 279.6,94.3 289,105 C298.4,115.7 317.1,115.7 326.5,105 C335.9,94.3 354.6,94.3 364,105" stroke-width="1.3" stroke-dasharray="4 4"></path>
+                      <path class="yd-clean" data-a="draw,0.4,0.9" pathLength="1" d="M-11,105 C-1.6,78.3 17.1,78.3 26.5,105 C35.9,131.7 54.6,131.7 64,105 C73.4,78.3 92.1,78.3 101.5,105 C110.9,131.7 129.6,131.7 139,105 C148.4,78.3 167.1,78.3 176.5,105 C185.9,131.7 204.6,131.7 214,105 C223.4,78.3 242.1,78.3 251.5,105 C260.9,131.7 279.6,131.7 289,105 C298.4,78.3 317.1,78.3 326.5,105 C335.9,131.7 354.6,131.7 364,105" stroke-width="2.2"></path>
+                    </g>
+                  </g>
+                  <path data-a="draw,0.1,0.6" pathLength="1" d="M241,57 H273 Q275,57 275,59 V66 Q275,68 273,68 H241 Q239,68 239,66 V59 Q239,57 241,57 Z" stroke-width="2"></path>
+                  <path data-a="draw,0.15,0.65" pathLength="1" d="M241,78 H273 Q275,78 275,80 V87 Q275,89 273,89 H241 Q239,89 239,87 V80 Q239,78 241,78 Z" stroke-width="2"></path>
+                  <path data-a="draw,0.15,0.7" pathLength="1" d="M242,116 A15,15 0 1 1 272,116 A15,15 0 1 1 242,116 Z" stroke-width="2"></path>
+                  <path data-a="draw,0.5,0.7" pathLength="1" d="M257,108 V117" stroke-width="2"></path>
+                  <path data-a="draw,0.2,0.7" pathLength="1" d="M230,171 H276 M253,162 V180 M240,188 H266" stroke-width="1.6"></path>
+                  <path data-a="draw,0.1,0.5" pathLength="1" d="M67.5,175 A6.5,6.5 0 1 1 80.5,175 A6.5,6.5 0 1 1 67.5,175 Z" stroke-width="2"></path>
+                  <path data-a="draw,0.12,0.52" pathLength="1" d="M102.5,175 A6.5,6.5 0 1 1 115.5,175 A6.5,6.5 0 1 1 102.5,175 Z" stroke-width="2"></path>
+                  <path data-a="draw,0.14,0.54" pathLength="1" d="M136.5,175 A6.5,6.5 0 1 1 149.5,175 A6.5,6.5 0 1 1 136.5,175 Z" stroke-width="2"></path>
+                  <path data-a="draw,0.16,0.56" pathLength="1" d="M170.5,175 A6.5,6.5 0 1 1 183.5,175 A6.5,6.5 0 1 1 170.5,175 Z" stroke-width="2"></path>
+                  <path data-a="draw,0.2,0.85" pathLength="1" d="M74,181.5 C74,215 60,238 41,250" stroke-width="2"></path>
+                  <path data-a="draw,0.2,0.85" pathLength="1" d="M109,181.5 C109,218 100,236 82,250" stroke-width="2"></path>
+                  <path data-a="draw,0.2,0.85" pathLength="1" d="M143,181.5 V250" stroke-width="2"></path>
+                  <path data-a="draw,0.35,0.6" pathLength="1" d="M143,197 V212" stroke-width="4.5"></path>
+                  <path data-a="draw,0.2,0.85" pathLength="1" d="M177,181.5 C177,220 196,238 221,248" stroke-width="2"></path>
+                </svg>
+              </div>
+              <div class="yanq-anim" data-step="2" style="--i: 2">
+                <svg class="yanq-diagram" aria-hidden="true" focusable="false" data-win="0.26,0.5" viewBox="0 0 425 278" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <defs><clipPath id="c2-in"><path d="M0,0 H143 V93 L176,160 V278 H0 Z"></path></clipPath></defs>
+                  <g clip-path="url(#c2-in)">
+                    <path class="yd-raw" data-a="stream,0.18,0.62,120,14" d="M28,92 C34,78 40,76 46,88 C52,100 56,76 64,78 C72,80 74,104 84,102 C94,100 96,86 106,92 C118,99 126,112 150,112"></path>
+                    <path class="yd-raw" data-a="stream,0.2,0.64,120,-30" d="M28,168 C34,152 42,150 48,162 C54,174 60,176 66,166 C72,156 78,150 86,158 C94,168 98,176 108,168 C118,160 128,152 150,150"></path>
+                    <path class="yd-raw" data-a="stream,0.16,0.54,70,-70" d="M104,212 C116,206 118,190 128,186 C138,182 144,184 152,178"></path>
+                    <g fill="currentColor" stroke="none">
+                      <circle data-a="drift,0.14,0.6,22,6" cx="32" cy="62" r="2"></circle>
+                      <circle class="yd-raw" data-a="stream,0.2,0.55,132,44" cx="58" cy="68" r="1.5"></circle>
+                      <circle data-a="drift,0.22,0.62,14,5" cx="82" cy="60" r="2"></circle>
+                      <circle class="yd-raw" data-a="stream,0.26,0.6,98,24" cx="92" cy="88" r="2.4"></circle>
+                      <circle class="yd-raw" data-a="stream,0.3,0.62,74,20" cx="116" cy="92" r="1.8"></circle>
+                      <circle data-a="drift,0.15,0.6,18,-1" cx="34" cy="120" r="1.5"></circle>
+                      <circle data-a="drift,0.2,0.62,16,-3" cx="62" cy="140" r="2"></circle>
+                      <circle class="yd-raw" data-a="stream,0.16,0.53,150,-38" cx="40" cy="150" r="2"></circle>
+                      <circle class="yd-raw" data-a="stream,0.27,0.6,90,-18" cx="100" cy="130" r="1.5"></circle>
+                      <circle class="yd-raw" data-a="stream,0.31,0.63,68,-28" cx="122" cy="140" r="2"></circle>
+                      <circle data-a="drift,0.14,0.6,20,-8" cx="36" cy="190" r="2"></circle>
+                      <circle class="yd-raw" data-a="stream,0.24,0.58,106,-66" cx="84" cy="178" r="2"></circle>
+                      <circle class="yd-raw" data-a="stream,0.28,0.61,82,-84" cx="108" cy="196" r="2.2"></circle>
+                      <circle class="yd-raw" data-a="stream,0.18,0.55,136,-100" cx="54" cy="212" r="2"></circle>
+                      <circle data-a="drift,0.2,0.62,14,-10" cx="74" cy="224" r="2.4"></circle>
+                      <circle class="yd-raw" data-a="stream,0.26,0.6,96,-118" cx="94" cy="230" r="2.4"></circle>
+                      <circle class="yd-raw" data-a="stream,0.31,0.63,68,-118" cx="122" cy="230" r="2"></circle>
+                    </g>
+                  </g>
+                  <path data-a="draw,0,0.22" pathLength="1" d="M145,93 H252 L210,160 V208 H178 V160 Z" stroke-width="2.4"></path>
+                  <path data-a="draw,0.08,0.24" pathLength="1" d="M152,102 H245" stroke-width="1.8"></path>
+                  <path data-a="draw,0.6,0.7" pathLength="1" d="M245,155 H274"></path>
+                  <path data-a="draw,0.66,0.72" pathLength="1" d="M268,149 L275,155 L268,161"></path>
+                  <path class="yd-clean" data-a="draw,0.7,1" pathLength="1" d="M292,175 C302,175 308,130 320,130 C332,130 338,175 348,175 C358,175 364,130 376,130 C388,130 394,175 404,175" stroke-width="2.2"></path>
+                </svg>
+              </div>
+              <div class="yanq-anim" data-step="3" style="--i: 3">
+                <svg class="yanq-diagram" aria-hidden="true" focusable="false" data-win="0.52,0.76" viewBox="0 0 345 285" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path data-a="slide,0.2,0.42,26,0" d="M71,45 H47 Q43,45 43,49 V238 Q43,242 47,242 H71" stroke-width="1.8"></path>
+                  <g data-a="rise,0,0.28,0,22">
+                    <path d="M76,16 H259 L281,38 V264 Q281,269 276,269 H76 Q71,269 71,264 V21 Q71,16 76,16 Z" class="yd-surface" stroke-width="2.4"></path>
+                    <path d="M259,16 V33 Q259,38 264,38 H281" stroke-width="1.8"></path>
+                  </g>
+                  <path data-a="draw,0.26,0.4" pathLength="1" d="M91,37 H236" stroke-width="1.5"></path>
+                  <path data-a="draw,0.3,0.5" pathLength="1" d="M92,57 H259 Q260,57 260,58 V128 Q260,129 259,129 H92 Q91,129 91,128 V58 Q91,57 92,57 Z" stroke-width="1.8"></path>
+                  <path data-a="fade,0.45,0.58" d="M169,60 V126" stroke-width="1.2" stroke-dasharray="4 4" class="yd-guide"></path>
+                  <path data-a="fade,0.5,0.7" d="M97,93 C107,101 127,101 137,93 C147,85 167,85 177,93 C187,101 207,101 217,93 C227,85 247,85 257,93" stroke-width="1.3" stroke-dasharray="4 4" class="yd-guide"></path>
+                  <path class="yd-clean" data-a="draw,0.45,0.72" pathLength="1" d="M97,93 C107,63.7 127,63.7 137,93 C147,122.3 167,122.3 177,93 C187,63.7 207,63.7 217,93 C227,122.3 247,122.3 257,93" stroke-width="2.2"></path>
+                  <g class="yd-clean" stroke-width="2.4">
+                    <path data-a="grow,0.55,0.66" d="M93,187 V152"></path>
+                    <path data-a="grow,0.57,0.68" d="M104,187 V147"></path>
+                    <path data-a="grow,0.59,0.7" d="M116,187 V159"></path>
+                    <path data-a="grow,0.61,0.72" d="M128,187 V165"></path>
+                    <path data-a="grow,0.63,0.74" d="M140,187 V169"></path>
+                    <path data-a="grow,0.65,0.76" d="M152,187 V172"></path>
+                  </g>
+                  <g stroke-width="1.5">
+                    <path data-a="draw,0.6,0.72" pathLength="1" d="M168,152 H259"></path>
+                    <path data-a="draw,0.63,0.75" pathLength="1" d="M168,165 H253"></path>
+                    <path data-a="draw,0.66,0.78" pathLength="1" d="M168,179 H228"></path>
+                    <path data-a="draw,0.68,0.8" pathLength="1" d="M91,210 H220"></path>
+                    <path data-a="draw,0.7,0.82" pathLength="1" d="M91,222 H213"></path>
+                    <path data-a="draw,0.72,0.84" pathLength="1" d="M91,234 H220"></path>
+                    <path data-a="draw,0.74,0.86" pathLength="1" d="M91,248 H183"></path>
+                  </g>
+                  <circle data-a="pop,0.82,0.94" cx="271" cy="218" r="30" class="yd-surface yd-clean" stroke-width="2.4"></circle>
+                  <path class="yd-clean" data-a="draw,0.9,1" pathLength="1" d="M258,219 L267,228 L284,209" stroke-width="2.4"></path>
+                </svg>
+              </div>
+              <div class="yanq-anim" data-step="4" style="--i: 4">
+                <svg class="yanq-diagram" aria-hidden="true" focusable="false" data-win="0.78,0.98" viewBox="0 0 387 285" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path class="yd-raw" data-a="draw,0,0.3" pathLength="1" d="M14,157 C24,140 36,103 48,104 C58,105 58,175 66,175 C76,175 80,112 90,106 C100,100 102,160 112,168 C120,176 126,170 128,160 C130,150 134,146 138,146" stroke-width="2.2"></path>
+                  <path data-a="draw,0.26,0.34" pathLength="1" d="M142,142 H161"></path>
+                  <path data-a="draw,0.3,0.36" pathLength="1" d="M155,137 L161,142 L155,147"></path>
+                  <path data-a="draw,0.34,0.5" pathLength="1" d="M175,142 V38"></path>
+                  <path data-a="draw,0.34,0.5" pathLength="1" d="M175,142 V232"></path>
+                  <path data-a="draw,0.44,0.56" pathLength="1" d="M175,38 H208 M202,32 L208,38 L202,44"></path>
+                  <path data-a="draw,0.4,0.52" pathLength="1" d="M175,103 H208 M202,97 L208,103 L202,109"></path>
+                  <path data-a="draw,0.4,0.52" pathLength="1" d="M175,168 H208 M202,162 L208,168 L202,174"></path>
+                  <path data-a="draw,0.44,0.56" pathLength="1" d="M175,232 H208 M202,226 L208,232 L202,238"></path>
+                  <circle data-a="pop,0.38,0.46" cx="175" cy="103" r="3" class="yd-surface" stroke-width="1.6"></circle>
+                  <circle data-a="pop,0.38,0.46" cx="175" cy="168" r="3" class="yd-surface" stroke-width="1.6"></circle>
+                  <g data-a="slide,0.52,0.66,-14,0">
+                    <path d="M225,11 H359 Q363,11 363,15 V60 Q363,64 359,64 H225 Q221,64 221,60 V15 Q221,11 225,11 Z" stroke-width="2.2"></path>
+                    <path d="M235,45 C239,45 240,28 245,28 C250,28 250,45 255,45 C259,45 261,31 266,31 C271,31 272,45 280,45"></path>
+                    <path d="M297,32 H344 M297,44 H340" stroke-width="1.3" class="yd-guide"></path>
+                  </g>
+                  <g data-a="slide,0.6,0.74,-14,0">
+                    <path d="M225,76 H359 Q363,76 363,80 V125 Q363,129 359,129 H225 Q221,129 221,125 V80 Q221,76 225,76 Z" stroke-width="2.2"></path>
+                    <path d="M243,103 A14,14 0 1 1 271,103 A14,14 0 1 1 243,103 Z M249,103 C252,95 255,95 257,103 C259,111 262,111 265,103"></path>
+                    <path d="M297,97 H344 M297,109 H340" stroke-width="1.3" class="yd-guide"></path>
+                  </g>
+                  <g data-a="slide,0.68,0.82,-14,0">
+                    <path d="M225,141 H359 Q363,141 363,145 V190 Q363,194 359,194 H225 Q221,194 221,190 V145 Q221,141 225,141 Z" stroke-width="2.2"></path>
+                    <path d="M257,152 V163 M245,163 H269 M245,171 H269 M257,171 V184"></path>
+                    <path d="M297,162 H344 M297,174 H340" stroke-width="1.3" class="yd-guide"></path>
+                  </g>
+                  <g data-a="slide,0.76,0.9,-14,0">
+                    <path d="M225,206 H359 Q363,206 363,210 V255 Q363,259 359,259 H225 Q221,259 221,255 V210 Q221,206 225,206 Z" stroke-width="2.2"></path>
+                    <path d="M235,234 H242 C242,227 251,227 251,234 C251,227 260,227 260,234 C260,227 269,227 269,234 C269,227 278,227 278,234 H285"></path>
+                    <path d="M297,227 H344 M297,239 H340" stroke-width="1.3" class="yd-guide"></path>
+                  </g>
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="yanq-step__illustration">
-          <img src="images/icons/yanq-analyser.svg" alt="Power quality analyser illustration" width="336" height="336">
-        </div>
-      </div>
-      <div class="yanq-step__dots">
-        <span class="dot"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
-        <span class="dot is-active"></span>
+
+        <!-- Filled by the script, one dot per step -->
+        <div class="yanq-flow__dots" aria-hidden="true"></div>
       </div>
     </section>
 
@@ -162,20 +390,36 @@
       <h2>What <span class="accent-gradient">YanQ</span> Delivers.</h2>
       <div class="yanq-delivers__grid">
         <div class="deliver-stat">
-          <h3>Diagnosis</h3>
-          <p>Root cause identified and documented, not assumed.</p>
+          <div class="deliver-stat__icon"><img src="images/icons/yanq-deliver-diagnosis.svg" alt="" width="210" height="200" loading="lazy"></div>
+          <div class="deliver-stat__text">
+            <span class="deliver-stat__num">01</span>
+            <h3>Diagnosis</h3>
+            <p>Root cause identified and documented, not assumed.</p>
+          </div>
         </div>
         <div class="deliver-stat">
-          <h3>Benchmarking+</h3>
-          <p>Every parameter measured against IEEE 519-2022 standards.</p>
+          <div class="deliver-stat__icon"><img src="images/icons/yanq-deliver-benchmarking.svg" alt="" width="210" height="200" loading="lazy"></div>
+          <div class="deliver-stat__text">
+            <span class="deliver-stat__num">02</span>
+            <h3>Benchmarking+</h3>
+            <p>Every parameter measured against IEEE 519-2022 standards.</p>
+          </div>
         </div>
         <div class="deliver-stat">
-          <h3>Business Translation</h3>
-          <p>What the data means for your costs, uptime, and equipment life.</p>
+          <div class="deliver-stat__icon"><img src="images/icons/yanq-deliver-business-translation.svg" alt="" width="210" height="200" loading="lazy"></div>
+          <div class="deliver-stat__text">
+            <span class="deliver-stat__num">03</span>
+            <h3>Business Translation</h3>
+            <p>What the data means for your costs, uptime, and equipment life.</p>
+          </div>
         </div>
         <div class="deliver-stat">
-          <h3>Recommendation</h3>
-          <p>A specific intervention sized to what your site's data actually shows.</p>
+          <div class="deliver-stat__icon"><img src="images/icons/yanq-deliver-recommendation.svg" alt="" width="210" height="200" loading="lazy"></div>
+          <div class="deliver-stat__text">
+            <span class="deliver-stat__num">04</span>
+            <h3>Recommendation</h3>
+            <p>A specific intervention sized to what your site's data actually shows.</p>
+          </div>
         </div>
       </div>
     </section>
