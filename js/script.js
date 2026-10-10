@@ -975,7 +975,7 @@
         if (it.rings.length) {
           // Distance travelled since the section started entering, past p = 1 too
           it.q = Math.max(0, (window.innerHeight * 0.85 - rect.top) / (window.innerHeight * 0.8));
-          if (reduceMotion || !it.flowing) spread(it, it.q * 1.2);
+          if (reduceMotion || !it.flowing) spread(it, it.q * 0.3);
         }
       });
     }
@@ -997,7 +997,7 @@
           raf = null;
           return;
         }
-        spread(it, it.q * 1.2 + now / 9000);
+        spread(it, it.q * 0.3 + now / 18000);
         raf = requestAnimationFrame(tick);
       }
       new IntersectionObserver(function (entries) {

@@ -2452,7 +2452,7 @@ ul {
 
 .pq-arrow {
   display: inline-block;
-  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* Cursor spotlight, shared by the glimpse and fit cards */
@@ -2467,7 +2467,7 @@ ul {
   inset: 0;
   background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), rgba(76, 200, 192, 0.2), transparent 70%);
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.6s ease;
   pointer-events: none;
 }
 
@@ -2521,11 +2521,11 @@ ul {
   border-radius: 50%;
   opacity: 0;
   pointer-events: none;
-  animation: pq-ring 9s linear infinite;
+  animation: pq-ring 14s linear infinite;
 }
 
-.pqs-hero__rings span:nth-child(2) { animation-delay: 3s; }
-.pqs-hero__rings span:nth-child(3) { animation-delay: 6s; }
+.pqs-hero__rings span:nth-child(2) { animation-delay: 4.6s; }
+.pqs-hero__rings span:nth-child(3) { animation-delay: 9.3s; }
 
 @keyframes pq-ring {
   0% { scale: 0.15; opacity: 0.75; }
@@ -2596,8 +2596,8 @@ ul {
     translateY(calc((1 - var(--pq-fan)) * var(--k) * -68%))
     rotate(calc((1 - var(--pq-fan)) * (var(--k) - 1) * -1.6deg))
     scale(calc(0.95 + 0.05 * var(--pq-fan)));
-  transition: translate 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
-    border-color 0.3s ease, background-color 0.3s ease;
+  transition: translate 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.5s ease, background-color 0.5s ease;
 }
 
 .glimpse:hover,
@@ -2672,7 +2672,7 @@ ul {
   -webkit-mask-image: radial-gradient(260px circle at var(--hx, 50%) var(--hy, 50%), #000, transparent 70%);
   mask-image: radial-gradient(260px circle at var(--hx, 50%) var(--hy, 50%), #000, transparent 70%);
   opacity: 0;
-  transition: opacity 0.5s ease;
+  transition: opacity 0.9s ease;
   pointer-events: none;
 }
 
@@ -2690,11 +2690,11 @@ ul {
   border: 1px solid rgba(76, 200, 192, 0.7);
   border-radius: 50%;
   pointer-events: none;
-  animation: pq-ping 1.4s cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+  animation: pq-ping 2.4s cubic-bezier(0.25, 0.6, 0.3, 1) forwards;
 }
 
 .pq-ping--big {
-  animation-duration: 1.9s;
+  animation-duration: 3s;
   border-width: 2px;
 }
 
@@ -2767,7 +2767,7 @@ ul {
 .pqs-marquee__track {
   display: flex;
   width: max-content;
-  animation: pqs-marquee 38s linear infinite;
+  animation: pqs-marquee 65s linear infinite;
 }
 
 .pqs-marquee:hover .pqs-marquee__track {
@@ -2853,8 +2853,8 @@ ul {
   color: var(--ink);
   text-decoration: none;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
-  transition: translate 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
-    box-shadow 0.35s ease;
+  transition: translate 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.6s ease;
 }
 
 .pqs-card:hover,
