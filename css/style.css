@@ -1058,6 +1058,16 @@ ul {
   object-fit: cover;
 }
 
+/* Dark petrol scrim over the film so the white heading stays legible on the
+   bright interior shots. Pure CSS: it sizes with the media as it grows. */
+.hero__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(10, 30, 33, 0.45), rgba(10, 30, 33, 0.6));
+  pointer-events: none;
+}
+
 .hero__ctas {
   position: relative;
   z-index: 1;
