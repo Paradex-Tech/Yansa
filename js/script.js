@@ -1002,6 +1002,62 @@
     });
   }
 
+  /* ---------- Navbar: hides on the way down the page, returns on the way up ----------
+     Direction is judged over 8px of travel so jitter does not flip it. The
+     bar stays put (and so keeps its space, so nothing below moves) and only
+     slides away. It is never hidden near the top of the page, while the
+     mobile menu is open, or while a pinned stage is holding at the navbar's
+     edge (Home hero, YanQ sequence): hiding it there would leave a gap above
+     the stage. Flip HIDE_WHEN to 'up' to invert the behaviour. */
+  function initNavAutoHide() {
+    var navbar = document.querySelector('.navbar');
+    if (!navbar) return;
+
+    var HIDE_WHEN = 'down';   // direction of travel down the page that hides the bar
+    var STEP = 8;             // px of travel before the direction counts
+    var root = document.documentElement;
+    var last = window.pageYOffset;
+    var hidden = false;
+    var queued = false;
+
+    function pinned() {
+      var edge = navbar.offsetHeight;
+      return toArray(document.querySelectorAll(
+        '.hero.is-scrolly .hero__stage, .yanq-flow.is-scrolly .yanq-flow__stage, .cases.is-scrolly .cases__stage'
+      )).some(function (el) {
+        return Math.abs(el.getBoundingClientRect().top - edge) <= 1.5;
+      });
+    }
+
+    function set(hide) {
+      if (hide === hidden) return;
+      hidden = hide;
+      navbar.classList.toggle('is-hidden', hide);
+      root.classList.toggle('nav-hidden', hide);
+    }
+
+    function update() {
+      queued = false;
+      var y = window.pageYOffset;
+      if (y <= navbar.offsetHeight || navbar.classList.contains('is-open') || pinned()) {
+        set(false);
+        last = y;
+        return;
+      }
+      var dy = y - last;
+      if (Math.abs(dy) < STEP) return;
+      set(HIDE_WHEN === 'down' ? dy > 0 : dy < 0);
+      last = y;
+    }
+
+    window.addEventListener('scroll', function () {
+      if (!queued) {
+        queued = true;
+        requestAnimationFrame(update);
+      }
+    }, { passive: true });
+  }
+
   /* ---------- Industries We Serve: category tabs (About) ----------
      A tablist over one table. The table is built here from the three
      fallback cards in the markup, so the copy lives in one place. Roving
@@ -1058,6 +1114,25 @@
     });
     holder.appendChild(grid);
 
+    // One bar under the row that slides to the chosen tab
+    var list = box.querySelector('.industry-tabs__list');
+    var bar = document.createElement('span');
+    bar.className = 'industry-tabs__bar';
+    bar.setAttribute('aria-hidden', 'true');
+    list.appendChild(bar);
+
+    function moveBar(instant) {
+      var tab = tabs[current];
+      if (!tab) return;
+      if (instant) bar.style.transition = 'none';
+      bar.style.width = tab.offsetWidth + 'px';
+      bar.style.transform = 'translateX(' + tab.offsetLeft + 'px)';
+      if (instant) {
+        void bar.offsetWidth;
+        bar.style.transition = '';
+      }
+    }
+
     var narrow = window.matchMedia('(max-width: 560px)');
     var animated = !reduceMotion && typeof grid.animate === 'function';
     var current = 0;
@@ -1074,6 +1149,7 @@
         tab.setAttribute('aria-controls', 'industry-grid');
         tab.tabIndex = on ? 0 : -1;
       });
+      moveBar(false);
       grid.setAttribute('aria-labelledby', tabs[index].id);
     }
 
@@ -1167,14 +1243,14 @@
       cells.forEach(function (cell, k) {
         if (!before[k]) return;
         var anim = texts[k].animate(
-          [{ transform: 'perspective(400px) rotateX(0deg)', opacity: 1 },
-           { transform: 'perspective(400px) rotateX(90deg)', opacity: 0 }],
-          { duration: 220, delay: k * 35, easing: 'ease-in', fill: 'forwards' }
+          [{ transform: 'perspective(600px) rotateX(0deg) translateY(0)', opacity: 1 },
+           { transform: 'perspective(600px) rotateX(55deg) translateY(-6px)', opacity: 0 }],
+          { duration: 380, delay: k * 45, easing: 'cubic-bezier(0.45, 0, 0.55, 1)', fill: 'forwards' }
         );
         outs.push(anim);
         running.push(anim);
       });
-      busyUntil = Date.now() + 1200;
+      busyUntil = Date.now() + 1800;
 
       var wait = outs.length ? Promise.all(outs.map(function (a) { return a.finished; })) : Promise.resolve();
       wait.then(function () {
@@ -1189,7 +1265,7 @@
         var h1 = grid.offsetHeight;
         running.push(grid.animate(
           [{ height: h0 + 'px' }, { height: h1 + 'px' }],
-          { duration: 480, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' }
+          { duration: 850, easing: 'cubic-bezier(0.65, 0, 0.35, 1)' }
         ));
 
         cells.forEach(function (cell, k) {
@@ -1207,11 +1283,11 @@
           } else {
             move = [{ opacity: 0, transform: 'scale(0.6)' }, { opacity: 1, transform: 'none' }];
           }
-          running.push(cell.animate(move, { duration: 480, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' }));
+          running.push(cell.animate(move, { duration: 850, easing: 'cubic-bezier(0.65, 0, 0.35, 1)' }));
           running.push(texts[k].animate(
-            [{ transform: 'perspective(400px) rotateX(-90deg)', opacity: 0 },
-             { transform: 'perspective(400px) rotateX(0deg)', opacity: 1 }],
-            { duration: 300, delay: 160 + k * 35, easing: 'ease-out', fill: 'backwards' }
+            [{ transform: 'perspective(600px) rotateX(-55deg) translateY(6px)', opacity: 0 },
+             { transform: 'perspective(600px) rotateX(0deg) translateY(0)', opacity: 1 }],
+            { duration: 600, delay: 260 + k * 60, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'backwards' }
           ));
         });
       });
@@ -1256,9 +1332,18 @@
       }).observe(grid);
     }
 
+    // Keep the bar on its tab when the row changes width (resize, web font)
+    if (window.ResizeObserver) {
+      new ResizeObserver(function () { moveBar(true); }).observe(list);
+    }
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { moveBar(true); });
+    }
+
     select(0);
     apply(0);
     box.classList.add('is-ready');
+    moveBar(true);
   }
 
   /* ---------- FAQ (about) ----------
@@ -2185,7 +2270,7 @@
       flow.style.setProperty('--yanq-flow-bg', out > 0 ?
         mix(PETROL, CREAM, smooth(clamp01(out / 0.7))) : mix(CREAM, PETROL, turn));
       flow.style.setProperty('--yanq-flow-title', mix(INK, GREY, turn));
-      flow.style.setProperty('--yanq-flow-brand', mix(INK, CYAN, turn, 1 - swap));
+      flow.style.setProperty('--yanq-flow-brand', mix(INK, CYAN, turn));
       flow.style.setProperty('--yanq-flow-intro', (1 - smooth(clamp01((u - READ) / half))).toFixed(4));
       flow.style.setProperty('--yanq-flow-reveal', smooth(clamp01((u - READ - half) / half)).toFixed(4));
       flow.style.setProperty('--yanq-flow-out', out.toFixed(4));
@@ -2737,6 +2822,7 @@
   initSymptomFocus();
   initFaq();
   initIndustryTabs();
+  initNavAutoHide();
   initPqScroll();
   initSpotlight();
   initPqPills();

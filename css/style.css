@@ -552,6 +552,23 @@ ul {
   top: 0;
   z-index: 100;
   padding: 0 var(--gutter);
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Slides away on the way down the page (initNavAutoHide). It keeps its space,
+   so the page does not shift; keyboard focus inside it always brings it back. */
+.navbar.is-hidden {
+  transform: translateY(-100%);
+}
+
+.navbar.is-hidden:focus-within {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navbar {
+    transition: none;
+  }
 }
 
 /* Same inner column as the sections, so the logo and CTA line up with the
@@ -2819,9 +2836,14 @@ ul {
 }
 
 /* Sticky jump bar under the navbar */
+.nav-hidden .pqs-pills {
+  top: 0;
+}
+
 .pqs-pills {
   position: sticky;
   top: var(--nav-height);
+  transition: top 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
   z-index: 20;
   background: rgba(250, 250, 239, 0.9);
   -webkit-backdrop-filter: blur(10px);
@@ -3349,10 +3371,10 @@ ul {
 }
 
 .industry-tabs.is-ready .industry-tabs__list {
+  position: relative;
   display: flex;
   justify-content: center;
   gap: 32px;
-  padding-bottom: 1px;
   border-bottom: 1px solid rgba(244, 244, 233, 0.22);
   overflow-x: auto;
   scrollbar-width: none;
@@ -3365,16 +3387,26 @@ ul {
 .industry-tab {
   flex: none;
   position: relative;
-  margin-bottom: -2px;
-  padding: 0 0 8px;
+  padding: 0 0 10px;
   background: none;
   border: 0;
-  border-bottom: 2px solid transparent;
   color: #95c3c3;
   font: inherit;
   cursor: pointer;
   white-space: nowrap;
-  transition: color 0.2s ease, border-color 0.2s ease;
+  transition: color 0.4s ease;
+}
+
+/* The bar under the chosen tab: the script sets its width and slides it */
+.industry-tabs__bar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--teal);
+  pointer-events: none;
+  transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1),
+    width 0.6s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 .industry-tab:hover {
@@ -3383,12 +3415,11 @@ ul {
 
 .industry-tab.is-active {
   color: #f4f4e9;
-  border-bottom-color: var(--teal);
 }
 
 .industry-tab:focus-visible {
   outline: 2px solid var(--teal);
-  outline-offset: 4px;
+  outline-offset: -2px;
   border-radius: 2px;
 }
 
@@ -3493,9 +3524,9 @@ ul {
   background: var(--ivory);
   pointer-events: none;
   transform: translate(-50%, -50%) rotate(var(--pr)) scale(var(--ps));
-  transition: left 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
-    top 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
-    transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: left 1.1s cubic-bezier(0.65, 0, 0.35, 1),
+    top 1.1s cubic-bezier(0.65, 0, 0.35, 1),
+    transform 1.1s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 .industry-plus::before,
@@ -3517,6 +3548,7 @@ ul {
 
 @media (prefers-reduced-motion: reduce) {
   .industry-tab,
+  .industry-tabs__bar,
   .industry-cell,
   .industry-plus {
     transition: none;
@@ -3774,11 +3806,19 @@ ul {
 }
 
 .yanq-flow__brand {
+  color: var(--yanq-flow-title);
+}
+
+/* Only the Q of YanQ is coloured, in every YanQ heading */
+.yanq-flow__q {
   color: var(--yanq-flow-brand);
 }
 
+.yanq-q {
+  color: var(--cyan);
+}
+
 /* The swap into "What YanQ Delivers." exists only while pinned */
-.yanq-flow__brand-to,
 .yanq-flow__word-in {
   display: none;
 }
@@ -4018,14 +4058,6 @@ ul {
 
 .yanq-flow.is-scrolly .yanq-flow__word-in--r {
   left: 100%;
-}
-
-.yanq-flow.is-scrolly .yanq-flow__brand-to {
-  display: block;
-  position: absolute;
-  left: 0;
-  top: 0;
-  opacity: var(--yanq-flow-swap);
 }
 
 .yanq-flow.is-scrolly .yanq-flow__body {
