@@ -894,8 +894,10 @@
               travelled 80% of a viewport up (the glimpse cards fan out)
        leave  0 at the top of the page, 1 after three quarters of the hero
               has scrolled away
-       The Solutions entry also spreads its ripples (two centres of four
-       rings) with p
+       The Solutions entry also sends out ripples (two centres of four rings)
+       for as long as it is on screen: a slow steady flow, pushed along by
+       scrolling (the unclamped distance, so they keep coming after p has
+       reached 1)
      It also redraws each [data-pq-wave] svg: a clean sine, plus a distorted
      copy (extra harmonics) whose distortion and opacity fall as p rises, so
      the wave straightens as you scroll. Under reduced motion p stays 1. */
@@ -936,9 +938,9 @@
     // Rings come in two centres of four. Each ring is one step further round
     // a cycle that p drives: it grows from nothing, thins and fades as it
     // widens. The second centre runs half a step behind the first.
-    function spread(it, p) {
+    function spread(it, phase) {
       it.rings.forEach(function (ring, i) {
-        var s = (p * 1.6 + (i % 4) / 4 + (i >= 4 ? 0.5 / 4 : 0)) % 1;
+        var s = (phase + (i % 4) / 4 + (i >= 4 ? 0.5 / 4 : 0)) % 1;
         var grow = Math.min(1, s * 6);
         ring.style.setProperty('--rs', (0.06 + s * 1.2).toFixed(4));
         ring.style.setProperty('--ro', (0.65 * (1 - s) * grow).toFixed(4));
@@ -970,7 +972,11 @@
         it.el.style.setProperty('--pq-fan', p.toFixed(4));
         var phase = reduceMotion ? 0 : window.pageYOffset * 0.006;
         it.waves.forEach(function (svg) { draw(svg, p, phase); });
-        if (it.rings.length) spread(it, p);
+        if (it.rings.length) {
+          // Distance travelled since the section started entering, past p = 1 too
+          it.q = Math.max(0, (window.innerHeight * 0.85 - rect.top) / (window.innerHeight * 0.8));
+          if (reduceMotion || !it.flowing) spread(it, it.q * 1.2);
+        }
       });
     }
     function queue() {
@@ -979,6 +985,26 @@
         requestAnimationFrame(frame);
       }
     }
+
+    // Ripples keep coming while the section is on screen
+    items.forEach(function (it) {
+      if (!it.rings.length || reduceMotion || !('IntersectionObserver' in window)) return;
+      it.q = 0;
+      it.flowing = false;
+      var raf = null;
+      function tick(now) {
+        if (!it.flowing) {
+          raf = null;
+          return;
+        }
+        spread(it, it.q * 1.2 + now / 9000);
+        raf = requestAnimationFrame(tick);
+      }
+      new IntersectionObserver(function (entries) {
+        it.flowing = entries[0].isIntersecting;
+        if (it.flowing && !raf) raf = requestAnimationFrame(tick);
+      }).observe(it.el);
+    });
 
     window.addEventListener('scroll', queue, { passive: true });
     window.addEventListener('resize', queue);
