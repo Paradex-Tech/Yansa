@@ -888,49 +888,207 @@
 
 
   /* ---------- Industries We Serve: category tabs (About) ----------
-     A tablist over three panels. Roving tabindex, so Tab reaches the row once
-     and the arrow keys, Home and End move within it. Adding .is-ready hides
-     the inactive panels; without the script every category shows in turn. */
+     A tablist over one table. The table is built here from the three
+     fallback cards in the markup, so the copy lives in one place. Roving
+     tabindex: Tab reaches the row once, arrows, Home and End move within it.
+     Choosing a tab runs one morph:
+       1  the "+" hub turns a quarter, and the words turn away (staggered)
+       2  new words and a new layout are set (3 or 2 across, the last row
+          stretching), then each cell glides from its old box to its new one
+          (FLIP), cells that did not exist grow in, the table's height eases
+          between the two, and the new words turn back
+     Under reduced motion, or without the Web Animations API, it just swaps. */
   function initIndustryTabs() {
     var box = document.querySelector('.industry-tabs');
     if (!box) return;
 
     var tabs = toArray(box.querySelectorAll('[role="tab"]'));
     var panels = toArray(box.querySelectorAll('[role="tabpanel"]'));
-    if (!tabs.length || tabs.length !== panels.length) return;
+    var holder = box.querySelector('.industry-tabs__panels');
+    if (!tabs.length || tabs.length !== panels.length || !holder) return;
 
-    // Stagger index for each panel's chips
-    panels.forEach(function (panel) {
-      toArray(panel.querySelectorAll('li')).forEach(function (li, i) {
-        li.style.setProperty('--i', i);
+    var data = panels.map(function (panel) {
+      return toArray(panel.querySelectorAll('li')).map(function (li) {
+        return li.textContent.trim();
       });
     });
+    var MAX = Math.max.apply(null, data.map(function (d) { return d.length; }));
 
-    function select(index, focus) {
-      tabs.forEach(function (tab, i) {
-        var on = i === index;
+    var grid = document.createElement('div');
+    grid.className = 'industry-grid';
+    grid.id = 'industry-grid';
+    grid.setAttribute('role', 'tabpanel');
+
+    var cells = [];
+    var texts = [];
+    for (var i = 0; i < MAX; i++) {
+      var cell = document.createElement('div');
+      cell.className = 'industry-cell';
+      var text = document.createElement('span');
+      text.className = 'industry-cell__text';
+      cell.appendChild(text);
+      grid.appendChild(cell);
+      cells.push(cell);
+      texts.push(text);
+    }
+    var hub = document.createElement('span');
+    hub.className = 'industry-hub';
+    hub.setAttribute('aria-hidden', 'true');
+    grid.appendChild(hub);
+    holder.appendChild(grid);
+
+    var narrow = window.matchMedia('(max-width: 560px)');
+    var animated = !reduceMotion && typeof grid.animate === 'function';
+    var current = 0;
+    var angle = 0;
+    var seq = 0;
+    var running = [];
+
+    function select(index) {
+      tabs.forEach(function (tab, k) {
+        var on = k === index;
         tab.classList.toggle('is-active', on);
         tab.setAttribute('aria-selected', on ? 'true' : 'false');
+        tab.setAttribute('aria-controls', 'industry-grid');
         tab.tabIndex = on ? 0 : -1;
-        panels[i].classList.toggle('is-active', on);
       });
-      if (focus) tabs[index].focus();
+      grid.setAttribute('aria-labelledby', tabs[index].id);
     }
 
-    tabs.forEach(function (tab, i) {
-      tab.addEventListener('click', function () { select(i, false); });
+    // Show n cells on the six-column track; returns the number of rows
+    function layout(n) {
+      var per = narrow.matches ? 2 : 3;
+      var rows = Math.ceil(n / per);
+      var rest = n - per * (rows - 1);
+      cells.forEach(function (cell, k) {
+        if (k >= n) {
+          cell.style.display = 'none';
+          return;
+        }
+        var lastRow = k >= per * (rows - 1);
+        cell.style.display = '';
+        cell.style.gridColumn = 'span ' + (lastRow ? 6 / rest : 6 / per);
+      });
+      return rows;
+    }
+
+    function setWords(items) {
+      items.forEach(function (word, k) { texts[k].textContent = word; });
+    }
+
+    function setHub(rows, turn) {
+      if (turn) angle += 90;
+      hub.style.setProperty('--hub-rot', angle + 'deg');
+      hub.style.setProperty('--hub-scale', rows > 1 ? '1' : '0');
+    }
+
+    function apply(index) {
+      setWords(data[index]);
+      setHub(layout(data[index].length), false);
+    }
+
+    function morph(index) {
+      var mine = ++seq;
+      running.forEach(function (anim) { anim.cancel(); });
+      running = [];
+
+      var h0 = grid.offsetHeight;
+      var before = cells.map(function (cell) {
+        return cell.style.display === 'none' ? null : cell.getBoundingClientRect();
+      });
+      var top0 = grid.getBoundingClientRect();
+
+      var items = data[index];
+      var outs = [];
+      cells.forEach(function (cell, k) {
+        if (!before[k]) return;
+        var anim = texts[k].animate(
+          [{ transform: 'perspective(400px) rotateX(0deg)', opacity: 1 },
+           { transform: 'perspective(400px) rotateX(90deg)', opacity: 0 }],
+          { duration: 220, delay: k * 35, easing: 'ease-in', fill: 'forwards' }
+        );
+        outs.push(anim);
+        running.push(anim);
+      });
+      angle += 90;
+      hub.style.setProperty('--hub-rot', angle + 'deg');
+
+      var wait = outs.length ? Promise.all(outs.map(function (a) { return a.finished; })) : Promise.resolve();
+      wait.then(function () {
+        if (mine !== seq) return;
+        outs.forEach(function (anim) { anim.cancel(); });
+        running = [];
+
+        setWords(items);
+        var rows = layout(items.length);
+        setHub(rows, false);
+
+        var h1 = grid.offsetHeight;
+        running.push(grid.animate(
+          [{ height: h0 + 'px' }, { height: h1 + 'px' }],
+          { duration: 480, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' }
+        ));
+
+        cells.forEach(function (cell, k) {
+          if (cell.style.display === 'none') return;
+          var after = cell.getBoundingClientRect();
+          var old = before[k];
+          var move;
+          if (old) {
+            var dx = old.left - after.left;
+            var dy = old.top - after.top;
+            var sx = old.width / after.width;
+            var sy = old.height / after.height;
+            move = [{ transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + sx + ',' + sy + ')' },
+                    { transform: 'none' }];
+          } else {
+            move = [{ opacity: 0, transform: 'scale(0.6)' }, { opacity: 1, transform: 'none' }];
+          }
+          running.push(cell.animate(move, { duration: 480, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' }));
+          running.push(texts[k].animate(
+            [{ transform: 'perspective(400px) rotateX(-90deg)', opacity: 0 },
+             { transform: 'perspective(400px) rotateX(0deg)', opacity: 1 }],
+            { duration: 300, delay: 160 + k * 35, easing: 'ease-out', fill: 'backwards' }
+          ));
+        });
+      });
+    }
+
+    function choose(index) {
+      if (index === current) return;
+      current = index;
+      select(index);
+      if (animated) morph(index);
+      else apply(index);
+    }
+
+    tabs.forEach(function (tab, k) {
+      tab.addEventListener('click', function () { choose(k); });
       tab.addEventListener('keydown', function (e) {
         var next = -1;
-        if (e.key === 'ArrowRight') next = (i + 1) % tabs.length;
-        else if (e.key === 'ArrowLeft') next = (i - 1 + tabs.length) % tabs.length;
+        if (e.key === 'ArrowRight') next = (k + 1) % tabs.length;
+        else if (e.key === 'ArrowLeft') next = (k - 1 + tabs.length) % tabs.length;
         else if (e.key === 'Home') next = 0;
         else if (e.key === 'End') next = tabs.length - 1;
         if (next < 0) return;
         e.preventDefault();
-        select(next, true);
+        choose(next);
+        tabs[next].focus();
       });
     });
 
+    // 3 across becomes 2 across on a phone: re-lay out, no animation
+    var onSize = function () {
+      seq++;
+      running.forEach(function (anim) { anim.cancel(); });
+      running = [];
+      apply(current);
+    };
+    if (narrow.addEventListener) narrow.addEventListener('change', onSize);
+    else if (narrow.addListener) narrow.addListener(onSize);
+
+    select(0);
+    apply(0);
     box.classList.add('is-ready');
   }
 

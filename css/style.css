@@ -371,6 +371,7 @@ ul {
 .deliver-stat p,
 .industry-tab,
 .industry-panel li,
+.industry-cell,
 .faq__answer,
 .results__desc,
 .solution-card__label .plus,
@@ -2859,6 +2860,7 @@ ul {
   margin-top: 32px;
 }
 
+/* No-JS fallback: each category is a card of chips, one under the other */
 .industry-panel {
   background: var(--ivory);
   border: 1px solid #2d5a5f;
@@ -2869,24 +2871,6 @@ ul {
 
 .industry-panel + .industry-panel {
   margin-top: 24px;
-}
-
-.industry-tabs.is-ready .industry-panel {
-  display: none;
-  margin-top: 0;
-}
-
-/* Equal height for every category, so the section does not jump on a switch */
-.industry-tabs.is-ready .industry-panel.is-active {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 190px;
-}
-
-/* Only the category's own tab names it once the tabs are running */
-.industry-tabs.is-ready .industry-panel__title {
-  display: none;
 }
 
 .industry-panel__title {
@@ -2910,35 +2894,92 @@ ul {
   border-radius: 999px;
   background: #ffffff;
   color: var(--ink);
-  transition: border-color 0.3s ease, color 0.3s ease;
 }
 
-.industry-panel li:hover {
-  border-color: var(--teal);
+/* With the script running, the cards give way to one table. Its hairlines
+   are the grid's own gap showing through, so they stay right for any number
+   of cells. The script lays the cells out on a six-column track (3 across, or
+   2 across on a phone, the last row stretching to fill) and morphs between
+   categories: the "+" hub turns, the text turns over, the cells glide. */
+.industry-tabs.is-ready .industry-panel {
+  display: none;
+}
+
+.industry-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1px;
+  overflow: hidden;
+  background: #cdd6d1;
+  border: 1px solid #2d5a5f;
+  border-radius: 10px;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
+}
+
+.industry-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 111px;
+  padding: 24px;
+  background: var(--ivory);
+  color: var(--ink);
+  text-align: center;
+  transform-origin: 0 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.industry-cell:hover {
+  background: #ffffff;
   color: var(--teal-deep);
 }
 
-/* A category's chips rise in one after another when its tab is chosen */
-.industry-tabs.is-ready .industry-panel.is-active li {
-  animation: industry-in 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
-  animation-delay: calc(var(--i, 0) * 60ms);
+.industry-cell__text {
+  display: inline-block;
 }
 
-@keyframes industry-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
+/* The "+" at the centre of the table: turns a quarter on every switch, and
+   shrinks away when the table is a single row (it would sit on a word) */
+.industry-hub {
+  --hub-rot: 0deg;
+  --hub-scale: 1;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--petrol);
+  border: 2px solid var(--teal);
+  pointer-events: none;
+  transform: translate(-50%, -50%) rotate(var(--hub-rot)) scale(var(--hub-scale));
+  transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.industry-hub::before,
+.industry-hub::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 16px;
+  height: 2px;
+  margin: -1px 0 0 -8px;
+  border-radius: 1px;
+  background: var(--teal);
+}
+
+.industry-hub::after {
+  transform: rotate(90deg);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .industry-tab,
-  .industry-panel li {
+  .industry-cell,
+  .industry-hub {
     transition: none;
-  }
-
-  .industry-tabs.is-ready .industry-panel.is-active li {
-    animation: none;
   }
 }
 
@@ -3060,6 +3101,11 @@ ul {
 
   .industry-panel {
     padding: 28px 16px;
+  }
+
+  .industry-cell {
+    min-height: 88px;
+    padding: 16px 10px;
   }
 }
 
