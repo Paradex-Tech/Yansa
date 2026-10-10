@@ -1341,8 +1341,6 @@
       /* about */
       { sel: '.industries > h2, .industries > p', step: 90 },
       { sel: '.industries__grid > *', step: 70 },
-      { sel: '.about-block__header > *', step: 90 },
-      { sel: '.about-block__grid > *', step: 80, mode: 'fade' },
       { sel: '.faq__header > *', step: 90 },
       { sel: '.faq__list > *', step: 70 },
 
@@ -1359,8 +1357,6 @@
 
       /* YanQ */
       { sel: '.yanq-hero__content > *', step: 90 },
-      { sel: '.yanq-after__header > *', step: 90 },
-      { sel: '.yanq-after__grid > *', step: 90, mode: 'fade' },
 
       /* contact */
       { sel: '.contact-map', step: 0 },
@@ -1674,7 +1670,7 @@
     var PETROL = [26, 65, 70];      // --petrol
     var INK = [23, 23, 23];         // the heading on cream
     var GREY = [152, 152, 152];     // the heading on petrol
-    var CYAN = [76, 200, 192];      // --cyan, for the Q of "YanQ"
+    var ORANGE = [255, 140, 64];    // --orange, for "YanQ"
 
     var n = steps.length;
     var dots = [];
@@ -1803,7 +1799,7 @@
       // Outro: the last stage of the runway, while What YanQ Delivers rises
       // into place. The steps scroll out with it (--yanq-flow-out), petrol
       // turns back to cream, and the heading's side words swap round the
-      // fixed "YanQ", whose Q stays light cyan.
+      // fixed "YanQ", whose orange hands over to the Delivers gradient.
       var runU = runway / stageH;
       var out = clamp01((u - (runU - OUT)) / OUT);
       var swap = smooth(clamp01((out - 0.15) / 0.55));
@@ -1811,7 +1807,7 @@
       flow.style.setProperty('--yanq-flow-bg', out > 0 ?
         mix(PETROL, CREAM, smooth(clamp01(out / 0.7))) : mix(CREAM, PETROL, turn));
       flow.style.setProperty('--yanq-flow-title', mix(INK, GREY, turn));
-      flow.style.setProperty('--yanq-flow-brand', mix(INK, CYAN, turn));
+      flow.style.setProperty('--yanq-flow-brand', mix(INK, ORANGE, turn, 1 - swap));
       flow.style.setProperty('--yanq-flow-intro', (1 - smooth(clamp01((u - READ) / half))).toFixed(4));
       flow.style.setProperty('--yanq-flow-reveal', smooth(clamp01((u - READ - half) / half)).toFixed(4));
       flow.style.setProperty('--yanq-flow-out', out.toFixed(4));

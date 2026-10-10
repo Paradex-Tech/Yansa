@@ -149,12 +149,9 @@ Commit these once the user confirms they look right.
 2. Add Sanya as a GitHub collaborator. It has to be done from the
    **Paradex-Tech** owner account, and Sanya's GitHub username is still
    unknown.
-3. Client-changes pass (2026-10-11, branch `worktree-yansa-client-changes`):
-   Why Yansa rewritten, About team/outcomes/industries, YanQ 5-step flow +
-   "Keep Watching After Handover", light-cyan `--cyan` replaces orange on
-   YanQ. Copy is drafted by Claude: confirm the publication count (none is
-   claimed), the 10 kHz sampling line, and the post-handover services with
-   the client.
+3. New **"Why Yansa"** copy for `index.html` (the section `.why`: the
+   "Data Before Direction" / "System Level Thinking" / "We Stay Until It's
+   Solved" cards are old copy). Wait for the user's text.
 4. Connect Cloudflare Pages and add the yansa.in domain.
 5. Optionally delete the stale worktree and the `seo` branch.
 

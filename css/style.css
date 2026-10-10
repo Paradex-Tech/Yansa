@@ -29,7 +29,6 @@
   --teal-deep: #006a65;
   --teal-brand: #007f7f;
   --teal-mid: #039999;
-  --cyan: #4cc8c0;          /* the one YanQ accent: light cyan */
   --petrol: #1a4146;
   --petrol-bright: #167777;
 
@@ -280,8 +279,6 @@ ul {
 /* H2 — section headings, including the footer call to action */
 .diagnosis__eyebrow,
 .yanq-hero__label,
-.yanq-after__header h2,
-.about-block__header h2,
 .symptoms__header h2,
 .why__header h2,
 .cases__header h2,
@@ -312,7 +309,6 @@ ul {
 
 /* H3 — sub-section headings and figure labels */
 .yanq-flow__step h3,
-.pq-table__title,
 .deliver-stat h3,
 .case-card__num,
 .case-card__title {
@@ -322,9 +318,6 @@ ul {
 }
 
 /* H4 — card titles */
-.about-card h3,
-.after-card h3,
-.industries__cell h3,
 .why-card h3,
 .symptom-card__title,
 .inaction-card__row h3,
@@ -346,8 +339,6 @@ ul {
 /* Lead — the paragraph that introduces a section */
 .hero__heading p,
 .header-placeholder__overlay p,
-.about-block__header p,
-.yanq-after__header p,
 .diagnosis__body,
 .symptoms__header p,
 .why__header p,
@@ -376,12 +367,7 @@ ul {
 .symptom-card__detail p,
 .yanq-flow__step > p,
 .deliver-stat p,
-.about-card p,
-.after-card p,
-.pq-table th,
-.pq-table td,
-.pq-table__note,
-.industries__cell li,
+.industries__cell,
 .faq__answer,
 .results__desc,
 .solution-card__label .plus,
@@ -403,9 +389,6 @@ ul {
 }
 
 /* Label — eyebrows, tags, counters, form labels */
-.about-card__num,
-.after-card__num,
-.yanq-hero__offer li,
 .yanq-flow__number,
 .yanq-flow__tag,
 .yanq-flow__sampling,
@@ -1965,13 +1948,9 @@ ul {
   transition: background-color 0.4s ease, height 0.4s ease;
 }
 
-.problems__dots .dot.is-active {
-  background: var(--orange);
-  height: 24px;
-}
-
+.problems__dots .dot.is-active,
 .yanq-flow__dot.is-active {
-  background: var(--cyan);
+  background: var(--orange);
   height: 24px;
 }
 
@@ -2787,8 +2766,7 @@ ul {
   }
 }
 
-/* ---------- Industries We Serve ----------
-   Three categories side by side, each a card with its own list. */
+/* ---------- Industries We Serve ---------- */
 .industries {
   background: var(--petrol);
   text-align: center;
@@ -2807,222 +2785,39 @@ ul {
 
 .industries__grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  max-width: 1152px;
+  grid-template-columns: repeat(3, minmax(160px, 251px));
+  border: 1px solid #2d5a5f;
+  border-radius: 10px;
+  overflow: hidden;
+  max-width: 754px;
   margin: 0 auto;
-  text-align: left;
+  background: var(--ivory);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
 }
 
 .industries__cell {
-  background: var(--ivory);
-  border: 1px solid #2d5a5f;
-  border-radius: 10px;
-  padding: 32px 28px;
+  padding: 40px 24px;
+  border-right: 1px solid #cdd6d1;
+  border-bottom: 1px solid #cdd6d1;
   color: var(--ink);
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
-  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
-    background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .industries__cell:hover {
   background: #ffffff;
-  transform: translateY(-4px);
-}
-
-.industries__cell h3 {
   color: var(--teal-deep);
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #cdd6d1;
 }
 
-.industries__cell ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.industries__cell:nth-child(3n) {
+  border-right: none;
 }
 
-.industries__cell li {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 5px 0;
-}
-
-.industries__cell li::before {
-  content: "";
-  flex: none;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--teal);
-}
-
-.industries__cell li:last-child {
-  color: var(--text);
-  font-style: italic;
-}
-
-/* ---------- Team and outcomes ----------
-   Two card blocks that share one layout: a header, then 3 or 4 cards. */
-.about-block {
-  padding: var(--section-pad-y) var(--gutter);
-}
-
-.about-team {
-  background: var(--cream);
-}
-
-.about-outcomes {
-  background: var(--ivory);
-}
-
-.about-block__inner {
-  max-width: 1152px;
-  margin: 0 auto;
-}
-
-.about-block__header {
-  margin-bottom: var(--header-gap);
-}
-
-.about-block__header h2 {
-  color: var(--ink);
-  margin-bottom: 24px;
-}
-
-.about-block__header p {
-  max-width: 768px;
-  color: #505050;
-}
-
-.about-block__grid {
-  display: grid;
-  gap: 24px;
-}
-
-.about-block__grid--4 {
-  grid-template-columns: repeat(4, 1fr);
-}
-
-.about-block__grid--3 {
-  grid-template-columns: repeat(3, 1fr);
-}
-
-.about-card {
-  background: var(--ivory-card);
-  border: 1px solid #a6cdd3;
-  border-radius: 8px;
-  padding: 25px;
-  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
-    box-shadow 0.35s ease, border-color 0.35s ease;
-}
-
-.about-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--teal);
-  box-shadow: 0 18px 40px rgba(26, 65, 70, 0.16);
-}
-
-.about-card__num {
-  display: inline-block;
-  margin-bottom: 20px;
-  padding: 4px 12px;
-  border-radius: 999px;
-  background: var(--petrol);
-  color: var(--cyan);
-  letter-spacing: 1.1px;
-}
-
-.about-card h3 {
-  color: var(--ink);
-  margin-bottom: 8px;
-}
-
-.about-card p {
-  color: var(--text);
-}
-
-@media (max-width: 1000px) {
-  .about-block__grid--4 {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (max-width: 760px) {
-  .about-block__grid--4,
-  .about-block__grid--3 {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .about-card,
-  .industries__cell {
-    transition: none;
-  }
-}
-
-/* ---------- Where poor power quality shows up (Solutions) ----------
-   Reuses the About card block; adds the phenomenon table under it. */
-.pq-impact {
-  background: var(--cream);
-}
-
-.pq-table__title {
-  color: var(--ink);
-  margin: 72px 0 24px;
-}
-
-.pq-table__wrap {
-  overflow-x: auto;
-  border: 1px solid #a6cdd3;
-  border-radius: 8px;
-  background: var(--ivory-card);
-}
-
-.pq-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-}
-
-.pq-table th,
-.pq-table td {
-  padding: 14px 20px;
-  border-bottom: 1px solid #dfe7e4;
-  color: var(--text);
-}
-
-.pq-table thead th {
-  background: var(--petrol);
-  color: var(--text-on-dark);
-  border-bottom: 0;
-}
-
-.pq-table tbody th {
-  color: var(--ink);
-  font-weight: 700;
-}
-
-.pq-table tbody tr {
-  transition: background-color 0.25s ease;
-}
-
-.pq-table tbody tr:hover {
-  background: #f1f7f6;
-}
-
-.pq-table tbody tr:last-child th,
-.pq-table tbody tr:last-child td {
-  border-bottom: 0;
-}
-
-.pq-table__note {
-  margin-top: 20px;
-  color: #505050;
-  max-width: 768px;
+.industries__cell:nth-child(n+4) {
+  border-bottom: none;
 }
 
 /* ---------- FAQ ----------
@@ -3130,8 +2925,25 @@ ul {
     padding: var(--section-pad-y) var(--gutter);
   }
 
+  /* Two columns: re-draw the inner grid lines for three rows of two */
   .industries__grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .industries__cell:nth-child(3n) {
+    border-right: 1px solid #cdd6d1;
+  }
+
+  .industries__cell:nth-child(2n) {
+    border-right: none;
+  }
+
+  .industries__cell:nth-child(n+4) {
+    border-bottom: 1px solid #cdd6d1;
+  }
+
+  .industries__cell:nth-child(n+5) {
+    border-bottom: none;
   }
 }
 
@@ -3141,7 +2953,7 @@ ul {
   }
 
   .industries__cell {
-    padding: 24px 20px;
+    padding: 28px 12px;
   }
 }
 
@@ -3180,12 +2992,7 @@ ul {
 }
 
 .yanq-hero__label {
-  color: var(--mist);
-}
-
-/* The Q of YanQ, in every YanQ heading and mention */
-.yanq-q {
-  color: var(--cyan);
+  color: var(--orange);
 }
 
 .yanq-hero h2 {
@@ -3196,35 +3003,7 @@ ul {
 .yanq-hero__body {
   color: #c5d9d0;
   max-width: 672px;
-  margin-bottom: 24px;
-}
-
-/* What a diagnosis includes: four short chips under the intro */
-.yanq-hero__offer {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: 0 0 40px;
-  padding: 0;
-}
-
-.yanq-hero__offer li {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 14px;
-  border: 1px solid rgba(76, 200, 192, 0.55);
-  border-radius: 999px;
-  color: var(--text-on-dark);
-}
-
-.yanq-hero__offer li::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--cyan);
+  margin-bottom: 40px;
 }
 
 /* ---------- How YanQ Works: pinned sequence ----------
@@ -3261,7 +3040,7 @@ ul {
 .yanq-flow {
   --yanq-flow-bg: var(--petrol);
   --yanq-flow-title: #989898;
-  --yanq-flow-brand: var(--cyan);
+  --yanq-flow-brand: var(--orange);
   --yanq-flow-intro: 1;
   --yanq-flow-reveal: 1;
   --yanq-flow-out: 0;
@@ -3299,14 +3078,11 @@ ul {
 }
 
 .yanq-flow__brand {
-  color: var(--yanq-flow-title);
-}
-
-.yanq-flow__q {
   color: var(--yanq-flow-brand);
 }
 
 /* The swap into "What YanQ Delivers." exists only while pinned */
+.yanq-flow__brand-to,
 .yanq-flow__word-in {
   display: none;
 }
@@ -3379,7 +3155,7 @@ ul {
 .yanq-flow__tag {
   letter-spacing: 1.1px;
   text-transform: uppercase;
-  color: var(--cyan);
+  color: var(--orange);
 }
 
 .yanq-flow__step h3 {
@@ -3418,7 +3194,7 @@ ul {
 }
 
 .yanq-flow__sampling {
-  color: var(--cyan);
+  color: var(--orange);
 }
 
 /* The hook for the supplied step visuals (see the comment above the slots
@@ -3469,8 +3245,7 @@ ul {
 }
 
 .yanq-diagram .yd-raw {
-  color: var(--mist);          /* raw, noisy, distorted input */
-  opacity: 0.7;
+  color: var(--orange);        /* raw, noisy, distorted input */
 }
 
 .yanq-diagram .yd-guide {
@@ -3518,7 +3293,8 @@ ul {
 
 /* The outro swap (--yanq-flow-swap, 0 to 1). "YanQ" never moves: the
    incoming words hang off its edges (their own space included, so the
-   spacing is the sentence's); its Q stays light cyan throughout. */
+   spacing is the sentence's), and the gradient "YanQ" of What YanQ
+   Delivers fades in over the orange one. */
 .yanq-flow.is-scrolly .yanq-flow__brand {
   position: relative;
   display: inline-block;
@@ -3546,6 +3322,14 @@ ul {
 
 .yanq-flow.is-scrolly .yanq-flow__word-in--r {
   left: 100%;
+}
+
+.yanq-flow.is-scrolly .yanq-flow__brand-to {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: var(--yanq-flow-swap);
 }
 
 .yanq-flow.is-scrolly .yanq-flow__body {
@@ -3685,7 +3469,7 @@ ul {
    navbar's height, tucked behind the (always visible) navbar, so the
    rail never shows a cut end under the bar. The dashed
    wave is one period (yanq-wave-tile.svg, 40 x 246, matching WAVE in the
-   script) repeated as a mask over a two-stop gradient: cyan above the
+   script) repeated as a mask over a two-stop gradient: orange above the
    marker, grey below. The script writes, all in px:
      --yanq-flow-marker-y  the marker's height from the stage top, which is
                            also the split
@@ -3711,7 +3495,7 @@ ul {
   inset: 0;
   background: linear-gradient(
     to bottom,
-    var(--cyan) calc(var(--yanq-flow-marker-y, 0px) + var(--nav-height)),
+    var(--orange) calc(var(--yanq-flow-marker-y, 0px) + var(--nav-height)),
     #d9d9d9 calc(var(--yanq-flow-marker-y, 0px) + var(--nav-height))
   );
   -webkit-mask: url("../images/icons/yanq-wave-tile.svg") 0 var(--yanq-flow-wave-y, 0px) / 40px 246px repeat-y;
@@ -3726,8 +3510,8 @@ ul {
   height: 10px;
   margin: -5px 0 0 -5px;
   border-radius: 50%;
-  background: var(--cyan);
-  box-shadow: 0 0 0 4px rgba(76, 200, 192, 0.22);
+  background: var(--orange);
+  box-shadow: 0 0 0 4px rgba(255, 140, 64, 0.22);
 }
 
 /* The bars themselves share the Solutions Problems indicator's styling
@@ -3919,114 +3703,6 @@ ul {
   }
 }
 
-
-/* ---------- After handover: verification and support ----------
-   Three numbered steps joined by a cyan rail. Plain layout: the script's
-   reveal fades each card in on scroll; hover only lifts a card. */
-.yanq-after {
-  background: var(--petrol);
-  padding: var(--section-pad-y) var(--gutter);
-}
-
-.yanq-after__inner {
-  max-width: 1152px;
-  margin: 0 auto;
-}
-
-.yanq-after__header {
-  margin-bottom: var(--header-gap);
-}
-
-.yanq-after__header h2 {
-  color: var(--text-on-dark);
-  margin-bottom: 24px;
-}
-
-.yanq-after__accent {
-  color: var(--cyan);
-}
-
-.yanq-after__header p {
-  max-width: 768px;
-  color: var(--mist);
-}
-
-.yanq-after__grid {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  margin: 0;
-  padding: 0;
-  position: relative;
-}
-
-/* The rail the steps hang on */
-.yanq-after__grid::before {
-  content: "";
-  position: absolute;
-  top: 27px;
-  left: 28px;
-  right: 28px;
-  height: 2px;
-  background: linear-gradient(90deg, var(--cyan), rgba(76, 200, 192, 0.2));
-}
-
-.after-card {
-  position: relative;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(169, 209, 215, 0.25);
-  border-radius: 8px;
-  padding: 72px 25px 28px;
-  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
-    border-color 0.35s ease, background-color 0.35s ease;
-}
-
-.after-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--cyan);
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.after-card__num {
-  position: absolute;
-  top: 6px;
-  left: 25px;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--petrol);
-  border: 2px solid var(--cyan);
-  color: var(--cyan);
-}
-
-.after-card h3 {
-  color: var(--text-on-dark);
-  margin-bottom: 8px;
-}
-
-.after-card p {
-  color: var(--mist);
-}
-
-@media (max-width: 900px) {
-  .yanq-after__grid {
-    grid-template-columns: 1fr;
-  }
-
-  .yanq-after__grid::before {
-    display: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .after-card {
-    transition: none;
-  }
-}
 
 /* =========================================================
    10. CONTACT
