@@ -2403,35 +2403,38 @@ ul {
   will-change: transform;
 }
 
+/* Smaller wells, kept to the outer edges: the heading and tagline sit in the
+   centre band, so nothing here may reach it (the drift and parallax are only
+   a few dozen px). Sizes follow the viewport width, same 1.39 ratio. */
+.about-hero__decor {
+  aspect-ratio: 260 / 187;
+}
+
 .about-hero__decor--1 {
-  width: 260px;
-  height: 187px;
-  left: 13%;
-  top: 30%;
+  width: clamp(100px, 10vw, 160px);
+  left: 5%;
+  top: 9%;
   background-image: url('../images/case-01-photo.jpg');
 }
 
 .about-hero__decor--2 {
-  width: 330px;
-  height: 238px;
-  left: 5%;
-  bottom: 10%;
+  width: clamp(120px, 12vw, 190px);
+  left: 3%;
+  bottom: 9%;
   background-image: url('../images/case-02-photo.jpg');
 }
 
 .about-hero__decor--3 {
-  width: 180px;
-  height: 130px;
-  right: 28%;
-  bottom: 22%;
+  width: clamp(90px, 8vw, 125px);
+  right: 4%;
+  bottom: 11%;
   background-image: url('../images/case-03-photo.jpg');
 }
 
 .about-hero__decor--4 {
-  width: 400px;
-  height: 288px;
-  right: 6%;
-  top: 20%;
+  width: clamp(140px, 14vw, 225px);
+  right: 4%;
+  top: 9%;
   background-image: url('../images/hero-plant.jpg');
 }
 
