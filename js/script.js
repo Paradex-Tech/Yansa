@@ -1717,7 +1717,7 @@
     var PETROL = [26, 65, 70];      // --petrol
     var INK = [23, 23, 23];         // the heading on cream
     var GREY = [152, 152, 152];     // the heading on petrol
-    var ORANGE = [255, 140, 64];    // --orange, for "YanQ"
+    var CYAN = [76, 200, 192];      // --cyan, for "YanQ"
 
     var n = steps.length;
     var dots = [];
@@ -1854,7 +1854,7 @@
       flow.style.setProperty('--yanq-flow-bg', out > 0 ?
         mix(PETROL, CREAM, smooth(clamp01(out / 0.7))) : mix(CREAM, PETROL, turn));
       flow.style.setProperty('--yanq-flow-title', mix(INK, GREY, turn));
-      flow.style.setProperty('--yanq-flow-brand', mix(INK, ORANGE, turn, 1 - swap));
+      flow.style.setProperty('--yanq-flow-brand', mix(INK, CYAN, turn, 1 - swap));
       flow.style.setProperty('--yanq-flow-intro', (1 - smooth(clamp01((u - READ) / half))).toFixed(4));
       flow.style.setProperty('--yanq-flow-reveal', smooth(clamp01((u - READ - half) / half)).toFixed(4));
       flow.style.setProperty('--yanq-flow-out', out.toFixed(4));

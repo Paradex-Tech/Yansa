@@ -29,6 +29,7 @@
   --teal-deep: #006a65;
   --teal-brand: #007f7f;
   --teal-mid: #039999;
+  --cyan: #4cc8c0;          /* the YanQ name: light cyan, never orange */
   --petrol: #1a4146;
   --petrol-bright: #167777;
 
@@ -3097,7 +3098,11 @@ ul {
 }
 
 .yanq-hero__label {
-  color: var(--orange);
+  color: var(--cyan);
+}
+
+.yanq-hero h2 .accent {
+  color: var(--cyan);
 }
 
 .yanq-hero h2 {
@@ -3145,7 +3150,7 @@ ul {
 .yanq-flow {
   --yanq-flow-bg: var(--petrol);
   --yanq-flow-title: #989898;
-  --yanq-flow-brand: var(--orange);
+  --yanq-flow-brand: var(--cyan);
   --yanq-flow-intro: 1;
   --yanq-flow-reveal: 1;
   --yanq-flow-out: 0;
