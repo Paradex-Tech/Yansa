@@ -2422,6 +2422,7 @@ ul {
 .pq-entry,
 .pqs-hero {
   --pq-p: 1;
+  --pq-fan: 1;
 }
 
 .pq-wave {
@@ -2475,14 +2476,50 @@ ul {
 }
 
 /* ----- Entry on the Solutions page ----- */
+/* overflow: clip, not hidden: hidden would make this a scroll container and
+   stop the stage inside it from pinning */
 .pq-entry {
   position: relative;
-  overflow: hidden;
+  overflow: clip;
   background: var(--petrol);
-  padding: var(--section-pad-y) var(--gutter) 0;
 }
 
-.pq-entry__rings span,
+.pq-entry__stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding: var(--section-pad-y) var(--gutter);
+}
+
+/* Pinned mode (script adds .is-scrolly on wide, tall screens): the section is
+   a runway, the stage sticks under the navbar, and scroll plays the section */
+.pq-entry.is-scrolly {
+  height: calc(100vh - var(--nav-height) + 260vh);
+}
+
+.pq-entry.is-scrolly .pq-entry__stage {
+  position: sticky;
+  top: var(--nav-height);
+  height: calc(100vh - var(--nav-height));
+  padding-block: 32px;
+}
+
+/* Ripples: scroll writes each ring's size (--rs) and strength (--ro), so they
+   spread as you scroll down and draw back in as you scroll up */
+.pq-entry__rings span {
+  position: absolute;
+  left: 72%;
+  top: 50%;
+  width: 1300px;
+  aspect-ratio: 1;
+  border: 1px solid rgba(76, 200, 192, 0.5);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(var(--rs, 0.6));
+  opacity: var(--ro, 0.2);
+}
+
 .pqs-hero__rings span {
   position: absolute;
   border: 1px solid rgba(76, 200, 192, 0.4);
@@ -2492,17 +2529,7 @@ ul {
   animation: pq-ring 9s linear infinite;
 }
 
-.pq-entry__rings span {
-  right: 8%;
-  top: 42%;
-  width: 760px;
-  aspect-ratio: 1;
-  translate: 50% -50%;
-}
-
-.pq-entry__rings span:nth-child(2),
 .pqs-hero__rings span:nth-child(2) { animation-delay: 3s; }
-.pq-entry__rings span:nth-child(3),
 .pqs-hero__rings span:nth-child(3) { animation-delay: 6s; }
 
 @keyframes pq-ring {
@@ -2569,9 +2596,9 @@ ul {
   z-index: calc(3 - var(--k));
   transform-origin: 50% 0;
   transform:
-    translateY(calc((1 - var(--pq-p)) * var(--k) * -86%))
-    rotate(calc((1 - var(--pq-p)) * (var(--k) - 1) * -2.2deg))
-    scale(calc(0.94 + 0.06 * var(--pq-p)));
+    translateY(calc((1 - var(--pq-fan)) * var(--k) * -86%))
+    rotate(calc((1 - var(--pq-fan)) * (var(--k) - 1) * -2.2deg))
+    scale(calc(0.94 + 0.06 * var(--pq-fan)));
   transition: translate 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
     border-color 0.3s ease, background-color 0.3s ease;
 }
@@ -2610,14 +2637,6 @@ ul {
 
 .glimpse__go {
   color: var(--text-on-dark);
-}
-
-.pq-entry__band {
-  position: relative;
-  z-index: 1;
-  height: 110px;
-  margin: 0 calc(-1 * var(--gutter));
-  width: calc(100% + 2 * var(--gutter));
 }
 
 /* ----- The PQ Solved page ----- */
@@ -2900,7 +2919,7 @@ ul {
   }
 
   .pq-entry__rings span {
-    right: 50%;
+    left: 50%;
   }
 }
 
@@ -2915,14 +2934,12 @@ ul {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pq-entry__rings span,
   .pqs-hero__rings span,
   .pqs-word,
   .pqs-marquee__track {
     animation: none;
   }
 
-  .pq-entry__rings span,
   .pqs-hero__rings span {
     opacity: 0.25;
     scale: 0.6;

@@ -241,10 +241,11 @@
     </section>
 
     <!-- ENTRY TO PQ SOLVED: a glimpse of the solutions; the full range lives on pq-solved.html.
-         --pq-p (0 to 1) is written by initPqScroll as the section scrolls in: the cards
-         fan out of a stack and the distorted wave straightens. -->
+         On wide, tall screens the stage pins and scroll drives it: --pq-p (0 to 1) widens the
+         ripples, --pq-fan fans the cards out of a stack, the small waves straighten. -->
     <section class="pq-entry" data-pq-progress="enter" aria-labelledby="pq-entry-title">
-      <div class="pq-entry__rings" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div class="pq-entry__stage">
+      <div class="pq-entry__rings" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
       <div class="pq-entry__inner">
         <div class="pq-entry__copy">
           <p class="pq-entry__eyebrow">Problem understood</p>
@@ -282,9 +283,7 @@
           </a>
         </div>
       </div>
-      <svg class="pq-wave pq-entry__band" viewBox="0 0 1200 120" preserveAspectRatio="none" aria-hidden="true" focusable="false" data-pq-wave data-cycles="4">
-        <path class="pq-wave__raw"></path><path class="pq-wave__clean"></path>
-      </svg>
+      </div>
     </section>
 
     <!-- WHAT INACTION COSTS -->
