@@ -887,12 +887,127 @@
   }
 
 
+  /* ---------- PQ Solved: scroll-linked wave, cursor spotlight, jump bar ----------
+     initPqScroll writes --pq-p (0 to 1) on every [data-pq-progress]
+     section, a pure function of scroll position:
+       enter  0 as the section's top is 85% down the viewport, 1 once it has
+              travelled 80% of a viewport up (the glimpse cards fan out)
+       leave  0 at the top of the page, 1 after three quarters of the hero
+              has scrolled away
+     It also redraws each [data-pq-wave] svg: a clean sine, plus a distorted
+     copy (extra harmonics) whose distortion and opacity fall as p rises, so
+     the wave straightens as you scroll. Under reduced motion p stays 1. */
+  function pqWavePath(w, h, amp, cycles, dist, phase) {
+    var N = 140;
+    var d = '';
+    for (var i = 0; i <= N; i++) {
+      var x = i / N;
+      var a = x * Math.PI * 2 * cycles + phase;
+      var y = Math.sin(a) +
+        dist * (0.34 * Math.sin(3 * a + 1.1) + 0.2 * Math.sin(5 * a + 0.4) + 0.11 * Math.sin(9 * a));
+      d += (i ? 'L' : 'M') + (x * w).toFixed(1) + ' ' + (h / 2 - y * amp).toFixed(1);
+    }
+    return d;
+  }
+
+  function initPqScroll() {
+    var targets = toArray(document.querySelectorAll('[data-pq-progress]'));
+    if (!targets.length) return;
+
+    var items = targets.map(function (el) {
+      return {
+        el: el,
+        mode: el.getAttribute('data-pq-progress'),
+        waves: toArray(el.querySelectorAll('[data-pq-wave]'))
+      };
+    });
+
+    function progress(it, rect) {
+      if (reduceMotion) return 1;
+      if (it.mode === 'leave') {
+        return clamp01(window.pageYOffset / Math.max(rect.height * 0.75, 1));
+      }
+      return clamp01((window.innerHeight * 0.85 - rect.top) / (window.innerHeight * 0.8));
+    }
+
+    function draw(svg, p, phase) {
+      var box = svg.viewBox.baseVal;
+      var cycles = parseFloat(svg.getAttribute('data-cycles')) || 3;
+      var amp = box.height * 0.34;
+      var raw = svg.querySelector('.pq-wave__raw');
+      var clean = svg.querySelector('.pq-wave__clean');
+      var dist = (1 - p) * 1.15;
+      raw.setAttribute('d', pqWavePath(box.width, box.height, amp, cycles, dist, phase));
+      raw.style.opacity = ((1 - p) * 0.9).toFixed(3);
+      clean.setAttribute('d', pqWavePath(box.width, box.height, amp, cycles, 0, phase));
+      clean.style.opacity = (0.4 + 0.6 * p).toFixed(3);
+    }
+
+    var queued = false;
+    function frame() {
+      queued = false;
+      var vh = window.innerHeight;
+      items.forEach(function (it) {
+        var rect = it.el.getBoundingClientRect();
+        if (rect.bottom < -50 || rect.top > vh + 50) return;
+        var p = progress(it, rect);
+        it.el.style.setProperty('--pq-p', p.toFixed(4));
+        var phase = reduceMotion ? 0 : window.pageYOffset * 0.006;
+        it.waves.forEach(function (svg) { draw(svg, p, phase); });
+      });
+    }
+    function queue() {
+      if (!queued) {
+        queued = true;
+        requestAnimationFrame(frame);
+      }
+    }
+
+    window.addEventListener('scroll', queue, { passive: true });
+    window.addEventListener('resize', queue);
+    frame();
+  }
+
+  // The glow on [data-spot] cards follows the pointer
+  function initSpotlight() {
+    toArray(document.querySelectorAll('[data-spot]')).forEach(function (el) {
+      el.addEventListener('pointermove', function (e) {
+        var r = el.getBoundingClientRect();
+        el.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+        el.style.setProperty('--my', (e.clientY - r.top) + 'px');
+      });
+    });
+  }
+
+  // The pill bar on PQ Solved marks the solution row in view
+  function initPqPills() {
+    var pills = toArray(document.querySelectorAll('.pqs-pills a'));
+    if (!pills.length || !('IntersectionObserver' in window)) return;
+
+    var seen = {};
+    pills.forEach(function (pill) {
+      var row = document.querySelector(pill.getAttribute('href'));
+      if (!row) return;
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) { seen[row.id] = entry.isIntersecting; });
+        var current = null;
+        pills.forEach(function (p) {
+          var id = p.getAttribute('href').slice(1);
+          if (seen[id] && !current) current = id;
+        });
+        pills.forEach(function (p) {
+          p.classList.toggle('is-active', p.getAttribute('href') === '#' + current);
+        });
+      }, { rootMargin: '-35% 0px -55% 0px' }).observe(row);
+    });
+  }
+
   /* ---------- Industries We Serve: category tabs (About) ----------
      A tablist over one table. The table is built here from the three
      fallback cards in the markup, so the copy lives in one place. Roving
      tabindex: Tab reaches the row once, arrows, Home and End move within it.
      Choosing a tab runs one morph:
-       1  the "+" hub turns a quarter, and the words turn away (staggered)
+       1  the "+" marks turn half a turn, and the words turn away (staggered)
        2  new words and a new layout are set (3 or 2 across, the last row
           stretching), then each cell glides from its old box to its new one
           (FLIP), cells that did not exist grow in, the table's height eases
@@ -931,16 +1046,23 @@
       cells.push(cell);
       texts.push(text);
     }
-    var hub = document.createElement('span');
-    hub.className = 'industry-hub';
-    hub.setAttribute('aria-hidden', 'true');
-    grid.appendChild(hub);
+    // The "+" markers sit where grid lines cross. There are two; when the
+    // cells merge (fewer cells, or a stretched last row) the crossings
+    // reduce, and the spare marker drifts onto the other and shrinks away.
+    var pluses = [0, 1].map(function () {
+      var el = document.createElement('span');
+      el.className = 'industry-plus';
+      el.setAttribute('aria-hidden', 'true');
+      grid.appendChild(el);
+      return el;
+    });
     holder.appendChild(grid);
 
     var narrow = window.matchMedia('(max-width: 560px)');
     var animated = !reduceMotion && typeof grid.animate === 'function';
     var current = 0;
     var angle = 0;
+    var busyUntil = 0;
     var seq = 0;
     var running = [];
 
@@ -976,15 +1098,57 @@
       items.forEach(function (word, k) { texts[k].textContent = word; });
     }
 
-    function setHub(rows, turn) {
-      if (turn) angle += 90;
-      hub.style.setProperty('--hub-rot', angle + 'deg');
-      hub.style.setProperty('--hub-scale', rows > 1 ? '1' : '0');
+    // Where the lines cross, from the cells' layout boxes (so a glide in
+    // progress does not matter): the dividers shared by two neighbouring rows.
+    // Where rows do not line up (a stretched last row) the crossing merges
+    // into one, at the lower row's divider.
+    function crossings() {
+      var rows = [];
+      cells.forEach(function (cell) {
+        if (cell.style.display === 'none') return;
+        var top = cell.offsetTop;
+        var row = rows.filter(function (r) { return Math.abs(r.top - top) < 2; })[0];
+        if (!row) {
+          row = { top: top, bottom: top + cell.offsetHeight, lefts: [] };
+          rows.push(row);
+        }
+        row.lefts.push(cell.offsetLeft);
+      });
+      rows.sort(function (p, q) { return p.top - q.top; });
+
+      var out = [];
+      for (var r = 0; r < rows.length - 1; r++) {
+        var y = rows[r].bottom + 0.5;
+        var upper = rows[r];
+        var lower = rows[r + 1];
+        var shared = upper.lefts.filter(function (x) {
+          return x > 2 && lower.lefts.some(function (m) { return Math.abs(m - x) < 2; });
+        });
+        if (!shared.length) {
+          shared = [lower.lefts.length > 1 ? lower.lefts[1] : grid.clientWidth / 2];
+        }
+        shared.forEach(function (x) { out.push({ x: x - 0.5, y: y }); });
+      }
+      return out;
+    }
+
+    function place(turn) {
+      var spots = crossings();
+      if (turn) angle += 180;
+      var rest = spots.length ? spots[spots.length - 1] : { x: grid.clientWidth / 2, y: grid.clientHeight / 2 };
+      pluses.forEach(function (el, k) {
+        var spot = spots[k];
+        el.style.setProperty('--px', (spot || rest).x + 'px');
+        el.style.setProperty('--py', (spot || rest).y + 'px');
+        el.style.setProperty('--ps', spot ? '1' : '0');
+        el.style.setProperty('--pr', (k ? -angle : angle) + 'deg');
+      });
     }
 
     function apply(index) {
       setWords(data[index]);
-      setHub(layout(data[index].length), false);
+      layout(data[index].length);
+      place(false);
     }
 
     function morph(index) {
@@ -1010,8 +1174,7 @@
         outs.push(anim);
         running.push(anim);
       });
-      angle += 90;
-      hub.style.setProperty('--hub-rot', angle + 'deg');
+      busyUntil = Date.now() + 1200;
 
       var wait = outs.length ? Promise.all(outs.map(function (a) { return a.finished; })) : Promise.resolve();
       wait.then(function () {
@@ -1020,8 +1183,8 @@
         running = [];
 
         setWords(items);
-        var rows = layout(items.length);
-        setHub(rows, false);
+        layout(items.length);
+        place(true);
 
         var h1 = grid.offsetHeight;
         running.push(grid.animate(
@@ -1086,6 +1249,12 @@
     };
     if (narrow.addEventListener) narrow.addEventListener('change', onSize);
     else if (narrow.addListener) narrow.addListener(onSize);
+
+    if (window.ResizeObserver) {
+      new ResizeObserver(function () {
+        if (Date.now() > busyUntil) place(false);
+      }).observe(grid);
+    }
 
     select(0);
     apply(0);
@@ -1562,6 +1731,10 @@
 
       /* YanQ */
       { sel: '.yanq-hero__content > *', step: 90 },
+      /* PQ Solved */
+      { sel: '.pq-entry__copy > *', step: 90 },
+      { sel: '.pqs-fit__header > *', step: 90 },
+      { sel: '.pqs-fit__grid > *', step: 80, mode: 'fade' },
 
       /* contact */
       { sel: '.contact-map', step: 0 },
@@ -2564,6 +2737,9 @@
   initSymptomFocus();
   initFaq();
   initIndustryTabs();
+  initPqScroll();
+  initSpotlight();
+  initPqPills();
   initTypewriter();
   initHeroVideo();
   initHero();

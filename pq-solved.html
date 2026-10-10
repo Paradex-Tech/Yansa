@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PQ Solved | Yansa</title>
+  <meta name="description" content="PQ Solved: the active, passive and hybrid power quality solutions behind every Yansa diagnosis.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#1a4146">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Yansa">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:title" content="PQ Solved | Yansa">
+  <meta property="og:description" content="The active, passive and hybrid power quality solutions behind every Yansa diagnosis.">
+    <meta property="og:image" content="https://yansa.in/images/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Aerial view of an industrial power plant">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+
+  <link rel="preload" href="fonts/LiberationSans-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="navbar__inner">
+      <a href="./" class="navbar__logo">
+        <img src="images/logo-nav.svg" alt="Yansa" width="102" height="26">
+      </a>
+      <nav class="navbar__links" id="site-nav" aria-label="Main">
+        <a href="./">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="solution.html" class="is-active">Solution</a>
+        <a href="yanq.html">YanQ</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <a href="contact.html#contact-form" class="btn btn--orange navbar__cta">Book a Diagnosis</a>
+      <button class="navbar__toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+        <span class="navbar__toggle-bar" aria-hidden="true"></span>
+      </button>
+    </div>
+  </header>
+
+  <main class="pqs">
+
+    <!-- HERO: the wave straightens as you scroll (--pq-p, initPqScroll) -->
+    <section class="pqs-hero" data-pq-progress="leave">
+      <div class="pqs-hero__grid" aria-hidden="true"></div>
+      <div class="pqs-hero__rings" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div class="pqs-hero__inner">
+        <p class="pqs-eyebrow">Yansa &middot; Solutions</p>
+        <h1><span class="pqs-word">PQ</span> <span class="pqs-word pqs-word--b">Solved.</span></h1>
+        <p class="pqs-lead">Distortion in, clean power out. The fixes behind every diagnosis, sized to your measured data.</p>
+        <div class="pqs-hero__ctas">
+          <a href="#families" class="btn btn--orange">Explore the solutions</a>
+          <a href="contact.html#contact-form" class="btn btn--outline-orange">Book a Diagnosis</a>
+        </div>
+      </div>
+      <svg class="pq-wave pqs-hero__wave" viewBox="0 0 1200 160" preserveAspectRatio="none" aria-hidden="true" focusable="false" data-pq-wave data-cycles="3.5">
+        <path class="pq-wave__raw"></path><path class="pq-wave__clean"></path>
+      </svg>
+    </section>
+
+    <!-- MARQUEE: problem to fix. The second copy is the loop and is hidden from readers. -->
+    <section class="pqs-marquee" aria-label="Problems and the fixes that answer them">
+      <div class="pqs-marquee__track">
+        <ul>
+          <li>Harmonics <b>&rarr;</b> Active harmonic filter</li>
+          <li>Low power factor <b>&rarr;</b> Detuned APFC</li>
+          <li>Fast load swings <b>&rarr;</b> SVG</li>
+          <li>Welding &amp; cranes <b>&rarr;</b> Thyristor switching</li>
+          <li>Mixed duty <b>&rarr;</b> Hybrid</li>
+        </ul>
+        <ul aria-hidden="true">
+          <li>Harmonics <b>&rarr;</b> Active harmonic filter</li>
+          <li>Low power factor <b>&rarr;</b> Detuned APFC</li>
+          <li>Fast load swings <b>&rarr;</b> SVG</li>
+          <li>Welding &amp; cranes <b>&rarr;</b> Thyristor switching</li>
+          <li>Mixed duty <b>&rarr;</b> Hybrid</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- MATCH THE FIX TO THE PROBLEM -->
+    <section class="pqs-fit">
+      <div class="pqs-fit__inner">
+        <div class="pqs-fit__header">
+          <h2>Match the fix to the problem.</h2>
+          <p>Every device is a bet on a diagnosis. The right type in the wrong place, or the wrong size, is an expensive way to learn that. This is how the choice usually falls.</p>
+        </div>
+        <div class="pqs-fit__grid">
+          <a class="pqs-card" href="#passive" data-spot>
+            <span class="pqs-card__num">01</span>
+            <h3>Low power factor</h3>
+            <p>A detuned APFC is the usual default for industry today. Add an SVG when loads swing fast or run leading.</p>
+            <span class="pqs-card__go" aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="pqs-card" href="#active" data-spot>
+            <span class="pqs-card__num">02</span>
+            <h3>High harmonics</h3>
+            <p>Active harmonic filters cancel distortion as it happens. Detuned filters take the steady base.</p>
+            <span class="pqs-card__go" aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="pqs-card" href="#active" data-spot>
+            <span class="pqs-card__num">03</span>
+            <h3>Fast-changing loads</h3>
+            <p>Welding, cranes and presses need a response within a cycle: thyristor switching or an SVG.</p>
+            <span class="pqs-card__go" aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="pqs-card" href="#hybrid" data-spot>
+            <span class="pqs-card__num">04</span>
+            <h3>Mixed duty</h3>
+            <p>When active alone is oversized and passive alone falls short, a hybrid is engineered to the site.</p>
+            <span class="pqs-card__go" aria-hidden="true">&rarr;</span>
+          </a>
+        </div>
+        <p class="pqs-fit__note">Not sure which one you need? <a href="yanq.html">That is what a YanQ diagnosis settles.</a></p>
+      </div>
+    </section>
+
+    <!-- JUMP BAR: sticky under the navbar, follows the row in view -->
+    <nav class="pqs-pills" id="families" aria-label="Solution families">
+      <div class="pqs-pills__inner">
+        <a href="#active">Active</a>
+        <a href="#passive">Passive</a>
+        <a href="#hybrid">Hybrid</a>
+      </div>
+    </nav>
+
+    <!-- ACTIVE SOLUTIONS -->
+    <section class="solutions-row" id="active">
+      <div class="solutions-row__inner">
+        <h2><span class="solutions-row__label solutions-row__label--active">Active</span> Solutions</h2>
+        <p>Intelligent power electronics that measure, correct, and adapt in real time. Built for facilities where harmonic levels are high and loads are dynamic.</p>
+        <div class="solutions-row__grid">
+          <button class="solution-card solution-card--photo" type="button">
+            <img src="images/solution-cabinet-placeholder.svg" alt="Active solution cabinet" width="300" height="300">
+            <div class="solution-card__label"><span class="solution-card__name">Static VAR Generator (SVG)</span><span class="plus">+</span></div>
+            <div class="solution-card__detail" hidden>
+              <p>An IGBT-based inverter that injects or absorbs reactive current continuously, correcting leading or lagging power factor within a cycle. There are no capacitor steps to switch, so there is no inrush and no resonance risk, and the output holds even when grid voltage sags. Suited to fast, fluctuating loads such as welding lines, cranes and compressors.</p>
+              <p><strong>Problem addressed:</strong> Leading &amp; lagging power factor, load imbalance</p>
+            </div>
+          </button>
+          <button class="solution-card" type="button">
+            <div class="solution-card__label"><span class="solution-card__name">Static VAR Generator Plus (SVG+)</span><span class="plus">+</span></div>
+            <div class="solution-card__detail" hidden>
+              <p>The SVG platform with harmonic mitigation built in. Alongside stepless reactive compensation and phase balancing, it cancels selected low-order harmonic currents, so a single unit covers both power factor and distortion on sites where harmonic levels are moderate.</p>
+              <p><strong>Problem addressed:</strong> Power factor, load imbalance &amp; moderate harmonics</p>
+            </div>
+          </button>
+          <button class="solution-card" type="button">
+            <div class="solution-card__label"><span class="solution-card__name">Active Harmonic Filter (AHF)</span><span class="plus">+</span></div>
+            <div class="solution-card__detail" hidden>
+              <p>Measures the load current in real time and injects an equal and opposite current to cancel harmonics across a wide spectrum. It adapts automatically as the load changes, bringing current distortion at the point of common coupling within IEEE 519-2022 limits. Spare capacity can also correct power factor and balance phases.</p>
+              <p><strong>Problem addressed:</strong> Harmonics</p>
+            </div>
+          </button>
+          <button class="solution-card" type="button">
+            <div class="solution-card__label"><span class="solution-card__name">Thyristor Switching Modules (TSM)</span><span class="plus">+</span></div>
+            <div class="solution-card__detail" hidden>
+              <p>Solid-state switching that connects capacitor steps at the zero-voltage crossing in a fraction of a cycle, with no inrush current and no contact wear. Driven by a fast controller, a thyristor-switched bank follows rapidly changing loads that contactor-switched panels cannot keep up with.</p>
+              <p><strong>Problem addressed:</strong> Fast-changing lagging power factor</p>
+            </div>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PASSIVE SOLUTIONS -->
+    <section class="solutions-row" id="passive">
+      <div class="solutions-row__inner">
+        <h2><span class="solutions-row__label solutions-row__label--passive">Passive</span> Solutions</h2>
+        <p>Fixed components that reduce harmonics and improve power factor. Best suited for facilities where load variation is low and correction requirements are consistent.</p>
+        <div class="solutions-row__grid">
+          <button class="solution-card solution-card--photo" type="button">
+            <img src="images/solution-cabinet-placeholder.svg" alt="Passive solution cabinet" width="300" height="300">
+            <div class="solution-card__label"><span class="solution-card__name">Yan-Q Power Quality Analysis</span><span class="plus">+</span></div>
+            <div class="solution-card__detail" hidden>
+              <p>A measured study before anything is specified. Analysers log voltage, current, harmonics and power factor at the incomer and key feeders, and every parameter is benchmarked against IEEE 519-2022. The outcome is a clear diagnosis and a correction sized to the site&#8217;s own data, not to a rule of thumb.</p>
+              <p><strong>Problem addressed:</strong> Power factor and harmonics</p>
+            </div>
+          </button>
+          <button class="solution-card" type="button">
+            <div class="solution-card__label"><span class="solution-card__name">Low Voltage Power Capacitors</span><span class="plus">+</span></div>
+            <div class="solution-card__detail" hidden>
+              <p>Self-healing metallised film capacitors that supply reactive power at the load, so it no longer has to be drawn from the utility. They lift power factor, cut kVA demand and line losses, and free up transformer and cable capacity. The building block of every fixed and automatic correction panel.</p>
+              <p><strong>Problem addressed:</strong> Lagging power factor</p>
+            </div>
+          </button>
+          <button class="solution-card" type="button">
+            <div class="solution-card__label"><span class="solution-card__name">Series Detuned Reactors / Harmonic Filters</span><span class="plus">+</span></div>
+            <div class="solution-card__detail" hidden>
+              <p>A reactor in series with each capacitor step tunes the branch below the lowest dominant harmonic, typically 7% detuning (189 Hz on a 50 Hz supply). The capacitors can no longer resonate with the network or soak up harmonic currents, so they last longer while still correcting power factor. Tuned filter versions go further and trap specific harmonic orders.</p>
+              <p><strong>Problem addressed:</strong> Power factor &amp; harmonics</p>
+            </div>
+          </button>
+          <button class="solution-card" type="button">
+            <div class="solution-card__label"><span class="solution-card__name">APFC Relay</span><span class="plus">+</span></div>
+            <div class="solution-card__detail" hidden>
+              <p>The controller at the heart of an automatic power factor correction panel. It measures power factor continuously and switches capacitor steps in and out to hold the target, rotating steps to share wear and raising alarms for over-voltage, high harmonics or a failed step.</p>
+              <p><strong>Problem addressed:</strong> Lagging power factor</p>
+            </div>
+          </button>
+          <button class="solution-card" type="button">
+            <div class="solution-card__label"><span class="solution-card__name">Thyristor Switching Modules for Capacitors</span><span class="plus">+</span></div>
+            <div class="solution-card__detail" hidden>
+              <p>A drop-in replacement for contactors in a capacitor panel. Each module switches its step at zero voltage, removing the inrush that shortens capacitor life, and switches silently with no contacts to wear out, even at a high number of operations per day.</p>
+              <p><strong>Problem addressed:</strong> Lagging power factor</p>
+            </div>
+          </button>
+          <button class="solution-card" type="button">
+            <div class="solution-card__label"><span class="solution-card__name">Line Chokes</span><span class="plus">+</span></div>
+            <div class="solution-card__detail" hidden>
+              <p>A series reactor fitted on the supply side of drives, rectifiers and UPS systems. It smooths the current the equipment draws, lowering harmonic distortion and improving true power factor, while shielding sensitive electronics from voltage spikes and line notching.</p>
+              <p><strong>Problem addressed:</strong> Lagging power factor</p>
+            </div>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- HYBRID SOLUTIONS -->
+    <section class="solutions-row" id="hybrid">
+      <div class="solutions-row__inner">
+        <h2><span class="solutions-row__label solutions-row__label--hybrid">Hybrid</span> Solutions</h2>
+        <p>When active correction alone is oversized and passive correction alone is insufficient, hybrid solutions bridge the gap. Engineered to the facility, not to a standard configuration.</p>
+        <div class="solutions-row__grid">
+          <button class="solution-card solution-card--photo" type="button">
+            <img src="images/solution-cabinet-placeholder.svg" alt="Hybrid solution cabinet" width="300" height="300">
+            <div class="solution-card__label"><span class="solution-card__name">Hybrid VAR Compensation (SVG + Capacitor Bank)</span><span class="plus">+</span></div>
+            <div class="solution-card__detail" hidden>
+              <p>A detuned capacitor bank carries the steady base of the reactive demand while an SVG trims the balance continuously. The site gets stepless, cycle-fast correction across the full load range, with an active unit sized to the fluctuating share rather than the whole load.</p>
+              <p><strong>Problem addressed:</strong> Fluctuating power factor on large loads</p>
+            </div>
+          </button>
+          <button class="solution-card" type="button">
+            <div class="solution-card__label"><span class="solution-card__name">Hybrid Harmonic Filter (AHF + Detuned Filter)</span><span class="plus">+</span></div>
+            <div class="solution-card__detail" hidden>
+              <p>A detuned passive filter corrects power factor and absorbs the dominant low-order harmonics economically, while an active harmonic filter cancels whatever remains, including higher orders. Together they reach IEEE 519-2022 limits with a far smaller active filter than a purely active design.</p>
+              <p><strong>Problem addressed:</strong> High harmonics &amp; power factor</p>
+            </div>
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__cta">
+      <div class="footer__icon" aria-hidden="true">
+        <img src="images/icons/footer-icon.svg" alt="">
+      </div>
+      <h2>Solve before problems become expensive.</h2>
+      <p>Tell us what your facility is experiencing. We will handle the rest.</p>
+      <div class="footer__buttons">
+        <a href="contact.html#contact-form" class="btn btn--orange">Book a Diagnosis</a>
+        <a href="assets/yansa-brochure.pdf" class="btn btn--outline-orange" data-brochure>Download Brochure</a>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <div class="footer__brand">
+        <img src="images/logo-footer.svg" alt="Yansa" width="125" height="32">
+        <p>Follow us for power quality insights, field observations, and engineering perspectives from the industry.</p>
+        <div class="footer__socials">
+          <img src="images/icons/social-1.svg" alt="Instagram">
+          <img src="images/icons/social-2.svg" alt="LinkedIn">
+          <img src="images/icons/social-3.svg" alt="Phone">
+          <img src="images/icons/social-4.svg" alt="WhatsApp">
+        </div>
+      </div>
+      <div class="footer__links">
+        <div class="footer__col">
+          <a href="./">Home</a>
+          <a href="solution.html">Solutions</a>
+          <a href="yanq.html">YanQ</a>
+          <a href="about.html">About</a>
+        </div>
+        <div class="footer__col">
+          <a href="contact.html">Contact</a>
+          <a href="contact.html#contact-form">Careers</a>
+          <a href="./#case-studies" hidden>Case Studies</a>
+          <a href="about.html#faq">FAQs</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/concentric-waves-icon.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
