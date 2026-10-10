@@ -89,7 +89,7 @@
             "name": "Does Yansa work across industries?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Yes. Automotive, FMCG, telecom, food and beverage, textiles, process industries, and commercial buildings."
+              "text": "Yes. Industrial sites such as automotive, textiles, power generation, petrochemicals and FMCG; commercial and institutional buildings such as hotels, schools, offices and hospitals; and data centres and critical infrastructure such as telecom."
             }
           }
         ]
@@ -174,13 +174,43 @@
     <section class="industries">
       <h2>Industries We Serve.</h2>
       <p>Every industry runs differently. Every power system tells a different story.</p>
-      <div class="industries__grid">
-        <div class="industries__cell">Automotive</div>
-        <div class="industries__cell">FMCG</div>
-        <div class="industries__cell">Telecom</div>
-        <div class="industries__cell">Textiles</div>
-        <div class="industries__cell">Commercial Buildings</div>
-        <div class="industries__cell">Food &amp; Beverage</div>
+      <div class="industry-tabs">
+        <div class="industry-tabs__list" role="tablist" aria-label="Industry categories">
+          <button class="industry-tab is-active" type="button" role="tab" id="industry-tab-1" aria-selected="true" aria-controls="industry-panel-1">Industrial</button>
+          <button class="industry-tab" type="button" role="tab" id="industry-tab-2" aria-selected="false" aria-controls="industry-panel-2" tabindex="-1">Commercial &amp; Institutional</button>
+          <button class="industry-tab" type="button" role="tab" id="industry-tab-3" aria-selected="false" aria-controls="industry-panel-3" tabindex="-1">Data Centres &amp; Critical Infrastructure</button>
+        </div>
+        <div class="industry-tabs__panels">
+          <div class="industry-panel is-active" role="tabpanel" id="industry-panel-1" aria-labelledby="industry-tab-1">
+            <h3 class="industry-panel__title">Industrial</h3>
+            <ul>
+              <li>Automotive</li>
+              <li>Textiles</li>
+              <li>Power generation</li>
+              <li>Petrochemicals</li>
+              <li>FMCG</li>
+              <li>And more</li>
+            </ul>
+          </div>
+          <div class="industry-panel" role="tabpanel" id="industry-panel-2" aria-labelledby="industry-tab-2">
+            <h3 class="industry-panel__title">Commercial &amp; Institutional</h3>
+            <ul>
+              <li>Hotels</li>
+              <li>Schools</li>
+              <li>Offices</li>
+              <li>Hospitals</li>
+              <li>And more</li>
+            </ul>
+          </div>
+          <div class="industry-panel" role="tabpanel" id="industry-panel-3" aria-labelledby="industry-tab-3">
+            <h3 class="industry-panel__title">Data Centres &amp; Critical Infrastructure</h3>
+            <ul>
+              <li>Data centres</li>
+              <li>Telecom</li>
+              <li>And more</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -230,7 +260,7 @@
               <span class="faq__question">Does Yansa work across industries?</span>
               <img src="images/icons/chevron-open.svg" alt="" class="faq__chevron">
             </summary>
-            <p class="faq__answer">Yes. Automotive, FMCG, telecom, food and beverage, textiles, process industries, and commercial buildings.</p>
+            <p class="faq__answer">Yes. Industrial sites such as automotive, textiles, power generation, petrochemicals and FMCG; commercial and institutional buildings such as hotels, schools, offices and hospitals; and data centres and critical infrastructure such as telecom.</p>
           </details>
         </div>
       </div>

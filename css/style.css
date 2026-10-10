@@ -318,6 +318,7 @@ ul {
 }
 
 /* H4 — card titles */
+.industry-panel__title,
 .why-card h3,
 .symptom-card__title,
 .inaction-card__row h3,
@@ -367,7 +368,8 @@ ul {
 .symptom-card__detail p,
 .yanq-flow__step > p,
 .deliver-stat p,
-.industries__cell,
+.industry-tab,
+.industry-panel li,
 .faq__answer,
 .results__desc,
 .solution-card__label .plus,
@@ -842,7 +844,7 @@ ul {
 .yanq-hero__inner,
 .yanq-flow__stage,
 .yanq-delivers__grid,
-.industries__grid,
+.industry-tabs,
 .faq__inner,
 .generates__grid,
 .problems__stack,
@@ -2796,41 +2798,147 @@ ul {
   margin-bottom: 48px;
 }
 
-.industries__grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(160px, 251px));
-  border: 1px solid #2d5a5f;
-  border-radius: 10px;
-  overflow: hidden;
+/* The tab row follows the primary tab style: a hairline under the row, the
+   chosen tab marked by a 2px bar that sits on it. The script (initIndustryTabs)
+   adds .is-ready; without it every category is simply shown in turn. */
+.industry-tabs {
   max-width: 754px;
   margin: 0 auto;
+}
+
+.industry-tabs__list {
+  display: none;
+}
+
+.industry-tabs.is-ready .industry-tabs__list {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  padding-bottom: 1px;
+  border-bottom: 1px solid rgba(244, 244, 233, 0.22);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.industry-tabs__list::-webkit-scrollbar {
+  display: none;
+}
+
+.industry-tab {
+  flex: none;
+  position: relative;
+  margin-bottom: -2px;
+  padding: 0 0 8px;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  color: #95c3c3;
+  font: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.industry-tab:hover {
+  color: #f4f4e9;
+}
+
+.industry-tab.is-active {
+  color: #f4f4e9;
+  border-bottom-color: var(--teal);
+}
+
+.industry-tab:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.industry-tabs__panels {
+  margin-top: 32px;
+}
+
+.industry-panel {
   background: var(--ivory);
+  border: 1px solid #2d5a5f;
+  border-radius: 10px;
+  padding: 36px 32px;
   box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
 }
 
-.industries__cell {
-  padding: 40px 24px;
-  border-right: 1px solid #cdd6d1;
-  border-bottom: 1px solid #cdd6d1;
-  color: var(--ink);
+.industry-panel + .industry-panel {
+  margin-top: 24px;
+}
+
+.industry-tabs.is-ready .industry-panel {
+  display: none;
+  margin-top: 0;
+}
+
+/* Equal height for every category, so the section does not jump on a switch */
+.industry-tabs.is-ready .industry-panel.is-active {
   display: flex;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  min-height: 190px;
 }
 
-.industries__cell:hover {
+/* Only the category's own tab names it once the tabs are running */
+.industry-tabs.is-ready .industry-panel__title {
+  display: none;
+}
+
+.industry-panel__title {
+  color: var(--teal-deep);
+  margin-bottom: 20px;
+}
+
+.industry-panel ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+}
+
+.industry-panel li {
+  padding: 12px 22px;
+  border: 1px solid #cdd6d1;
+  border-radius: 999px;
   background: #ffffff;
+  color: var(--ink);
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+.industry-panel li:hover {
+  border-color: var(--teal);
   color: var(--teal-deep);
 }
 
-.industries__cell:nth-child(3n) {
-  border-right: none;
+/* A category's chips rise in one after another when its tab is chosen */
+.industry-tabs.is-ready .industry-panel.is-active li {
+  animation: industry-in 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 60ms);
 }
 
-.industries__cell:nth-child(n+4) {
-  border-bottom: none;
+@keyframes industry-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .industry-tab,
+  .industry-panel li {
+    transition: none;
+  }
+
+  .industry-tabs.is-ready .industry-panel.is-active li {
+    animation: none;
+  }
 }
 
 /* ---------- FAQ ----------
@@ -2937,27 +3045,6 @@ ul {
   .about-statement {
     padding: var(--section-pad-y) var(--gutter);
   }
-
-  /* Two columns: re-draw the inner grid lines for three rows of two */
-  .industries__grid {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .industries__cell:nth-child(3n) {
-    border-right: 1px solid #cdd6d1;
-  }
-
-  .industries__cell:nth-child(2n) {
-    border-right: none;
-  }
-
-  .industries__cell:nth-child(n+4) {
-    border-bottom: 1px solid #cdd6d1;
-  }
-
-  .industries__cell:nth-child(n+5) {
-    border-bottom: none;
-  }
 }
 
 @media (max-width: 560px) {
@@ -2965,8 +3052,13 @@ ul {
     margin-bottom: 32px;
   }
 
-  .industries__cell {
-    padding: 28px 12px;
+  .industry-tabs.is-ready .industry-tabs__list {
+    justify-content: flex-start;
+    gap: 24px;
+  }
+
+  .industry-panel {
+    padding: 28px 16px;
   }
 }
 

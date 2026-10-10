@@ -887,6 +887,53 @@
   }
 
 
+  /* ---------- Industries We Serve: category tabs (About) ----------
+     A tablist over three panels. Roving tabindex, so Tab reaches the row once
+     and the arrow keys, Home and End move within it. Adding .is-ready hides
+     the inactive panels; without the script every category shows in turn. */
+  function initIndustryTabs() {
+    var box = document.querySelector('.industry-tabs');
+    if (!box) return;
+
+    var tabs = toArray(box.querySelectorAll('[role="tab"]'));
+    var panels = toArray(box.querySelectorAll('[role="tabpanel"]'));
+    if (!tabs.length || tabs.length !== panels.length) return;
+
+    // Stagger index for each panel's chips
+    panels.forEach(function (panel) {
+      toArray(panel.querySelectorAll('li')).forEach(function (li, i) {
+        li.style.setProperty('--i', i);
+      });
+    });
+
+    function select(index, focus) {
+      tabs.forEach(function (tab, i) {
+        var on = i === index;
+        tab.classList.toggle('is-active', on);
+        tab.setAttribute('aria-selected', on ? 'true' : 'false');
+        tab.tabIndex = on ? 0 : -1;
+        panels[i].classList.toggle('is-active', on);
+      });
+      if (focus) tabs[index].focus();
+    }
+
+    tabs.forEach(function (tab, i) {
+      tab.addEventListener('click', function () { select(i, false); });
+      tab.addEventListener('keydown', function (e) {
+        var next = -1;
+        if (e.key === 'ArrowRight') next = (i + 1) % tabs.length;
+        else if (e.key === 'ArrowLeft') next = (i - 1 + tabs.length) % tabs.length;
+        else if (e.key === 'Home') next = 0;
+        else if (e.key === 'End') next = tabs.length - 1;
+        if (next < 0) return;
+        e.preventDefault();
+        select(next, true);
+      });
+    });
+
+    box.classList.add('is-ready');
+  }
+
   /* ---------- FAQ (about) ----------
      A <details> has no in-between state, so the script takes ownership of
      `open`: it is set before the opening animation and cleared only after
@@ -1340,7 +1387,7 @@
 
       /* about */
       { sel: '.industries > h2, .industries > p', step: 90 },
-      { sel: '.industries__grid > *', step: 70 },
+      { sel: '.industry-tabs', step: 0 },
       { sel: '.faq__header > *', step: 90 },
       { sel: '.faq__list > *', step: 70 },
 
@@ -2358,6 +2405,7 @@
   initNavIndicator();
   initSymptomFocus();
   initFaq();
+  initIndustryTabs();
   initTypewriter();
   initHeroVideo();
   initHero();
