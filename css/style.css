@@ -2648,7 +2648,7 @@ ul {
   justify-content: center;
   min-height: var(--inner-hero-height);
   background: var(--petrol);
-  padding: 80px var(--gutter) 160px;
+  padding: 80px var(--gutter);
   text-align: center;
 }
 
@@ -2662,6 +2662,50 @@ ul {
   background-size: 56px 56px;
   -webkit-mask-image: radial-gradient(ellipse 70% 65% at 50% 45%, #000 20%, transparent 75%);
   mask-image: radial-gradient(ellipse 70% 65% at 50% 45%, #000 20%, transparent 75%);
+}
+
+/* A brighter copy of the grid, shown only round the cursor */
+.pqs-hero__glow {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(76, 200, 192, 0.55) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(76, 200, 192, 0.55) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(260px circle at var(--hx, 50%) var(--hy, 50%), #000, transparent 70%);
+  mask-image: radial-gradient(260px circle at var(--hx, 50%) var(--hy, 50%), #000, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.pqs-hero.is-hot .pqs-hero__glow {
+  opacity: 1;
+}
+
+/* A ring left behind by the cursor: grows and fades, then removes itself */
+.pq-ping {
+  position: absolute;
+  z-index: 0;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border: 1px solid rgba(76, 200, 192, 0.7);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: pq-ping 1.4s cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+}
+
+.pq-ping--big {
+  animation-duration: 1.9s;
+  border-width: 2px;
+}
+
+@keyframes pq-ping {
+  to {
+    transform: scale(9);
+    opacity: 0;
+  }
 }
 
 .pqs-hero__rings span {
@@ -2714,13 +2758,6 @@ ul {
   gap: 16px;
 }
 
-.pqs-hero__wave {
-  position: absolute;
-  left: 0;
-  bottom: 24px;
-  height: 140px;
-}
-
 /* Marquee: the track holds two copies and slides half its width, so the
    loop is seamless. It stops on hover and under reduced motion. */
 .pqs-marquee {
@@ -2767,7 +2804,12 @@ ul {
 }
 
 .pqs-fit {
-  background: var(--cream);
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(700px circle at 88% 12%, rgba(76, 200, 192, 0.28), transparent 60%),
+    radial-gradient(600px circle at 6% 96%, rgba(255, 140, 64, 0.16), transparent 60%),
+    linear-gradient(160deg, var(--teal-deep) 0%, var(--petrol-bright) 45%, var(--petrol) 100%);
   padding: var(--section-pad-y) var(--gutter);
 }
 
@@ -2781,13 +2823,13 @@ ul {
 }
 
 .pqs-fit h2 {
-  color: var(--ink);
+  color: var(--text-on-dark);
   margin-bottom: 20px;
 }
 
 .pqs-fit__header p {
   max-width: 768px;
-  color: #505050;
+  color: var(--mist);
 }
 
 .pqs-fit__grid {
@@ -2796,32 +2838,44 @@ ul {
   gap: 20px;
 }
 
+.pqs-card:nth-child(1) { --accent: var(--teal); }
+.pqs-card:nth-child(2) { --accent: #e6483c; }
+.pqs-card:nth-child(3) { --accent: var(--orange); }
+.pqs-card:nth-child(4) { --accent: var(--teal-deep); }
+
 .pqs-card {
+  --accent: var(--teal);
   display: flex;
   flex-direction: column;
   min-height: 280px;
   padding: 24px;
-  border: 1px solid #a6cdd3;
+  border: 1px solid transparent;
+  border-top: 4px solid var(--accent);
   border-radius: 14px;
   background: var(--ivory-card);
   color: var(--ink);
   text-decoration: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
   transition: translate 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
-    border-color 0.3s ease, box-shadow 0.35s ease;
+    box-shadow 0.35s ease;
 }
 
 .pqs-card:hover,
 .pqs-card:focus-visible {
-  translate: 0 -6px;
-  border-color: var(--teal);
-  box-shadow: 0 18px 40px rgba(26, 65, 70, 0.16);
+  translate: 0 -8px;
+  box-shadow: 0 22px 44px rgba(0, 0, 0, 0.3),
+    0 0 0 2px var(--accent);
   outline: none;
 }
 
 .pqs-card__num {
-  color: var(--teal-deep);
+  align-self: flex-start;
+  margin-bottom: 36px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  color: var(--ink);
   letter-spacing: 1.4px;
-  margin-bottom: 40px;
 }
 
 .pqs-card h3 {
@@ -2835,7 +2889,7 @@ ul {
 .pqs-card__go {
   margin-top: auto;
   padding-top: 16px;
-  color: var(--teal-deep);
+  color: var(--accent);
   transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
@@ -2845,11 +2899,11 @@ ul {
 
 .pqs-fit__note {
   margin-top: 32px;
-  color: #505050;
+  color: var(--mist);
 }
 
 .pqs-fit__note a {
-  color: var(--teal-deep);
+  color: var(--cyan);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -2934,6 +2988,10 @@ ul {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .pqs-hero__glow {
+    transition: none;
+  }
+
   .pqs-hero__rings span,
   .pqs-word,
   .pqs-marquee__track {

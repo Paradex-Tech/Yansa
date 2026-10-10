@@ -1010,6 +1010,59 @@
     frame();
   }
 
+  /* ---------- PQ Solved hero: cursor glow and pings ----------
+     The bright grid shows round the pointer (--hx / --hy), and the pointer
+     sheds a ring every so often as it moves; a click sheds a bigger one.
+     Rings remove themselves when they finish. Mouse only, and not under
+     reduced motion. */
+  function initPqHover() {
+    var hero = document.querySelector('.pqs-hero');
+    if (!hero || reduceMotion) return;
+
+    var lastPing = 0;
+    var lastX = 0;
+    var lastY = 0;
+
+    function ping(x, y, big) {
+      var ring = document.createElement('span');
+      ring.className = 'pq-ping' + (big ? ' pq-ping--big' : '');
+      ring.style.left = x + 'px';
+      ring.style.top = y + 'px';
+      ring.setAttribute('aria-hidden', 'true');
+      ring.addEventListener('animationend', function () { ring.remove(); });
+      hero.insertBefore(ring, hero.firstChild.nextSibling);
+    }
+
+    hero.addEventListener('pointermove', function (e) {
+      if (e.pointerType && e.pointerType !== 'mouse') return;
+      var r = hero.getBoundingClientRect();
+      var x = e.clientX - r.left;
+      var y = e.clientY - r.top;
+      hero.style.setProperty('--hx', x + 'px');
+      hero.style.setProperty('--hy', y + 'px');
+      hero.classList.add('is-hot');
+
+      var now = performance.now();
+      var moved = Math.abs(x - lastX) + Math.abs(y - lastY);
+      if (now - lastPing > 260 && moved > 60) {
+        lastPing = now;
+        lastX = x;
+        lastY = y;
+        ping(x, y, false);
+      }
+    });
+
+    hero.addEventListener('pointerleave', function () {
+      hero.classList.remove('is-hot');
+    });
+
+    hero.addEventListener('click', function (e) {
+      if (e.target.closest('a, button')) return;
+      var r = hero.getBoundingClientRect();
+      ping(e.clientX - r.left, e.clientY - r.top, true);
+    });
+  }
+
   // The glow on [data-spot] cards follows the pointer
   function initSpotlight() {
     toArray(document.querySelectorAll('[data-spot]')).forEach(function (el) {
@@ -2867,6 +2920,7 @@
   initNavAutoHide();
   initPqScroll();
   initSpotlight();
+  initPqHover();
   initPqPills();
   initTypewriter();
   initHeroVideo();

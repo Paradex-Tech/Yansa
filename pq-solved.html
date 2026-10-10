@@ -50,9 +50,10 @@
 
   <main class="pqs">
 
-    <!-- HERO: the wave straightens as you scroll (--pq-p, initPqScroll) -->
-    <section class="pqs-hero" data-pq-progress="leave">
+    <!-- HERO: the grid lights up under the cursor and pings rings as it moves (initPqHover) -->
+    <section class="pqs-hero">
       <div class="pqs-hero__grid" aria-hidden="true"></div>
+      <div class="pqs-hero__glow" aria-hidden="true"></div>
       <div class="pqs-hero__rings" aria-hidden="true"><span></span><span></span><span></span></div>
       <div class="pqs-hero__inner">
         <p class="pqs-eyebrow">Yansa &middot; Solutions</p>
@@ -63,9 +64,6 @@
           <a href="contact.html#contact-form" class="btn btn--outline-orange">Book a Diagnosis</a>
         </div>
       </div>
-      <svg class="pq-wave pqs-hero__wave" viewBox="0 0 1200 160" preserveAspectRatio="none" aria-hidden="true" focusable="false" data-pq-wave data-cycles="3.5">
-        <path class="pq-wave__raw"></path><path class="pq-wave__clean"></path>
-      </svg>
     </section>
 
     <!-- MARQUEE: problem to fix. The second copy is the loop and is hidden from readers. -->
