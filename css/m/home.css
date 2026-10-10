@@ -1,0 +1,7 @@
+/* =========================================================
+   Phone styles: home
+   Loaded after css/style.css, only at max-width 768px (the link carries the
+   media query), so everything here wins over the desktop and old narrow rules
+   by order. Written for phones first: carousels, sheets, thumb reach, not
+   desktop layouts stacked into a column.
+   ========================================================= */
