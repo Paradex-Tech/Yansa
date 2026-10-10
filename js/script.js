@@ -1695,145 +1695,163 @@
   }
 
 
-  /* ---------- Home hero: scroll-driven reveal ----------
-     Adds .is-scrolly, which pins the stage and lifts the media out of its
-     frame, then drives it from full bleed back into the frame as the page
-     scrolls. The page's own scroll bar drives it (sticky, never a wheel
-     hijack). The end state is measured from .hero__frame-slot, so progress
-     1 lands exactly on the designed layout, and scroll is followed with a
-     damped lerp so a coarse wheel notch glides. */
+  /* ---------- Home hero: scroll-driven sequence ----------
+     Adds .is-scrolly, which pins the stage, then plays one scrubbed timeline
+     (p, 0 to 1) as the page scrolls. The page's own scroll bar drives it
+     (sticky, never a wheel hijack), followed with a damped lerp so a coarse
+     wheel notch glides.
+       0    to 0.5   the film shrinks from full bleed to a card; the heading
+                     fades and sinks away (0 to 0.28)
+       0.3  to 0.75  the card lifts a little; four photos spread out from
+                     behind it, each starting a step after the last
+       0.7  to 1     the description (and buttons) arrive under the card
+       0.7  on       the photos and the card drift with the cursor
+     Not run under reduced motion, on phones, or on screens too short to
+     hold the whole end state; those get the plain stack. */
   function initHero() {
     var hero = document.querySelector('.hero');
-    if (!hero || !hero.querySelector('.hero__frame-slot')) return;
+    if (!hero || !hero.querySelector('.hero__float')) return;
 
     var stage = hero.querySelector('.hero__stage');
-    var heading = hero.querySelector('.hero__heading');
-    var h1 = heading.querySelector('h1');
-    var sub = heading.querySelector('p');
-    var slot = hero.querySelector('.hero__frame-slot');
     var media = hero.querySelector('.hero__media');
-    var ctas = hero.querySelector('.hero__ctas');
+    var heading = hero.querySelector('.hero__heading');
+    var desc = hero.querySelector('.hero__desc');
+    var floats = toArray(hero.querySelectorAll('.hero__float'));
 
-    var HEAD_SCALE = 1.55; // heading size at full bleed, relative to final
-    var RADIUS = 10;
-    var BORDER = 10;
-    var DAMP = 0.16;
+    // Where each photo rests: fractions of the stage from the card's centre,
+    // when it starts, its width at 1440px wide, and how far the cursor moves it
+    var SPOTS = [
+      { x: -0.27, y: -0.10, at: 0.30, w: 190, drift: 0.12 },
+      { x: 0.28, y: -0.15, at: 0.36, w: 220, drift: 0.08 },
+      { x: -0.21, y: 0.17, at: 0.42, w: 170, drift: 0.15 },
+      { x: 0.23, y: 0.14, at: 0.48, w: 200, drift: 0.10 }
+    ];
+    var CARD_W = 250;      // px at 1440px wide
+    var CARD_RATIO = 1.3;  // height over width
+    var CARD_DRIFT = 0.06;
+    var DRIFT_PX = 300;    // cursor travel (across the whole window) to px of drift
+    var DAMP = 0.12;
 
     var geo = null;
     var target = 0;
     var current = 0;
     var raf = null;
     var on = false;
+    var mouse = { x: 0, y: 0 };
+    var mouseNow = { x: 0, y: 0 };
 
     // Slow in, slow out: the motion never arrives at a hard stop
     function ease(t) {
       return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
     }
 
-    function mix(from, to, t) {
-      return 'rgb(' +
-        Math.round(lerp(from[0], to[0], t)) + ',' +
-        Math.round(lerp(from[1], to[1], t)) + ',' +
-        Math.round(lerp(from[2], to[2], t)) + ')';
-    }
-
     function measure() {
-      // Measure the heading untransformed, or this reads back its own offset
-      var prevTransform = heading.style.transform;
-      heading.style.transform = 'none';
-
-      var stageRect = stage.getBoundingClientRect();
-      var slotRect = slot.getBoundingClientRect();
-      var headRect = heading.getBoundingClientRect();
-
-      heading.style.transform = prevTransform;
-
+      var rect = stage.getBoundingClientRect();
+      var scale = Math.min(1.25, Math.max(0.7, rect.width / 1440));
       geo = {
-        stageW: stageRect.width,
-        stageH: stageRect.height,
-        boxLeft: slotRect.left - stageRect.left,
-        boxTop: slotRect.top - stageRect.top,
-        boxW: slotRect.width,
-        boxH: slotRect.height,
-        // how far the heading must rise to sit centred in the stage
-        headShift: stageRect.height / 2 - (headRect.top - stageRect.top + headRect.height / 2)
+        W: rect.width,
+        H: rect.height,
+        scale: scale,
+        cardW: CARD_W * scale,
+        cardH: CARD_W * scale * CARD_RATIO,
+        cyEnd: rect.height * 0.34
       };
     }
 
     function apply(p) {
       if (!geo) return;
-      var e = ease(p);
+      var shrink = ease(clamp01(p / 0.5));
+      var lift = ease(clamp01((p - 0.3) / 0.45));
+      var drift = clamp01((p - 0.7) / 0.3);
+      var dx = -mouseNow.x * drift;
+      var dy = -mouseNow.y * drift;
 
-      media.style.left = lerp(0, geo.boxLeft, e) + 'px';
-      media.style.top = lerp(0, geo.boxTop, e) + 'px';
-      media.style.width = lerp(geo.stageW, geo.boxW, e) + 'px';
-      media.style.height = lerp(geo.stageH, geo.boxH, e) + 'px';
-      media.style.borderRadius = lerp(0, RADIUS, e) + 'px';
-      media.style.borderWidth = lerp(0, BORDER, e) + 'px';
-      media.style.boxShadow =
-        '0 0 0 1px rgba(0, 0, 0, ' + (0.2 * e).toFixed(3) + '), ' +
-        '0 2px 8px rgba(0, 0, 0, ' + (0.12 * e).toFixed(3) + ')';
+      var cy = lerp(geo.H / 2, geo.cyEnd, lift);
+      var w = lerp(geo.W, geo.cardW, shrink);
+      var h = lerp(geo.H, geo.cardH, shrink);
+      var cardX = dx * CARD_DRIFT * DRIFT_PX;
+      var cardY = dy * CARD_DRIFT * DRIFT_PX;
 
-      heading.style.transform =
-        'translate3d(0, ' + lerp(geo.headShift, 0, e).toFixed(2) + 'px, 0) ' +
-        'scale(' + lerp(HEAD_SCALE, 1, e).toFixed(4) + ')';
+      media.style.left = (geo.W / 2 - w / 2 + cardX).toFixed(2) + 'px';
+      media.style.top = (cy - h / 2 + cardY).toFixed(2) + 'px';
+      media.style.width = w.toFixed(2) + 'px';
+      media.style.height = h.toFixed(2) + 'px';
+      media.style.borderRadius = lerp(0, 18, shrink).toFixed(2) + 'px';
+      media.style.boxShadow = '0 20px 50px rgba(26, 65, 70, ' + (0.28 * shrink).toFixed(3) + ')';
 
-      h1.style.color = mix([255, 255, 255], [0, 127, 127], e);
-      sub.style.color = mix([255, 255, 255], [21, 21, 21], e);
+      var fade = clamp01(p / 0.28);
+      heading.style.opacity = (1 - fade).toFixed(3);
+      heading.style.visibility = fade >= 1 ? 'hidden' : '';
+      heading.style.transform = 'translate3d(0, ' + (-fade * 50).toFixed(2) + 'px, 0) ' +
+        'scale(' + lerp(1.5, 1.2, fade).toFixed(4) + ')';
 
-      // A soft shadow lifts the white type off bright frames of the film,
-      // and is gone by the time the type has turned dark on cream
-      var shade = 1 - clamp01(e / 0.75);
-      heading.style.textShadow = shade > 0
-        ? '0 1px 3px rgba(0, 0, 0, ' + (0.35 * shade).toFixed(3) + '), ' +
-          '0 2px 24px rgba(0, 0, 0, ' + (0.45 * shade).toFixed(3) + ')'
-        : '';
+      floats.forEach(function (el, i) {
+        var spot = SPOTS[i];
+        var t = ease(clamp01((p - spot.at) / 0.4));
+        var fw = spot.w * geo.scale;
+        var fh = fw * 0.75;
+        var x = geo.W / 2 + spot.x * geo.W * t + dx * spot.drift * DRIFT_PX - fw / 2;
+        var y = cy + spot.y * geo.H * t + dy * spot.drift * DRIFT_PX - fh / 2;
+        el.style.width = fw.toFixed(2) + 'px';
+        el.style.opacity = clamp01(t * 1.6).toFixed(3);
+        el.style.transform = 'translate3d(' + x.toFixed(2) + 'px, ' + y.toFixed(2) + 'px, 0) ' +
+          'scale(' + lerp(0.5, 1, t).toFixed(4) + ')';
+      });
 
-      // The buttons belong to the settled state, so they arrive late
-      var c = clamp01((e - 0.45) / 0.55);
-      ctas.style.opacity = c;
-      ctas.style.transform = 'translate3d(0, ' + ((1 - c) * 20).toFixed(2) + 'px, 0)';
+      var d = clamp01((p - 0.7) / 0.3);
+      desc.style.opacity = d.toFixed(3);
+      desc.style.visibility = d <= 0 ? 'hidden' : '';
+      desc.style.top = (cy + h / 2 + 36 + cardY).toFixed(2) + 'px';
+      desc.style.transform = 'translate3d(-50%, ' + ((1 - d) * 24).toFixed(2) + 'px, 0)';
     }
 
     // Hand every property back to the stylesheet
     function reset() {
-      [media.style, heading.style, h1.style, sub.style, ctas.style].forEach(function (style) {
-        style.left = '';
-        style.top = '';
-        style.width = '';
-        style.height = '';
-        style.borderRadius = '';
-        style.borderWidth = '';
-        style.boxShadow = '';
-        style.transform = '';
-        style.color = '';
-        style.opacity = '';
-        style.textShadow = '';
+      [media, heading, desc].concat(floats).forEach(function (el) {
+        ['left', 'top', 'width', 'height', 'borderRadius', 'boxShadow', 'opacity', 'visibility', 'transform']
+          .forEach(function (name) { el.style[name] = ''; });
       });
     }
 
     function progress() {
-      var runway = hero.offsetHeight - geo.stageH;
+      var runway = hero.offsetHeight - geo.H;
       if (runway <= 0) return 1;
       var stuckAt = parseFloat(getComputedStyle(stage).top) || 0;
       return clamp01((stuckAt - hero.getBoundingClientRect().top) / runway);
     }
 
     function tick() {
+      var settled = true;
+
       var diff = target - current;
       if (Math.abs(diff) < 0.0004) {
         current = target;
-        apply(current);
-        raf = null;
-        return;
+      } else {
+        current += diff * DAMP;
+        settled = false;
       }
-      current += diff * DAMP;
+
+      var mx = mouse.x - mouseNow.x;
+      var my = mouse.y - mouseNow.y;
+      if (Math.abs(mx) + Math.abs(my) < 0.0005) {
+        mouseNow.x = mouse.x;
+        mouseNow.y = mouse.y;
+      } else {
+        mouseNow.x += mx * 0.06;
+        mouseNow.y += my * 0.06;
+        settled = false;
+      }
+
       apply(current);
-      raf = requestAnimationFrame(tick);
+      raf = settled ? null : requestAnimationFrame(tick);
+    }
+
+    function kick() {
+      if (raf === null) raf = requestAnimationFrame(tick);
     }
 
     function sync() {
-      if (reduceMotion || window.innerWidth <= 768) {
+      if (reduceMotion || window.innerWidth <= 768 || window.innerHeight < 640) {
         if (on || hero.classList.contains('is-scrolly')) {
           hero.classList.remove('is-scrolly');
           reset();
@@ -1855,12 +1873,20 @@
     window.addEventListener('scroll', function () {
       if (!on) return;
       target = progress();
-      if (raf === null) raf = requestAnimationFrame(tick);
+      kick();
     }, { passive: true });
+
+    // The cursor, as -0.5 to 0.5 across the window
+    window.addEventListener('pointermove', function (e) {
+      if (!on || (e.pointerType && e.pointerType !== 'mouse')) return;
+      mouse.x = e.clientX / window.innerWidth - 0.5;
+      mouse.y = e.clientY / window.innerHeight - 0.5;
+      if (target > 0.7) kick();
+    });
 
     onResizeEnd(sync, 120);
 
-    // The frame's height depends on the media, so re-measure once loaded
+    // The film's size depends on the media, so re-measure once loaded
     window.addEventListener('load', sync);
   }
 

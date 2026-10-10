@@ -76,28 +76,32 @@
 
   <main>
 
-    <!-- HERO -->
+    <!-- HERO: pinned and scrubbed by initHero. The film starts full bleed and shrinks to a
+         card, the heading fades, four photos spread round the card, the group lifts and
+         the description arrives. Without the script (or on a phone) it is a plain stack:
+         film with the heading on it, then the description. -->
     <section class="hero">
       <div class="hero__stage">
-        <!-- The laid-out end state. It also reserves the space the media
-             lands in, so the finished hero is the plain CSS layout. -->
-        <div class="hero__layout">
-          <div class="hero__heading">
-            <h1>Engineering Power Quality</h1>
-            <p>An end to end power quality engineering company.</p>
-          </div>
-          <div class="hero__frame-slot">
-            <!-- Hero film: muted, looping, no audio track. The 1920 cut is for
-                 wide screens, 1280 for the rest; the poster is its first frame,
-                 so the switch from still to motion is seamless. With reduced
-                 motion the script pauses it on the poster. -->
-            <div class="hero__media">
-              <video autoplay muted loop playsinline preload="auto" poster="images/hero-poster.jpg" width="1920" height="1080" aria-hidden="true">
-                <source src="videos/hero-1920.mp4" type="video/mp4" media="(min-width: 1400px)">
-                <source src="videos/hero-1280.mp4" type="video/mp4">
-              </video>
-            </div>
-          </div>
+        <!-- Hero film: muted, looping, no audio track. The 1920 cut is for
+             wide screens, 1280 for the rest; the poster is its first frame.
+             With reduced motion the script pauses it on the poster. -->
+        <div class="hero__media">
+          <video autoplay muted loop playsinline preload="auto" poster="images/hero-poster.jpg" width="1920" height="1080" aria-hidden="true">
+            <source src="videos/hero-1920.mp4" type="video/mp4" media="(min-width: 1400px)">
+            <source src="videos/hero-1280.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="hero__float" aria-hidden="true"><img src="images/case-01-photo.jpg" alt="" loading="lazy" decoding="async"></div>
+        <div class="hero__float" aria-hidden="true"><img src="images/hero-plant.jpg" alt="" loading="lazy" decoding="async"></div>
+        <div class="hero__float" aria-hidden="true"><img src="images/case-02-photo.jpg" alt="" loading="lazy" decoding="async"></div>
+        <div class="hero__float" aria-hidden="true"><img src="images/case-03-photo.jpg" alt="" loading="lazy" decoding="async"></div>
+        <div class="hero__heading">
+          <h1>Engineering Power Quality</h1>
+          <p>An end to end power quality engineering company.</p>
+        </div>
+        <div class="hero__desc">
+          <h2>Measurement-led power quality engineering.</h2>
+          <p>We measure what your electrical system is really doing, then design, install and support the fix, so your facility runs safer, more efficiently and with less downtime.</p>
           <div class="hero__ctas">
             <a href="solution.html" class="btn btn--orange">Explore Solutions</a>
             <a href="contact.html#contact-form" class="btn btn--outline-teal">Contact Us</a>
