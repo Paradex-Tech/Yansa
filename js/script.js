@@ -894,10 +894,8 @@
               travelled 80% of a viewport up (the glimpse cards fan out)
        leave  0 at the top of the page, 1 after three quarters of the hero
               has scrolled away
-       pin    the Solutions entry on wide, tall screens: the stage holds under
-              the navbar and p runs 0 to 1 across the runway. Its ripples
-              spread with p, the cards fan out over the first 40% of it, and
-              the small waves straighten over the first 55%
+       The Solutions entry also spreads its ripples (two centres of four
+       rings) with p
      It also redraws each [data-pq-wave] svg: a clean sine, plus a distorted
      copy (extra harmonics) whose distortion and opacity fall as p rises, so
      the wave straightens as you scroll. Under reduced motion p stays 1. */
@@ -918,46 +916,29 @@
     var targets = toArray(document.querySelectorAll('[data-pq-progress]'));
     if (!targets.length) return;
 
-    var navbar = document.querySelector('.navbar');
     var items = targets.map(function (el) {
       return {
         el: el,
         mode: el.getAttribute('data-pq-progress'),
-        stage: el.querySelector('.pq-entry__stage'),
         rings: toArray(el.querySelectorAll('.pq-entry__rings span')),
-        waves: toArray(el.querySelectorAll('[data-pq-wave]')),
-        pinned: false
+        waves: toArray(el.querySelectorAll('[data-pq-wave]'))
       };
     });
 
-    // The entry pins only where the stage fits the screen
-    function setPins() {
-      items.forEach(function (it) {
-        if (!it.stage) return;
-        it.pinned = !reduceMotion && window.innerWidth > 900 && window.innerHeight >= 760;
-        it.el.classList.toggle('is-scrolly', it.pinned);
-      });
-    }
-
     function progress(it, rect) {
       if (reduceMotion) return 1;
-      if (it.pinned) {
-        var run = rect.height - it.stage.offsetHeight;
-        return clamp01(((navbar ? navbar.offsetHeight : 0) - rect.top) / Math.max(run, 1));
-      }
       if (it.mode === 'leave') {
         return clamp01(window.pageYOffset / Math.max(rect.height * 0.75, 1));
       }
       return clamp01((window.innerHeight * 0.85 - rect.top) / (window.innerHeight * 0.8));
     }
 
-    // Each ring is one step further round a cycle that p drives: it grows
-    // from nothing, thins and fades as it widens
+    // Rings come in two centres of four. Each ring is one step further round
+    // a cycle that p drives: it grows from nothing, thins and fades as it
+    // widens. The second centre runs half a step behind the first.
     function spread(it, p) {
-      var n = it.rings.length;
-      var cycles = it.pinned ? 2.4 : 1.2;
       it.rings.forEach(function (ring, i) {
-        var s = (p * cycles + i / n) % 1;
+        var s = (p * 1.6 + (i % 4) / 4 + (i >= 4 ? 0.5 / 4 : 0)) % 1;
         var grow = Math.min(1, s * 6);
         ring.style.setProperty('--rs', (0.06 + s * 1.2).toFixed(4));
         ring.style.setProperty('--ro', (0.65 * (1 - s) * grow).toFixed(4));
@@ -985,12 +966,10 @@
         var rect = it.el.getBoundingClientRect();
         if (rect.bottom < -50 || rect.top > vh + 50) return;
         var p = progress(it, rect);
-        var fan = it.pinned ? clamp01(p / 0.4) : p;
-        var straight = it.pinned ? clamp01(p / 0.55) : p;
         it.el.style.setProperty('--pq-p', p.toFixed(4));
-        it.el.style.setProperty('--pq-fan', fan.toFixed(4));
+        it.el.style.setProperty('--pq-fan', p.toFixed(4));
         var phase = reduceMotion ? 0 : window.pageYOffset * 0.006;
-        it.waves.forEach(function (svg) { draw(svg, straight, phase); });
+        it.waves.forEach(function (svg) { draw(svg, p, phase); });
         if (it.rings.length) spread(it, p);
       });
     }
@@ -1002,11 +981,7 @@
     }
 
     window.addEventListener('scroll', queue, { passive: true });
-    window.addEventListener('resize', function () {
-      setPins();
-      queue();
-    });
-    setPins();
+    window.addEventListener('resize', queue);
     frame();
   }
 
@@ -1118,7 +1093,7 @@
     function pinned() {
       var edge = navbar.offsetHeight;
       return toArray(document.querySelectorAll(
-        '.hero.is-scrolly .hero__stage, .yanq-flow.is-scrolly .yanq-flow__stage, .cases.is-scrolly .cases__stage, .pq-entry.is-scrolly .pq-entry__stage'
+        '.hero.is-scrolly .hero__stage, .yanq-flow.is-scrolly .yanq-flow__stage, .cases.is-scrolly .cases__stage'
       )).some(function (el) {
         return Math.abs(el.getBoundingClientRect().top - edge) <= 1.5;
       });
