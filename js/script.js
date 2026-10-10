@@ -1700,36 +1700,45 @@
      (p, 0 to 1) as the page scrolls. The page's own scroll bar drives it
      (sticky, never a wheel hijack), followed with a damped lerp so a coarse
      wheel notch glides.
-       0    to 0.5   the film shrinks from full bleed to a card; the heading
-                     fades and sinks away (0 to 0.28)
-       0.3  to 0.75  the card lifts a little; four photos spread out from
-                     behind it, each starting a step after the last
-       0.7  to 1     the description (and buttons) arrive under the card
-       0.7  on       the photos and the card drift with the cursor
+       0    to 0.22  the navbar and the heading fade away together, leaving
+                     the film bare. The film does not move. It already
+                     reaches up under the navbar, so nothing shifts as the
+                     navbar goes (it comes back once the hero is scrolled past)
+       0.22 to 0.28  a beat with just the film
+       0.28 to 0.62  the film shrinks to a card
+       0.40 to 0.80  the card lifts to the top; four photos slide out from
+                     BEHIND it (the card is in front of them)
+       0.80 to 1     the description and buttons arrive under the card
+       0.85 on       the photos and the card drift with the cursor
      Not run under reduced motion, on phones, or on screens too short to
      hold the whole end state; those get the plain stack. */
   function initHero() {
     var hero = document.querySelector('.hero');
     if (!hero || !hero.querySelector('.hero__float')) return;
 
+    var navbar = document.querySelector('.navbar');
     var stage = hero.querySelector('.hero__stage');
     var media = hero.querySelector('.hero__media');
     var heading = hero.querySelector('.hero__heading');
     var desc = hero.querySelector('.hero__desc');
     var floats = toArray(hero.querySelectorAll('.hero__float'));
 
-    // Where each photo rests: fractions of the stage from the card's centre,
-    // when it starts, its width at 1440px wide, and how far the cursor moves it
+    // Where each photo rests: x as a fraction of the stage width, y as a
+    // fraction of the card's height, both from the card's centre; when it
+    // starts; its width at 1440px; and how far the cursor moves it. The lower
+    // ones stay shallow so they keep clear of the text under the card.
     var SPOTS = [
-      { x: -0.27, y: -0.10, at: 0.30, w: 190, drift: 0.12 },
-      { x: 0.28, y: -0.15, at: 0.36, w: 220, drift: 0.08 },
-      { x: -0.21, y: 0.17, at: 0.42, w: 170, drift: 0.15 },
-      { x: 0.23, y: 0.14, at: 0.48, w: 200, drift: 0.10 }
+      { x: -0.30, y: -0.20, at: 0.42, w: 190, drift: 0.12 },
+      { x: 0.30, y: -0.22, at: 0.48, w: 220, drift: 0.08 },
+      { x: -0.17, y: 0.28, at: 0.54, w: 170, drift: 0.15 },
+      { x: 0.18, y: 0.26, at: 0.60, w: 200, drift: 0.10 }
     ];
-    var CARD_W = 250;      // px at 1440px wide
+    var CARD_W = 210;      // px at scale 1
     var CARD_RATIO = 1.3;  // height over width
     var CARD_DRIFT = 0.06;
     var DRIFT_PX = 300;    // cursor travel (across the whole window) to px of drift
+    var TOP_GAP = 36;      // space above the card, resting
+    var TEXT_GAP = 48;     // space between the card and the description
     var DAMP = 0.12;
 
     var geo = null;
@@ -1747,28 +1756,33 @@
 
     function measure() {
       var rect = stage.getBoundingClientRect();
-      var scale = Math.min(1.25, Math.max(0.7, rect.width / 1440));
+      var scale = Math.min(1.25, Math.max(0.6, Math.min(rect.width / 1440, rect.height / 760)));
+      var cardH = CARD_W * scale * CARD_RATIO;
+      var navH = navbar ? navbar.offsetHeight : 0;
       geo = {
         W: rect.width,
         H: rect.height,
+        navH: navH,
         scale: scale,
         cardW: CARD_W * scale,
-        cardH: CARD_W * scale * CARD_RATIO,
-        cyEnd: rect.height * 0.34
+        cardH: cardH,
+        cy0: (rect.height - navH) / 2,
+        cyEnd: TOP_GAP + cardH / 2
       };
     }
 
     function apply(p) {
       if (!geo) return;
-      var shrink = ease(clamp01(p / 0.5));
-      var lift = ease(clamp01((p - 0.3) / 0.45));
-      var drift = clamp01((p - 0.7) / 0.3);
+      var fade = clamp01(p / 0.22);
+      var shrink = ease(clamp01((p - 0.28) / 0.34));
+      var lift = ease(clamp01((p - 0.40) / 0.40));
+      var drift = clamp01((p - 0.85) / 0.15);
       var dx = -mouseNow.x * drift;
       var dy = -mouseNow.y * drift;
 
-      var cy = lerp(geo.H / 2, geo.cyEnd, lift);
+      var cy = lerp(geo.cy0, geo.cyEnd, lift);
       var w = lerp(geo.W, geo.cardW, shrink);
-      var h = lerp(geo.H, geo.cardH, shrink);
+      var h = lerp(geo.H + geo.navH, geo.cardH, shrink);
       var cardX = dx * CARD_DRIFT * DRIFT_PX;
       var cardY = dy * CARD_DRIFT * DRIFT_PX;
 
@@ -1779,29 +1793,36 @@
       media.style.borderRadius = lerp(0, 18, shrink).toFixed(2) + 'px';
       media.style.boxShadow = '0 20px 50px rgba(26, 65, 70, ' + (0.28 * shrink).toFixed(3) + ')';
 
-      var fade = clamp01(p / 0.28);
       heading.style.opacity = (1 - fade).toFixed(3);
       heading.style.visibility = fade >= 1 ? 'hidden' : '';
-      heading.style.transform = 'translate3d(0, ' + (-fade * 50).toFixed(2) + 'px, 0) ' +
-        'scale(' + lerp(1.5, 1.2, fade).toFixed(4) + ')';
+      heading.style.transform = 'translate3d(0, ' + (-fade * 24).toFixed(2) + 'px, 0) ' +
+        'scale(' + lerp(1.5, 1.4, fade).toFixed(4) + ')';
+
+      // The navbar goes with the heading, and returns once the hero has been
+      // scrolled past (the stage lets go of the screen)
+      if (navbar) {
+        var away = clamp01((geo.navH + geo.H - hero.getBoundingClientRect().bottom) / 160);
+        var navOpacity = 1 - fade * (1 - away);
+        navbar.style.opacity = navOpacity.toFixed(3);
+        navbar.style.visibility = navOpacity <= 0.01 ? 'hidden' : '';
+      }
 
       floats.forEach(function (el, i) {
         var spot = SPOTS[i];
-        var t = ease(clamp01((p - spot.at) / 0.4));
+        var t = ease(clamp01((p - spot.at) / 0.38));
         var fw = spot.w * geo.scale;
         var fh = fw * 0.75;
         var x = geo.W / 2 + spot.x * geo.W * t + dx * spot.drift * DRIFT_PX - fw / 2;
-        var y = cy + spot.y * geo.H * t + dy * spot.drift * DRIFT_PX - fh / 2;
+        var y = cy + spot.y * geo.cardH * t + dy * spot.drift * DRIFT_PX - fh / 2;
         el.style.width = fw.toFixed(2) + 'px';
-        el.style.opacity = clamp01(t * 1.6).toFixed(3);
         el.style.transform = 'translate3d(' + x.toFixed(2) + 'px, ' + y.toFixed(2) + 'px, 0) ' +
-          'scale(' + lerp(0.5, 1, t).toFixed(4) + ')';
+          'scale(' + lerp(0.8, 1, t).toFixed(4) + ')';
       });
 
-      var d = clamp01((p - 0.7) / 0.3);
+      var d = clamp01((p - 0.80) / 0.20);
       desc.style.opacity = d.toFixed(3);
       desc.style.visibility = d <= 0 ? 'hidden' : '';
-      desc.style.top = (cy + h / 2 + 36 + cardY).toFixed(2) + 'px';
+      desc.style.top = (cy + h / 2 + TEXT_GAP + cardY).toFixed(2) + 'px';
       desc.style.transform = 'translate3d(-50%, ' + ((1 - d) * 24).toFixed(2) + 'px, 0)';
     }
 
@@ -1811,6 +1832,10 @@
         ['left', 'top', 'width', 'height', 'borderRadius', 'boxShadow', 'opacity', 'visibility', 'transform']
           .forEach(function (name) { el.style[name] = ''; });
       });
+      if (navbar) {
+        navbar.style.opacity = '';
+        navbar.style.visibility = '';
+      }
     }
 
     function progress() {
@@ -1851,7 +1876,7 @@
     }
 
     function sync() {
-      if (reduceMotion || window.innerWidth <= 768 || window.innerHeight < 640) {
+      if (reduceMotion || window.innerWidth <= 768 || window.innerHeight < 700) {
         if (on || hero.classList.contains('is-scrolly')) {
           hero.classList.remove('is-scrolly');
           reset();
@@ -1881,7 +1906,7 @@
       if (!on || (e.pointerType && e.pointerType !== 'mouse')) return;
       mouse.x = e.clientX / window.innerWidth - 0.5;
       mouse.y = e.clientY / window.innerHeight - 0.5;
-      if (target > 0.7) kick();
+      if (target > 0.85) kick();
     });
 
     onResizeEnd(sync, 120);

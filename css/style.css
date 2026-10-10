@@ -53,7 +53,7 @@
   --header-gap: 48px;
 
   /* Home hero scroll animation */
-  --hero-runway: 140vh;
+  --hero-runway: 190vh;
   --hero-stage-h: calc(100vh - var(--nav-height));
   --hero-frame-w: 762px;
 
@@ -1063,16 +1063,6 @@ ul {
   object-fit: cover;
 }
 
-/* Dark petrol scrim over the film so the white heading stays legible on the
-   bright interior shots. Pure CSS: it sizes with the media as it shrinks. */
-.hero__media::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(rgba(10, 30, 33, 0.45), rgba(10, 30, 33, 0.6));
-  pointer-events: none;
-}
-
 .hero__heading {
   position: absolute;
   left: 0;
@@ -1128,17 +1118,23 @@ ul {
    position below from scroll, so the CSS only holds the resting rules. */
 .hero.is-scrolly {
   height: calc(var(--hero-stage-h) + var(--hero-runway));
+  /* The scaled heading is wider than the screen: clip the sides only, since
+     the film must still reach up over the navbar */
+  overflow-x: clip;
 }
 
 .hero.is-scrolly .hero__stage {
   position: sticky;
   top: var(--nav-height);
   height: var(--hero-stage-h);
-  overflow: hidden;
 }
 
+/* The film is in front of the photos (they come out from behind it) and
+   behind the heading. It reaches up under the navbar so that, once the navbar
+   fades, the film is already there and nothing has to move. */
 .hero.is-scrolly .hero__media {
   position: absolute;
+  z-index: 2;
   left: 0;
   top: 0;
   width: 100%;
@@ -1148,6 +1144,7 @@ ul {
 }
 
 .hero.is-scrolly .hero__heading {
+  z-index: 3;
   height: 100%;
   min-height: 0;
   will-change: transform, opacity;
@@ -1163,7 +1160,6 @@ ul {
   aspect-ratio: 4 / 3;
   overflow: hidden;
   border-radius: 12px;
-  opacity: 0;
   box-shadow: 0 14px 34px rgba(26, 65, 70, 0.24);
   will-change: transform, opacity;
 }
@@ -1179,8 +1175,8 @@ ul {
   position: absolute;
   left: 50%;
   top: 0;
-  z-index: 3;
-  width: min(760px, 90%);
+  z-index: 4;
+  width: min(820px, 90%);
   margin: 0;
   padding: 0;
   opacity: 0;
