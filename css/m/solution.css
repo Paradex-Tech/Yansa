@@ -691,7 +691,7 @@
   border-radius: 999px;
   color: #ffd2b3;
   background: rgba(20, 51, 56, 0.62);
-  border-color: rgba(255, 140, 64, 0.55);
+  border-color: rgba(3, 153, 153, 0.55);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
 }
@@ -1097,4 +1097,68 @@
     scale: none;
     opacity: 1;
   }
+}
+
+
+/* ---------- Solutions We Offer + team statement ----------
+   The four product groups stack as compact cards; services wrap as chips on
+   their petrol band. The statement mirrors the About page's phone treatment. */
+.offered {
+  padding: var(--section-pad-y, 64px) var(--gutter, 20px);
+}
+
+.offered__inner > p {
+  margin-bottom: 32px;
+}
+
+.offered__grid {
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.offered-col {
+  padding: 20px;
+}
+
+.offered-col a {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.offered-services {
+  padding: 20px;
+}
+
+.offered-services h3 {
+  flex-basis: 100%;
+}
+
+.offered-services a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.about-statement {
+  min-height: 0;
+  padding: calc(var(--section-pad-y, 64px) + 8px) var(--gutter, 20px) var(--section-pad-y, 64px);
+}
+
+.about-statement p {
+  --fs-scale: 1.08;
+  max-width: 34em;
+  margin: 0;
+  color: var(--petrol);
+}
+
+.about-statement__inner::before {
+  content: "";
+  display: block;
+  width: 36px;
+  height: 3px;
+  margin-bottom: 22px;
+  border-radius: 2px;
+  background: var(--orange, #ff8c40);
 }

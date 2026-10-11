@@ -406,7 +406,7 @@
 }
 
 .yq-rail__fill {
-  stroke: var(--orange);
+  stroke: var(--orange, #ff8c40);
 }
 
 .yq-rail__node {
@@ -415,12 +415,12 @@
 }
 
 .yq-rail__node.is-on {
-  fill: var(--orange);
-  stroke: var(--orange);
+  fill: var(--orange, #ff8c40);
+  stroke: var(--orange, #ff8c40);
 }
 
 .yq-rail__marker {
-  fill: var(--orange);
+  fill: var(--orange, #ff8c40);
   stroke: rgba(255, 140, 64, 0.26);
 }
 

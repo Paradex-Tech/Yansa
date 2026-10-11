@@ -22,7 +22,7 @@
    ========================================================= */
 
 // Who gets an alert for every submission (comma-separate for several)
-var NOTIFY_TO = 'paradexstudios@gmail.com';
+var NOTIFY_TO = 'info@yansa.in, sanya.sharma@yansa.in';
 
 // Attached to the brochure email. Served from the public GitHub repo, so it
 // is always the copy on main.

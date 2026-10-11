@@ -95,7 +95,7 @@ Commit these once the user confirms they look right.
   It has two tabs, Contact and Brochure. 4 rows labelled "TEST - Claude" can
   be deleted.
 - Web app URL (in `js/script.js` as `FORMS_ENDPOINT`):
-  https://script.google.com/macros/s/AKfycby1FseYxoZf98idb1vlxApBTynyOCM12i5B3SKHmHeEEYV1xkUWQpcnin7PoLonbN95UA/exec
+  https://script.google.com/macros/s/AKfycbziI_2OEZY-ufzPrK1xTGadr_j4ds01j6MWr78D6oC3xQEhfaPAeD96shMkJlCQXFaw2w/exec
 - The front end posts form-encoded (no CORS preflight). There's a honeypot
   field `website`, and a guard against formula injection in the sheet.
 - The brochure popup (every `a[data-brochure]`) saves the lead, then

@@ -188,6 +188,16 @@
 }
 
 /* The script eases the photo from slightly enlarged to rest as it arrives */
+.contact-map iframe {
+  height: 100%;
+}
+
+.contact-map__open {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
 .contact-map img {
   transform: scale(var(--m-map-zoom, 1));
   transform-origin: 50% 40%;
@@ -247,7 +257,7 @@
 
 /* The zero in brand orange */
 .not-found__zero {
-  color: var(--orange);
+  color: var(--highlight, #039999);
 }
 
 .not-found h1 {

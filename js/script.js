@@ -1728,10 +1728,10 @@
     // starts; its width at 1440px; and how far the cursor moves it. The lower
     // ones stay shallow so they keep clear of the text under the card.
     var SPOTS = [
-      { x: -0.30, y: -0.20, at: 0.42, w: 190, drift: 0.12 },
-      { x: 0.30, y: -0.22, at: 0.48, w: 220, drift: 0.08 },
-      { x: -0.17, y: 0.28, at: 0.54, w: 170, drift: 0.15 },
-      { x: 0.18, y: 0.26, at: 0.60, w: 200, drift: 0.10 }
+      { x: -0.33, y: -0.16, at: 0.42, w: 200, drift: 0.12 },
+      { x: 0.33, y: -0.16, at: 0.48, w: 200, drift: 0.08 },
+      { x: -0.17, y: 0.30, at: 0.54, w: 170, drift: 0.15 },
+      { x: 0.17, y: 0.30, at: 0.60, w: 170, drift: 0.10 }
     ];
     var CARD_W = 210;      // px at scale 1
     var CARD_RATIO = 1.3;  // height over width
@@ -2812,7 +2812,7 @@
      that appends a row to the submissions sheet. The body is form-encoded
      so the browser sends it without a CORS preflight, which Apps Script
      cannot answer. */
-  var FORMS_ENDPOINT = 'https://script.google.com/macros/s/AKfycby1FseYxoZf98idb1vlxApBTynyOCM12i5B3SKHmHeEEYV1xkUWQpcnin7PoLonbN95UA/exec';
+  var FORMS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbziI_2OEZY-ufzPrK1xTGadr_j4ds01j6MWr78D6oC3xQEhfaPAeD96shMkJlCQXFaw2w/exec';
 
   // Downloaded after the brochure form; empty shows the thank-you only
   var BROCHURE_URL = 'assets/yansa-brochure.pdf';

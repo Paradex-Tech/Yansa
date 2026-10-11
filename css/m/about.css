@@ -134,7 +134,7 @@
   height: 3px;
   margin-bottom: 22px;
   border-radius: 2px;
-  background: var(--orange);
+  background: var(--orange, #ff8c40);
 }
 
 
@@ -193,7 +193,7 @@
 
 .m-measure-steps span.is-on {
   width: 44px;
-  background: var(--orange);
+  background: var(--orange, #ff8c40);
 }
 
 
