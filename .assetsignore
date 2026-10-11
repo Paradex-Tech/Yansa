@@ -1,0 +1,11 @@
+# Repo files that must not be published as part of the website
+.git
+.gitignore
+.assetsignore
+.claude
+AGENTS.md
+backend
+worker
+wrangler.jsonc
+node_modules
+.wrangler

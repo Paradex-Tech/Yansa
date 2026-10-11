@@ -1,0 +1,19 @@
+// Cloudflare Worker serving the static site from the repo root.
+// worker/index.js only runs for /videos/*; everything else is served
+// straight from static assets.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "yansa",
+  "compatibility_date": "2026-09-25",
+  "main": "worker/index.js",
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "directory": ".",
+    "binding": "ASSETS",
+    // Unknown URLs get 404.html with a real 404 status
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/videos/*"]
+  }
+}
