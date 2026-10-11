@@ -376,8 +376,12 @@
       return Math.abs(offset) < window.innerHeight * 0.2 ? offset : null;
     }
 
+    // Phones never hold the scroll here; the values cycle on their own
+    var phone = window.matchMedia('(max-width: 768px)');
+
     // True when the gesture was spent on the panel rather than the page
     function jack(dir) {
+      if (phone.matches) return false;
       var offset = offsetFromCentre();
       if (offset === null) return false;
 
@@ -444,6 +448,44 @@
     onResizeEnd(function () {
       valueCopy.style.height = '';
     }, 200);
+
+    /* Phones: the values advance by themselves while the panel is on screen
+       (client request, 11 Oct), and a tap on a bar jumps to that value.
+       Reduced motion keeps them still until tapped. */
+    var AUTO_MS = 3500;
+    var autoTimer = null;
+    var onScreen = false;
+
+    function stopAuto() {
+      window.clearInterval(autoTimer);
+      autoTimer = null;
+    }
+
+    function startAuto() {
+      stopAuto();
+      // An announcement every few seconds would talk over a screen reader
+      if (valueLive) valueLive.setAttribute('aria-live', phone.matches && !reduceMotion ? 'off' : 'polite');
+      if (!phone.matches || !onScreen || reduceMotion) return;
+      autoTimer = window.setInterval(function () {
+        show((index + 1) % VALUES.length);
+      }, AUTO_MS);
+    }
+
+    bars.forEach(function (bar, i) {
+      bar.addEventListener('click', function () {
+        if (!phone.matches) return;
+        show(i);
+        startAuto();
+      });
+    });
+
+    if (hasObserver) {
+      new IntersectionObserver(function (entries) {
+        onScreen = entries[0].isIntersecting;
+        if (onScreen) startAuto(); else stopAuto();
+      }, { threshold: 0.4 }).observe(values);
+    }
+    phone.addEventListener('change', startAuto);
 
     if (panel && !reduceMotion && hasObserver) {
       values.classList.add('is-armed');

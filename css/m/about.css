@@ -215,6 +215,8 @@
 }
 
 .value-bar {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
   width: 14px;
   height: 30px;
   border-radius: 4px;

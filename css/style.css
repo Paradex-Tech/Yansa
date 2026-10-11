@@ -273,6 +273,7 @@ ul {
 }
 
 /* H1 — page hero titles, and the two pinned YanQ headings */
+.legal h1,
 .hero__heading h1,
 .header-placeholder__overlay h1,
 .yanq-flow__title,
@@ -329,6 +330,7 @@ ul {
 }
 
 /* H4 — card titles */
+.legal h2,
 .offered-col h3,
 .offered-services h3,
 .industry-panel__title,
@@ -382,6 +384,8 @@ ul {
 }
 
 /* Body — running copy, navigation, controls */
+.legal p,
+.legal li,
 .contact-map__open,
 .offered-col a,
 .offered-services a,
@@ -4811,6 +4815,49 @@ ul {
   }
 }
 
+
+/* ---------- Legal pages (Terms of Use, Privacy Policy) ----------
+   One readable column; Terms copy is yansa.in's, word for word */
+.legal {
+  background: var(--cream);
+  padding: calc(var(--nav-height) + 72px) var(--gutter) 112px;
+}
+
+.legal__inner {
+  max-width: 760px;
+  margin: 0 auto;
+  color: var(--text);
+}
+
+.legal h1 {
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.legal__updated {
+  color: var(--teal-deep);
+  margin-bottom: 40px;
+}
+
+.legal h2 {
+  color: var(--ink);
+  margin: 40px 0 12px;
+}
+
+.legal p,
+.legal li {
+  margin-bottom: 12px;
+  line-height: 1.65;
+}
+
+.legal ul {
+  padding-left: 22px;
+  margin-bottom: 12px;
+}
+
+.legal a {
+  color: var(--teal-deep);
+}
 
 /* =========================================================
    11. FOOTER
