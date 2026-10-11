@@ -4,4 +4,517 @@
    media query), so everything here wins over the desktop and old narrow rules
    by order. Written for phones first: carousels, sheets, thumb reach, not
    desktop layouts stacked into a column.
+
+   Sizes come from the type tokens; a heading that needs to be larger on a
+   phone sets --fs-scale on itself rather than a font-size. The scripted
+   states (.m-hero-on, .m-deck-on, .m-quote-on, .m-why-on) are added by
+   js/m/home.js; without them each section is a complete static layout.
    ========================================================= */
+
+
+/* ---------- Hero ----------
+   Static composition (no script, reduced motion, landscape, short screens):
+   the film as a rounded card inset in the gutter with the heading on it,
+   then the description. */
+.hero__stage {
+  padding: 12px var(--gutter, 20px) 0;
+}
+
+.hero__media {
+  height: 64vh;
+  height: 64svh;
+  min-height: 340px;
+  border-radius: 20px;
+}
+
+.hero__heading {
+  top: 12px;
+  left: var(--gutter, 20px);
+  right: var(--gutter, 20px);
+  height: 64vh;
+  height: 64svh;
+  min-height: 340px;
+  padding: 0 20px;
+}
+
+.hero__heading h1 {
+  --fs-scale: 1.1;
+  font-size: calc(var(--fs-display) * var(--fs-scale, 1));
+  line-height: 1.08;
+  letter-spacing: -1px;
+  margin-bottom: 14px;
+}
+
+.hero__heading p {
+  max-width: 300px;
+}
+
+.hero__desc {
+  padding: 40px var(--gutter, 20px) var(--section-pad-y, 64px);
+}
+
+.hero__desc h2 {
+  margin-bottom: 12px;
+}
+
+.hero__desc p {
+  margin-bottom: 28px;
+}
+
+.hero__ctas {
+  gap: 12px;
+}
+
+/* Scene mode. The hero is the stage plus a runway; the stage sticks under
+   the navbar for the whole runway and the script sets every size and
+   position. svh keeps the runway steady while the browser's toolbar slides;
+   the stage itself follows the visible height (dvh). */
+.hero.m-hero-on {
+  height: calc(100vh - var(--m-hero-top, 0px) + 130vh);
+  height: calc(100svh - var(--m-hero-top, 0px) + var(--m-hero-runway, 130svh));
+  overflow-x: clip;
+}
+
+.hero.m-hero-on .hero__stage {
+  position: sticky;
+  top: var(--m-hero-top, 0px);
+  height: calc(100vh - var(--m-hero-top, 0px));
+  height: calc(100dvh - var(--m-hero-top, 0px));
+  padding: 0;
+}
+
+/* In front of the photos (they come out from behind it), behind the heading.
+   It starts full bleed and reaches up under the navbar. */
+.hero.m-hero-on .hero__media {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border-radius: 0;
+  will-change: left, top, width, height;
+}
+
+/* Centred on the whole screen, navbar strip included */
+.hero.m-hero-on .hero__heading {
+  z-index: 3;
+  left: 0;
+  right: 0;
+  top: calc(-1 * var(--m-hero-top, 0px));
+  height: calc(100% + var(--m-hero-top, 0px));
+  min-height: 0;
+  padding: 0 var(--gutter, 20px);
+  will-change: transform, opacity;
+}
+
+.hero.m-hero-on .hero__float {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  width: 110px;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 12px 28px rgba(26, 65, 70, 0.22);
+  visibility: hidden;
+  will-change: transform;
+}
+
+/* Three photos fit round a portrait card; the fourth rests */
+.hero.m-hero-on .hero__float ~ .hero__float ~ .hero__float ~ .hero__float {
+  display: none;
+}
+
+.hero.m-hero-on .hero__float img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero.m-hero-on .hero__desc {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  z-index: 4;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  visibility: hidden;
+  will-change: transform, opacity;
+}
+
+
+/* ---------- Diagnosis ----------
+   Left-aligned display type with a compact rhythm; "Diagnosis." is the one
+   word that gets the room. The wave lies low behind the button, dimmed so
+   it never sits on the copy, and drifts sideways with the scroll. */
+.diagnosis {
+  padding: calc(var(--section-pad-y, 64px) + 8px) var(--gutter, 20px) calc(var(--section-pad-y, 64px) + 56px);
+}
+
+.diagnosis__eyebrow {
+  margin-bottom: 4px;
+}
+
+.diagnosis h2 {
+  --fs-scale: 1.5;
+  letter-spacing: -1.5px;
+  line-height: 1;
+  margin-bottom: 24px;
+}
+
+.diagnosis__body {
+  margin-bottom: 32px;
+}
+
+.diagnosis__wave {
+  top: auto;
+  right: auto;
+  left: -10%;
+  bottom: -18px;
+  width: 135%;
+  max-width: none;
+  opacity: 0.32;
+  will-change: transform;
+}
+
+
+/* ---------- Symptoms: swipe deck ----------
+   Static (no script): the cards in a column with their detail shown. */
+.symptoms__header {
+  text-align: left;
+}
+
+.symptoms__header h2 {
+  margin-bottom: 12px;
+}
+
+.symptom-card {
+  transform: none !important; /* the desktop cursor tilt has no place here */
+}
+
+.symptoms.m-deck-on {
+  overflow: hidden;
+}
+
+/* The deck runs edge to edge: the first card lines up with the gutter and
+   the next one peeks in from the right. */
+.symptoms.m-deck-on .symptoms__grid {
+  display: flex;
+  gap: 12px;
+  margin: 0 calc(-1 * var(--gutter, 20px));
+  padding: 8px var(--gutter, 20px) 20px;
+  width: auto;
+  max-width: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gutter, 20px);
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  perspective: none;
+  counter-reset: symptom;
+}
+
+.symptoms.m-deck-on .symptoms__grid::-webkit-scrollbar {
+  display: none;
+}
+
+.symptoms.m-deck-on .symptom-card {
+  flex: 0 0 min(80%, 340px);
+  min-height: 300px;
+  padding: 24px 22px 26px;
+  gap: 32px;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  counter-increment: symptom;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  scale: 0.95;
+  transform-origin: 50% 60%;
+  background: var(--petrol);
+  box-shadow: none;
+  transition: scale 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* The card's number, top right */
+.symptoms.m-deck-on .symptom-card::after {
+  content: counter(symptom, decimal-leading-zero);
+  position: absolute;
+  top: 26px;
+  right: 22px;
+  color: var(--mist);
+  opacity: 0.55;
+  font-size: calc(var(--fs-label) * var(--fs-scale, 1));
+  letter-spacing: 1.5px;
+  transition: opacity 0.7s ease;
+}
+
+.symptoms.m-deck-on .symptom-card.is-active {
+  scale: 1;
+  background: #1d4a50;
+  box-shadow: 0 16px 36px rgba(26, 65, 70, 0.26);
+}
+
+.symptoms.m-deck-on .symptom-card.is-active::after {
+  opacity: 1;
+}
+
+.symptoms.m-deck-on .symptom-card:active {
+  scale: 0.97;
+}
+
+.symptoms.m-deck-on .symptom-card.is-active:active {
+  scale: 0.985;
+}
+
+.symptoms.m-deck-on .symptom-card:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 3px;
+}
+
+.symptoms.m-deck-on .symptom-card .symptom-card__title {
+  transform: none;
+}
+
+/* The detail keeps its space on every card (so the deck never changes
+   height) and only shows on the card in place. */
+.symptoms.m-deck-on .symptom-card .symptom-card__detail {
+  max-height: none;
+  margin-top: 14px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.symptoms.m-deck-on .symptom-card.is-active .symptom-card__detail {
+  opacity: 1;
+  transform: none;
+  transition-delay: 0.12s;
+}
+
+/* Progress dots: a 44px tap target each, the drawn dot inside it */
+.m-deck-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  margin-top: 4px;
+}
+
+.m-deck-dot {
+  position: relative;
+  width: 32px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.m-deck-dot::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 4px;
+  background: var(--line);
+  transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    margin-left 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.6s ease;
+}
+
+.m-deck-dot.is-active::before {
+  width: 22px;
+  margin-left: -11px;
+  background: var(--petrol);
+}
+
+.m-deck-dot:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: -6px;
+  border-radius: 10px;
+}
+
+
+/* ---------- Quote: read-along ----------
+   A step larger than the phone statement tier, with a short measure. The
+   rail fills as the words light. */
+.quote {
+  padding-top: calc(var(--section-pad-y, 64px) + 16px);
+  padding-bottom: calc(var(--section-pad-y, 64px) + 16px);
+}
+
+.quote p {
+  --fs-scale: 1.2;
+  max-width: 34ch;
+  padding-left: 22px;
+  line-height: 1.42;
+}
+
+.quote.m-quote-on .quote__word {
+  color: #6f8b8d;
+  transition: color 0.35s ease;
+}
+
+.quote.m-quote-on .quote__word.is-lit {
+  color: var(--text-on-dark);
+}
+
+
+/* ---------- Why Yansa: numbered timeline ----------
+   Static (no script): the three cards in a column. Timeline mode: a line
+   runs down the left through a number for each step; the script draws it as
+   the page scrolls and lights each step as the line reaches it. */
+.why-card {
+  transform: none !important; /* the desktop hover lift has no place here */
+}
+
+.why__header h2 {
+  margin-bottom: 16px;
+}
+
+.why.m-why-on .why__grid {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-left: 52px;
+  counter-reset: why;
+}
+
+/* The track, and the drawn line over it */
+.why.m-why-on .why__grid::before,
+.why.m-why-on .why__grid::after {
+  content: "";
+  position: absolute;
+  left: 17px;
+  top: var(--m-why-top, 18px);
+  width: 2px;
+  height: var(--m-why-len, 0px);
+  border-radius: 1px;
+  z-index: 0;
+}
+
+/* Each card (and so its number) sits above the line, even while the scroll
+   reveal's opacity gives the card its own stacking context. */
+.why.m-why-on .why-card {
+  z-index: 1;
+}
+
+.why.m-why-on .why__grid::before {
+  background: var(--line);
+  opacity: 0.6;
+}
+
+.why.m-why-on .why__grid::after {
+  background: var(--teal);
+  transform-origin: 50% 0;
+  transform: scaleY(var(--m-why-s, 0));
+}
+
+.why.m-why-on .why-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: 14px;
+  padding: 20px;
+  counter-increment: why;
+  transition: border-color 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* The step's number on the line */
+.why.m-why-on .why-card::before {
+  content: counter(why, decimal-leading-zero);
+  position: absolute;
+  z-index: 1;
+  left: -52px;
+  top: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--cream);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(var(--fs-label) * var(--fs-scale, 1));
+  letter-spacing: 0.5px;
+  transition: background-color 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.why.m-why-on .why-card__icon {
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  background: var(--cream);
+}
+
+.why.m-why-on .why-card__icon img {
+  width: 26px;
+}
+
+.why.m-why-on .why-card h3 {
+  margin: 0;
+  padding-bottom: 6px;
+  transform: none;
+}
+
+.why.m-why-on .why-card p {
+  grid-column: 1 / -1;
+  margin-top: 14px;
+}
+
+.why.m-why-on .why-card > * {
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.why.m-why-on .why-card:not(.is-reached) > * {
+  opacity: 0.5;
+}
+
+.why.m-why-on .why-card.is-reached {
+  border-color: var(--teal);
+  box-shadow: 0 12px 28px rgba(26, 65, 70, 0.1);
+}
+
+.why.m-why-on .why-card.is-reached::before {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: #ffffff;
+}
+
+.why.m-why-on .why-card.is-reached h3::after {
+  transform: scaleX(1);
+  transition-duration: 0.8s;
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .symptoms.m-deck-on .symptom-card,
+  .symptoms.m-deck-on .symptom-card .symptom-card__detail,
+  .m-deck-dot::before,
+  .quote.m-quote-on .quote__word,
+  .why.m-why-on .why-card,
+  .why.m-why-on .why-card::before,
+  .why.m-why-on .why-card > * {
+    transition: none;
+  }
+}

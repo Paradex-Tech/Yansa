@@ -4,4 +4,478 @@
    media query), so everything here wins over the desktop and old narrow rules
    by order. Written for phones first: carousels, sheets, thumb reach, not
    desktop layouts stacked into a column.
+
+   1. Hero          shorter photo, the four photo cards back as small
+                    drifting prints in the corners, clear of the heading
+   2. Statement     left-aligned editorial paragraph with an orange rule
+   3. We Measure.   big left-anchored rotator (the word grows to the right,
+                    so "We" never moves) and a box sized for the longest copy
+   4. Values        tighter panel, bars and copy that never resize the page
+   5. Industries    full-bleed scrolling tab row, compact table, swipe
+   6. FAQ           full-width tap rows, round chevron, eased open/close
+   Type sizes only through --fs-scale on the tiers in style.css.
    ========================================================= */
+
+
+/* ---------- 1. Hero ---------- */
+.about-hero {
+  min-height: 0;
+}
+
+.about-hero .header-placeholder {
+  height: clamp(440px, 68svh, 600px);
+  min-height: 0;
+}
+
+/* Fallback for browsers without svh */
+@supports not (height: 1svh) {
+  .about-hero .header-placeholder {
+    height: clamp(440px, 68vh, 600px);
+  }
+}
+
+.about-hero .header-placeholder__overlay {
+  padding: 0 var(--gutter, 20px);
+}
+
+/* The scrim deepens through the middle band, where the text sits, and
+   leaves the corners (where the prints sit) closer to the photo */
+.about-hero .header-placeholder__overlay::before {
+  background:
+    radial-gradient(120% 46% at 50% 50%, rgba(4, 25, 23, 0.5) 0%, rgba(4, 25, 23, 0) 100%),
+    linear-gradient(180deg, rgba(4, 25, 23, 0.42) 0%, rgba(4, 25, 23, 0.22) 50%, rgba(4, 25, 23, 0.5) 100%);
+}
+
+.about-hero .header-placeholder__overlay h1 {
+  --fs-scale: 1.12;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+
+.about-hero .header-placeholder__overlay p {
+  max-width: 300px;
+}
+
+/* The photo cards: back on phones as small prints in the four corners. The
+   script (js/m/about.js) writes transform every frame (slow drift, scroll
+   lift); the entrance uses the separate opacity/scale properties so the
+   two never fight. */
+.about-hero__decor {
+  display: block;
+  z-index: 3;
+  border-radius: 6px;
+  border: 2px solid rgba(253, 251, 243, 0.92);
+  box-shadow: 0 10px 26px rgba(4, 25, 23, 0.38);
+  opacity: 0;
+  scale: 0.92;
+  transition: opacity 0.9s var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)),
+    scale 1.1s var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1));
+  will-change: transform;
+}
+
+.about-hero__decor.is-m-in {
+  opacity: 1;
+  scale: 1;
+}
+
+.about-hero__decor--1 {
+  left: 6%;
+  top: 8%;
+  width: min(26vw, 150px);
+}
+
+.about-hero__decor--4 {
+  left: auto;
+  right: 6%;
+  top: 15%;
+  width: min(30vw, 175px);
+}
+
+.about-hero__decor--2 {
+  left: 9%;
+  top: auto;
+  bottom: 9%;
+  width: min(29vw, 170px);
+}
+
+.about-hero__decor--3 {
+  right: 7%;
+  bottom: 15%;
+  width: min(21vw, 124px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-hero__decor {
+    opacity: 1;
+    scale: 1;
+    transition: none;
+  }
+}
+
+
+/* ---------- 2. Statement ---------- */
+.about-statement {
+  min-height: 0;
+  padding: calc(var(--section-pad-y, 64px) + 8px) var(--gutter, 20px) var(--section-pad-y, 64px);
+}
+
+.about-statement p {
+  --fs-scale: 1.08;
+  max-width: 34em;
+  margin: 0;
+  color: var(--petrol);
+}
+
+/* A short orange rule leads the paragraph in, like an editorial dropline */
+.about-statement__inner::before {
+  content: "";
+  display: block;
+  width: 36px;
+  height: 3px;
+  margin-bottom: 22px;
+  border-radius: 2px;
+  background: var(--orange);
+}
+
+
+/* ---------- 3. We Measure. ---------- */
+.about-measure {
+  min-height: 0;
+  text-align: left;
+  padding: calc(var(--section-pad-y, 64px) + 8px) var(--gutter, 20px);
+}
+
+/* Anchored left, so the box grows and shrinks to the right and the static
+   "We" never moves */
+.about-measure h2 {
+  --fs-scale: 1.45;
+  justify-content: flex-start;
+  gap: 0.22em;
+  margin-bottom: 24px;
+  letter-spacing: -0.8px;
+}
+
+.about-measure .measure-highlight {
+  padding: 2px 12px 4px;
+  border-radius: 6px;
+}
+
+.about-measure.is-armed .measure-highlight::before {
+  border-radius: 6px;
+}
+
+.about-measure p {
+  max-width: none;
+  margin: 0;
+}
+
+/* The script pins min-height to the tallest of the three paragraphs, so the
+   section never changes height as the copy swaps */
+.about-measure__copy {
+  min-height: var(--m-copy-h, 0px);
+}
+
+/* Three ticks under the copy: which word is up */
+.m-measure-steps {
+  display: flex;
+  gap: 6px;
+  margin-top: 28px;
+}
+
+.m-measure-steps span {
+  width: 18px;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(244, 244, 233, 0.22);
+  transition: width 0.8s var(--ease-inout, cubic-bezier(0.65, 0, 0.35, 1)),
+    background-color 0.6s ease;
+}
+
+.m-measure-steps span.is-on {
+  width: 44px;
+  background: var(--orange);
+}
+
+
+/* ---------- 4. Our Values ---------- */
+.about-values__panel {
+  min-height: 0;
+  padding: calc(var(--section-pad-y, 64px) + 4px) var(--gutter, 20px);
+}
+
+.about-values h2 {
+  --fs-scale: 1.25;
+  margin-bottom: 14px;
+}
+
+.about-values__bars {
+  height: 30px;
+  gap: 6px;
+  margin-bottom: 26px;
+}
+
+.value-bar {
+  width: 14px;
+  height: 30px;
+  border-radius: 4px;
+}
+
+.value-bar.is-active {
+  width: 48px;
+}
+
+.about-values .about-values__label {
+  margin-bottom: 14px;
+  letter-spacing: 0.3em;
+}
+
+.about-values p {
+  letter-spacing: 0.2px;
+}
+
+.about-values__copy {
+  min-height: var(--m-copy-h, 0px);
+  max-width: 30em;
+}
+
+.about-values .value-hl {
+  color: var(--teal-mid);
+}
+
+
+/* ---------- 5. Industries We Serve ---------- */
+.industries {
+  min-height: 0;
+  text-align: left;
+  padding: calc(var(--section-pad-y, 64px) + 8px) var(--gutter, 20px);
+}
+
+.industries h2 {
+  margin-bottom: 10px;
+}
+
+.industries > p {
+  margin-bottom: 28px;
+  max-width: 30em;
+}
+
+.industry-tabs {
+  max-width: none;
+}
+
+/* The row runs edge to edge and scrolls; its ends fade only on the side
+   with more to see (js/m/about.js sets is-m-start / is-m-end). */
+.industry-tabs.is-ready .industry-tabs__list {
+  justify-content: flex-start;
+  gap: 28px;
+  margin: 0 calc(-1 * var(--gutter, 20px));
+  padding: 0 var(--gutter, 20px);
+  scroll-padding: 0 var(--gutter, 20px);
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 48px), transparent 100%);
+  mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 48px), transparent 100%);
+}
+
+.industry-tabs.is-ready .industry-tabs__list.is-m-mid {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 48px, #000 calc(100% - 48px), transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 48px, #000 calc(100% - 48px), transparent 100%);
+}
+
+.industry-tabs.is-ready .industry-tabs__list.is-m-end {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 48px, #000 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 48px, #000 100%);
+}
+
+.industry-tabs.is-ready .industry-tabs__list.is-m-fits {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+/* A trailing spacer, since a scroller ignores its own end padding */
+.industry-tabs.is-ready .industry-tabs__list::after {
+  content: "";
+  flex: 0 0 1px;
+}
+
+.industry-tab {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap, 48px);
+  padding: 4px 0 12px;
+  touch-action: manipulation;
+}
+
+.industry-tab:active {
+  color: #f4f4e9;
+}
+
+.industry-tabs__bar {
+  height: 3px;
+  border-radius: 2px 2px 0 0;
+}
+
+.industry-tabs__panels {
+  margin-top: 24px;
+}
+
+/* The table: smaller cells, a softer corner, a pan-y touch so a sideways
+   swipe can change category (js/m/about.js) */
+.industry-grid {
+  border-radius: 14px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.26);
+  touch-action: pan-y;
+}
+
+.industry-cell {
+  min-height: 78px;
+  padding: 14px 10px;
+  line-height: 1.35;
+}
+
+@media (hover: none) {
+  .industry-cell:hover {
+    background: var(--ivory);
+    color: var(--ink);
+  }
+}
+
+.industry-plus {
+  width: 22px;
+  height: 22px;
+}
+
+.industry-plus::before,
+.industry-plus::after {
+  width: 9px;
+  margin-left: -4.5px;
+}
+
+/* Under the table: one dot per category, the current one stretched */
+.m-industry-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 20px;
+}
+
+.m-industry-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(244, 244, 233, 0.25);
+  transition: width 0.7s var(--ease-inout, cubic-bezier(0.65, 0, 0.35, 1)),
+    background-color 0.5s ease;
+}
+
+.m-industry-dots span.is-on {
+  width: 22px;
+  background: var(--teal);
+}
+
+@media (min-width: 600px) {
+  .industry-cell {
+    min-height: 96px;
+  }
+}
+
+
+/* ---------- 6. FAQ ---------- */
+.faq {
+  padding: var(--section-pad-y, 64px) var(--gutter, 20px) calc(var(--section-pad-y, 64px) + 8px);
+}
+
+.faq__inner {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: 28px;
+}
+
+.faq__header {
+  flex: none;
+  max-width: none;
+}
+
+.faq__header h2 {
+  --fs-scale: 1.4;
+  margin-bottom: 8px;
+}
+
+.faq__list {
+  flex: none;
+  border-top: 1px solid rgba(26, 65, 70, 0.14);
+}
+
+/* The whole row is the tap target; spacing below an open answer eases in
+   and out with it (the script writes opacity 0 at the start of a close) */
+.faq__item {
+  padding: 0;
+  border-bottom: 1px solid rgba(26, 65, 70, 0.14);
+  transition: padding-bottom 0.42s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.faq__item[open]:not(:has(.faq__answer[style*="opacity: 0"])) {
+  padding-bottom: 22px;
+}
+
+.faq__item summary {
+  align-items: flex-start;
+  gap: 12px;
+  min-height: 68px;
+  padding: 20px 0;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.faq__item summary:active .faq__question {
+  color: var(--teal-deep);
+}
+
+.faq__num {
+  flex: 0 0 26px;
+  margin: 0;
+  padding-top: 3px;
+  color: var(--teal-mid);
+  letter-spacing: 0.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.faq__question {
+  --fs-scale: 0.92;
+  transition: color 0.45s ease;
+}
+
+.faq__item[open] .faq__question {
+  color: var(--teal-deep);
+}
+
+/* The chevron sits in a soft round well that fills teal when open */
+.faq__chevron {
+  width: 32px;
+  height: 32px;
+  margin-top: -3px;
+  padding: 8px;
+  border-radius: 50%;
+  background: rgba(52, 182, 175, 0.12);
+  transition: transform 0.6s var(--ease-inout, cubic-bezier(0.65, 0, 0.35, 1)),
+    background-color 0.45s ease;
+}
+
+.faq__item[open] .faq__chevron {
+  background: rgba(52, 182, 175, 0.26);
+}
+
+.faq__answer {
+  padding: 0 44px 0 38px;
+  max-width: none;
+  margin-top: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq__item,
+  .faq__chevron,
+  .m-measure-steps span,
+  .m-industry-dots span {
+    transition: none;
+  }
+}

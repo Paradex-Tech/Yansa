@@ -4,4 +4,1097 @@
    media query), so everything here wins over the desktop and old narrow rules
    by order. Written for phones first: carousels, sheets, thumb reach, not
    desktop layouts stacked into a column.
+
+   Serves solution.html and pq-solved.html. Tokens come from :root (BASE sets
+   the phone values); every var() carries a fallback so this file reads
+   correctly on its own. Scroll-linked values (--m-d, --m-y, --m-s, --m-dim,
+   --m-par, --pq-fan) are written by js/m/solution.js; without it every one of
+   them falls back to the finished, resting state.
    ========================================================= */
+
+
+/* ---------- Shared: snap carousel ----------
+   One pattern for every card row on these pages: full-bleed track, the card
+   in view sits on the gutter and the next one peeks in from the right.
+   --m-d is each card's distance (0 to 1) from the snapped position, so cards
+   ease down and dim slightly as they leave, scroll-linked. */
+.generates__grid,
+.inaction__grid,
+.pqs-fit__grid,
+.solutions-row__grid {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  max-width: none;
+  width: auto;
+  margin: 0 calc(-1 * var(--gutter, 20px));
+  /* Room under the cards for their shadows, which the track would clip */
+  padding: 8px var(--gutter, 20px) 34px;
+  margin-bottom: -16px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gutter, 20px);
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.generates__grid::-webkit-scrollbar,
+.inaction__grid::-webkit-scrollbar,
+.pqs-fit__grid::-webkit-scrollbar,
+.solutions-row__grid::-webkit-scrollbar {
+  display: none;
+}
+
+.generates__card,
+.inaction-card,
+.pqs-card,
+.solutions-row__grid > .solution-card {
+  flex: 0 0 min(80%, 320px);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  scale: calc(1 - var(--m-d, 0) * 0.045);
+  opacity: calc(1 - var(--m-d, 0) * 0.32);
+}
+
+/* Progress dots, injected by the script under each carousel. The button is
+   the tap area; the dot is drawn inside it and stretches when active. */
+.m-dots {
+  display: flex;
+  justify-content: center;
+  margin-top: 6px;
+  color: var(--petrol, #1a4146);
+}
+
+.m-dots--light {
+  color: var(--text-on-dark, #f1f1e6);
+}
+
+.m-dots button {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.m-dots button::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background: currentColor;
+  opacity: 0.28;
+  transition: width 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.7s ease, background-color 0.7s ease;
+}
+
+.m-dots button.is-active::before {
+  width: 22px;
+  opacity: 1;
+  background: var(--orange, #ff8c40);
+}
+
+.m-dots button:focus-visible {
+  outline: 2px solid var(--teal, #34b6af);
+  outline-offset: -4px;
+  border-radius: 8px;
+}
+
+
+/* ---------- Solutions hero ----------
+   Shorter than a full screen so the next section shows it is there; the
+   heading sits low and left over a darker foot, the photo drifts slowly
+   behind it as the page scrolls (--m-par, 0 to 1). */
+.solution-hero {
+  min-height: 0;
+}
+
+.solution-hero .header-placeholder {
+  height: clamp(440px, 76svh, 680px);
+  min-height: 0;
+}
+
+.solution-hero .header-placeholder img {
+  transform-origin: 50% 100%;
+  transform: translate3d(0, calc(var(--m-par, 0) * 72px), 0) scale(1.14);
+  will-change: transform;
+}
+
+.solution-hero .header-placeholder__overlay {
+  justify-content: flex-end;
+  align-items: flex-start;
+  text-align: left;
+  padding: 0 var(--gutter, 20px) 44px;
+}
+
+.solution-hero .header-placeholder__overlay::before {
+  background: linear-gradient(
+    180deg,
+    rgba(4, 25, 23, 0.2) 0%,
+    rgba(4, 25, 23, 0.32) 42%,
+    rgba(4, 25, 23, 0.82) 100%
+  );
+}
+
+.solution-hero .header-placeholder__overlay h1 {
+  margin-bottom: 14px;
+  max-width: 13ch;
+}
+
+.solution-hero .header-placeholder__overlay p {
+  margin: 0;
+  max-width: 34ch;
+}
+
+/* A short rule over the heading, the page's one ornament */
+.solution-hero .header-placeholder__overlay h1::before {
+  content: "";
+  display: block;
+  width: 36px;
+  height: 3px;
+  margin-bottom: 18px;
+  border-radius: 2px;
+  background: var(--orange, #ff8c40);
+}
+
+
+/* ---------- Loads Responsible for Power Quality Problems ----------
+   A swipe row of tall cards. The card in view plays its icon animation
+   (the desktop plays it on hover), again every few seconds while it stays
+   there, and again on a tap. */
+.generates {
+  padding: var(--section-pad-y, 64px) var(--gutter, 20px) calc(var(--section-pad-y, 64px) - 16px);
+  text-align: left;
+}
+
+.generates h2 {
+  margin-bottom: 14px;
+}
+
+.generates > p {
+  margin-bottom: 24px;
+}
+
+.generates__grid {
+  counter-reset: gen;
+}
+
+.generates__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+  padding: 30px 24px 28px;
+  border-radius: 16px;
+  box-shadow: 0 14px 30px rgba(26, 65, 70, 0.08);
+  counter-increment: gen;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* The icon sits on its own tile so five different shapes read as a set */
+.generates__icon {
+  box-sizing: content-box;
+  align-self: flex-start;
+  height: 38px;
+  padding: 18px 20px;
+  margin-bottom: auto;
+  border-radius: 14px;
+  background: rgba(255, 140, 64, 0.1);
+}
+
+.generates__card h3 {
+  margin: 28px 0 10px;
+}
+
+.generates__card:not(.generates__card--cta)::after {
+  content: counter(gen, decimal-leading-zero) " / 05";
+  position: absolute;
+  top: 26px;
+  right: 22px;
+  color: var(--line, #bcc9c7);
+  letter-spacing: 1.2px;
+  font-size: calc(var(--fs-label, 14px) * var(--fs-scale, 1));
+}
+
+/* The closing card answers the row: petrol, with the button full width */
+.generates__card--cta {
+  justify-content: flex-end;
+  gap: 12px;
+  background: var(--petrol, #1a4146);
+  border-color: var(--petrol, #1a4146);
+  box-shadow: 0 18px 36px rgba(26, 65, 70, 0.28);
+}
+
+.generates__card--cta h3 {
+  color: var(--text-on-dark, #f1f1e6);
+  margin: 0;
+}
+
+.generates__card--cta p {
+  color: var(--mist, #a9d1d7);
+}
+
+.generates__card--cta .btn {
+  align-self: stretch;
+  margin-top: 16px;
+  min-height: 52px;
+}
+
+.generates__card:active {
+  translate: 0 2px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .generates__card {
+    transition: translate 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* The desktop hover animations, played by .m-play (section 13 of
+     style.css holds the keyframes) */
+  .generates__card.m-play[data-anim="vfd"] .anim-wave {
+    animation: vfdTravel 0.9s cubic-bezier(0.4, 0, 0.6, 1);
+  }
+
+  .generates__card.m-play[data-anim="vfd"] .anim-bar {
+    animation: vfdBar 0.9s ease-in-out;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .generates__card.m-play[data-anim="vfd"] .anim-bar-b { animation-delay: 0.08s; }
+  .generates__card.m-play[data-anim="vfd"] .anim-bar-c { animation-delay: 0.16s; }
+
+  .generates__card.m-play[data-anim="smps"] .anim-gap {
+    animation: smpsJoin 0.9s ease-in-out;
+  }
+
+  .generates__card.m-play[data-anim="smps"] .anim-pin {
+    animation: smpsPin 0.9s ease-in-out;
+  }
+
+  .generates__card.m-play[data-anim="smps"] .anim-pin-b { animation-delay: 0.1s; }
+
+  .generates__card.m-play[data-anim="smps"] .anim-body {
+    animation: smpsBody 0.9s ease-in-out;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .generates__card.m-play[data-anim="paint"] .anim-p {
+    animation: paintSpray 0.9s ease-out;
+  }
+
+  .generates__card.m-play[data-anim="paint"] .anim-p2 { animation-delay: 0.08s; }
+  .generates__card.m-play[data-anim="paint"] .anim-p3 { animation-delay: 0.16s; }
+
+  .generates__card.m-play[data-anim="paint"] .anim-gun {
+    animation: paintRecoil 0.9s ease-in-out;
+  }
+
+  .generates__card.m-play[data-anim="paint"] .anim-nozzle {
+    animation: paintNozzle 0.9s ease-in-out;
+    transform-box: fill-box;
+    transform-origin: left center;
+  }
+
+  .generates__card.m-play[data-anim="heavy"] .anim-square {
+    animation: heavyAmp 0.9s ease-in-out;
+    transform-origin: 0px 90px;
+  }
+
+  .generates__card.m-play[data-anim="heavy"] .anim-bolt {
+    animation: heavyBolt 0.9s ease-in-out;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .generates__card.m-play[data-anim="arc"] .anim-dome {
+    animation: arcLift 0.9s ease-in-out;
+  }
+
+  .generates__card.m-play[data-anim="arc"] .anim-rod {
+    animation: arcDip 0.9s ease-in-out;
+  }
+
+  .generates__card.m-play[data-anim="arc"] .anim-rod-mid { animation-delay: 0.12s; }
+
+  .generates__card.m-play[data-anim="arc"] .anim-spark {
+    animation: arcSpark 0.45s steps(2, end) 2;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .generates__card.m-play[data-anim="arc"] .anim-spark-b { animation-delay: 0.17s; }
+  .generates__card.m-play[data-anim="arc"] .anim-spark-c { animation-delay: 0.31s; }
+  .generates__card.m-play[data-anim="arc"] .anim-spark-d { animation-delay: 0.09s; }
+
+  .generates__card.m-play[data-anim="arc"] .anim-shell {
+    animation: arcShell 0.9s ease-in-out;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+}
+
+
+/* ---------- The Problems These Loads Create ----------
+   .m-stack (added by the script): a pinned scene about two screens long.
+   The stage holds under the top of the screen while each card slides up
+   over the one before, which eases back, shrinks a little and dims. All of
+   it is a function of scroll (--m-y, --m-s, --m-dim per card), so it stops
+   when the thumb stops. The desktop dealing classes are overridden here. */
+.problems.m-stack {
+  height: calc(100vh + 96vh);
+  height: calc(100svh + 96svh);
+  padding: 0 var(--gutter, 20px);
+}
+
+.problems.m-stack .problems__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  padding: calc(var(--nav-height, 64px) + 12px) 0 calc(28px + var(--m-bar-space, 0px));
+  justify-content: center;
+  overflow: hidden;
+}
+
+.problems.m-stack h2 {
+  margin-bottom: 28px;
+}
+
+.problems.m-stack .problems__stack,
+.problems.m-list .problems__stack {
+  width: 100%;
+  max-width: 540px;
+  margin: 0 auto;
+}
+
+.problems.m-stack .problem-card,
+.problems.m-list .problem-card {
+  position: relative;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  min-height: 300px;
+  padding: 26px 24px 28px;
+  border-radius: 18px;
+  pointer-events: auto;
+  transition: none;
+}
+
+.problems.m-stack .problem-card {
+  z-index: var(--m-z, 1);
+  opacity: 1;
+  transform-origin: 50% 0;
+  transform: translate3d(0, var(--m-y, 0px), 0) scale(var(--m-s, 1));
+}
+
+.problems.m-stack .problem-card + .problem-card {
+  box-shadow: 0 -6px 20px rgba(4, 25, 23, 0.22);
+}
+
+/* Cards underneath darken toward the section colour */
+.problems.m-stack .problem-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--petrol, #1a4146);
+  opacity: var(--m-dim, 0);
+  pointer-events: none;
+}
+
+.problems.m-stack .problem-card > *,
+.problems.m-list .problem-card > * {
+  opacity: 1;
+  transition: none;
+}
+
+.problems.m-stack .problem-card__num,
+.problems.m-list .problem-card__num {
+  margin-bottom: auto;
+}
+
+.problems.m-stack .problem-card__text,
+.problems.m-list .problem-card__text {
+  margin-top: 40px;
+}
+
+.problems.m-stack .problem-card__text p,
+.problems.m-list .problem-card__text p {
+  max-width: none;
+}
+
+.problems.m-stack .problem-card__icon,
+.problems.m-list .problem-card__icon {
+  position: absolute;
+  top: 24px;
+  right: 20px;
+  width: 116px;
+  height: 78px;
+  margin: 0;
+}
+
+.problems.m-stack .problems__dots,
+.problems.m-list .problems__dots {
+  display: none;
+}
+
+/* Progress: one segment per card, each filling as its card arrives */
+.m-prob-bar {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+  max-width: 540px;
+  margin: 26px auto 0;
+}
+
+.m-prob-bar span {
+  flex: 1;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.18);
+  overflow: hidden;
+}
+
+.m-prob-bar i {
+  display: block;
+  height: 100%;
+  background: var(--orange, #ff8c40);
+  transform-origin: 0 50%;
+  transform: scaleX(var(--f, 0));
+}
+
+/* Reduced motion: no pin, the three cards simply follow one another */
+.problems.m-list .problems__sticky {
+  padding: var(--section-pad-y, 64px) 0;
+}
+
+.problems.m-list .problems__stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.problems.m-list .problem-card {
+  transform: none;
+  opacity: 1;
+}
+
+/* Icons: the desktop draw-ins are replaced by the same ones keyed to this
+   scene (data-m-front marks the card that has just arrived). Without it
+   every icon rests fully drawn. */
+.problems.m-stack .problem-card .anim-draw-wave,
+.problems.m-stack .problem-card .anim-dial,
+.problems.m-stack .problem-card .anim-band,
+.problems.m-stack .problem-card .anim-tick,
+.problems.m-stack .problem-card .anim-hub,
+.problems.m-stack .problem-card .anim-needle,
+.problems.m-stack .problem-card .anim-origin,
+.problems.m-stack .problem-card .anim-h,
+.problems.m-stack .problem-card .anim-h-head,
+.problems.m-stack .problem-card .anim-swing,
+.problems.m-stack .problem-card .anim-d-head,
+.problems.m-stack .problem-card .anim-pf-arc,
+.problems.m-stack .problem-card .anim-phi {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .problems.m-stack .problem-card[data-m-front] .anim-draw-wave { animation: pqDraw 1.6s cubic-bezier(0.35, 0, 0.5, 1) both; }
+
+  .problems.m-stack .problem-card[data-m-front] .anim-dial   { animation: pqDraw 1.2s cubic-bezier(0.4, 0, 0.55, 1) both; }
+  .problems.m-stack .problem-card[data-m-front] .anim-band   { animation: pqFadeIn 0.3s ease-out 1.05s both; }
+  .problems.m-stack .problem-card[data-m-front] .anim-tick   { animation: pqPopIn 0.25s cubic-bezier(0.3, 1.5, 0.6, 1) both; }
+  .problems.m-stack .problem-card[data-m-front] .anim-tick-1 { animation-delay: 0.08s; }
+  .problems.m-stack .problem-card[data-m-front] .anim-tick-2 { animation-delay: 0.34s; }
+  .problems.m-stack .problem-card[data-m-front] .anim-tick-3 { animation-delay: 0.6s; }
+  .problems.m-stack .problem-card[data-m-front] .anim-tick-4 { animation-delay: 0.86s; }
+  .problems.m-stack .problem-card[data-m-front] .anim-tick-5 { animation-delay: 1.1s; }
+  .problems.m-stack .problem-card[data-m-front] .anim-hub    { animation: pqPopIn 0.3s cubic-bezier(0.3, 1.5, 0.6, 1) both; }
+  .problems.m-stack .problem-card[data-m-front] .anim-needle { animation: pqExtend 1s cubic-bezier(0.25, 1.15, 0.4, 1) 0.15s both; }
+
+  .problems.m-stack .problem-card[data-m-front] .anim-origin { animation: pqPopIn 0.3s cubic-bezier(0.3, 1.5, 0.6, 1) both; }
+  .problems.m-stack .problem-card[data-m-front] .anim-h      { animation: pqStretch 0.55s cubic-bezier(0.3, 0, 0.4, 1) 0.1s both; }
+  .problems.m-stack .problem-card[data-m-front] .anim-h-head { animation: pqFadeIn 0.2s ease-out 0.6s both; }
+  .problems.m-stack .problem-card[data-m-front] .anim-swing  { animation: pqSwingUp 0.5s cubic-bezier(0.35, 0, 0.3, 1.1) 0.7s both; }
+  .problems.m-stack .problem-card[data-m-front] .anim-d-head { animation: pqFadeIn 0.2s ease-out 1.15s both; }
+  .problems.m-stack .problem-card[data-m-front] .anim-pf-arc { animation: pqDraw 0.4s ease-out 1.1s both; }
+  .problems.m-stack .problem-card[data-m-front] .anim-phi    { animation: pqPopIn 0.3s cubic-bezier(0.3, 1.5, 0.6, 1) 1.3s both; }
+}
+
+
+/* ---------- Entry to PQ Solved ----------
+   One column: the line, the fan, then the way in. The copy block is
+   dissolved (display: contents) so the button can close the section under
+   the cards. The fan keeps the desktop idea, sized down: the three cards
+   lie stacked and leaning, and settle into a column as the fan itself
+   rises up the screen (--pq-fan, written on .pq-entry__fan). */
+.pq-entry__stage {
+  display: block;
+  padding: var(--section-pad-y, 64px) var(--gutter, 20px);
+}
+
+.pq-entry__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+}
+
+.pq-entry__copy {
+  display: contents;
+}
+
+.pq-entry__eyebrow {
+  order: 0;
+  margin-bottom: 14px;
+}
+
+.pq-entry h2 {
+  order: 1;
+  margin-bottom: 14px;
+}
+
+.pq-entry__lead {
+  order: 2;
+  margin-bottom: 0;
+}
+
+.pq-entry__fan {
+  order: 3;
+  gap: 12px;
+  padding: 28px 0 32px;
+}
+
+.pq-entry__cta {
+  order: 4;
+  align-self: stretch;
+  min-height: 56px;
+  box-shadow: 0 16px 34px rgba(255, 140, 64, 0.28);
+}
+
+.pq-entry .glimpse {
+  position: relative;
+  padding: 16px 18px 16px;
+  border-radius: 16px;
+  transform:
+    translateY(calc((1 - var(--pq-fan, 1)) * var(--k) * -74%))
+    rotate(calc((1 - var(--pq-fan, 1)) * (var(--k) - 1) * -2.6deg))
+    scale(calc(0.94 + 0.06 * var(--pq-fan, 1)));
+  box-shadow: 0 -8px 24px rgba(4, 25, 23, calc(0.3 * (1 - var(--pq-fan, 1))));
+  transition: border-color 0.5s ease, background-color 0.5s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pq-entry .glimpse:hover {
+  translate: none;
+}
+
+.pq-entry .glimpse:active {
+  border-color: var(--cyan, #4cc8c0);
+  background: color-mix(in srgb, var(--petrol, #1a4146) 78%, #ffffff 22%);
+}
+
+.glimpse__wave {
+  height: 30px;
+  margin-bottom: 10px;
+}
+
+.glimpse p {
+  margin-bottom: 6px;
+}
+
+/* "Explore" moves up to the tag's line, so each card is one row shorter */
+.pq-entry .glimpse__go {
+  position: absolute;
+  top: 56px;
+  right: 18px;
+  color: var(--cyan, #4cc8c0);
+  font-size: calc(var(--fs-label, 14px) * var(--fs-scale, 1));
+}
+
+/* Ripples: two centres, one high behind the heading, one behind the fan */
+.pq-entry__rings span {
+  left: 88%;
+  top: 14%;
+  width: 620px;
+}
+
+.pq-entry__rings span:nth-child(n + 5) {
+  left: 18%;
+  top: 66%;
+  width: 560px;
+}
+
+
+/* ---------- What Inaction Costs ----------
+   Tall photo cards in a swipe row: the photo fills the card, the cost tag
+   sits on it, and the copy rests on a dark foot. */
+.inaction {
+  padding: var(--section-pad-y, 64px) var(--gutter, 20px) calc(var(--section-pad-y, 64px) - 16px);
+}
+
+.inaction__inner > p {
+  margin-bottom: 24px;
+}
+
+.inaction-card {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  aspect-ratio: 4 / 5;
+  max-height: 440px;
+  border-radius: 16px;
+  background: #143338;
+  box-shadow: 0 12px 24px rgba(4, 25, 23, 0.28);
+}
+
+.inaction-card__photo {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  height: auto;
+  border-radius: 0;
+}
+
+.inaction-card__photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(20, 51, 56, 0) 28%,
+    rgba(20, 51, 56, 0.72) 58%,
+    rgba(20, 51, 56, 0.96) 100%
+  );
+}
+
+.inaction-card__row {
+  padding: 0 20px 8px;
+}
+
+.inaction-card__tag {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  color: #ffd2b3;
+  background: rgba(20, 51, 56, 0.62);
+  border-color: rgba(255, 140, 64, 0.55);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.inaction-card p {
+  padding: 0 20px 22px;
+  color: rgba(241, 241, 230, 0.8);
+}
+
+
+/* ---------- PQ Solved: hero ----------
+   No cursor on touch: the bright grid drifts slowly by itself (--hx/--hy
+   from the script), sheds a faint ring now and then, and a tap pings a ring
+   where the finger lands (initPqHover's click handler). The hero stops just
+   short of a full screen so the marquee shows under it. */
+.pqs-hero {
+  min-height: calc(100vh - var(--nav-height, 64px) - 56px);
+  min-height: calc(100svh - var(--nav-height, 64px) - 56px);
+  padding: 56px var(--gutter, 20px) 64px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pqs-hero__grid,
+.pqs-hero__glow {
+  background-size: 40px 40px;
+}
+
+.pqs-hero__glow {
+  -webkit-mask-image: radial-gradient(170px circle at var(--hx, 50%) var(--hy, 45%), #000, transparent 72%);
+  mask-image: radial-gradient(170px circle at var(--hx, 50%) var(--hy, 45%), #000, transparent 72%);
+  transition: opacity 1.6s ease;
+}
+
+.pqs-hero__rings span {
+  width: 640px;
+}
+
+.pqs-lead {
+  margin-bottom: 32px;
+}
+
+.pqs-hero__ctas {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+.pqs-hero__ctas .btn {
+  min-height: 52px;
+}
+
+/* ---------- Marquee ---------- */
+.pqs-marquee {
+  padding: 15px 0;
+}
+
+.pqs-marquee li {
+  padding: 0 26px;
+}
+
+/* ---------- Match the fix to the problem: a swipe deck ---------- */
+.pqs-fit {
+  padding: var(--section-pad-y, 64px) var(--gutter, 20px) calc(var(--section-pad-y, 64px) - 16px);
+}
+
+.pqs-fit__header {
+  margin-bottom: 26px;
+}
+
+.pqs-fit h2 {
+  margin-bottom: 14px;
+}
+
+.pqs-card {
+  min-height: 300px;
+  padding: 24px 22px 22px;
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--accent) 9%, transparent), transparent 46%),
+    var(--ivory-card, #fffefa);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pqs-card:hover,
+.pqs-card:focus-visible {
+  translate: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+}
+
+.pqs-card:focus-visible {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18), 0 0 0 2px var(--accent);
+}
+
+.pqs-card:active {
+  translate: 0 2px;
+}
+
+.pqs-card__num {
+  margin-bottom: 44px;
+}
+
+.pqs-card p {
+  margin-bottom: 22px;
+}
+
+.pqs-card__go {
+  align-self: flex-start;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  margin-top: auto;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.pqs-card:hover .pqs-card__go {
+  transform: none;
+}
+
+.pqs-fit__note {
+  margin-top: 18px;
+}
+
+/* ---------- Jump bar: a segmented control ----------
+   Sits under the compact navbar and rises to the top edge when the navbar
+   slides away (.nav-hidden on <html>). The thumb glides to the family in
+   view; :has() reads the active link initPqPills marks. */
+.pqs-pills {
+  padding: 10px var(--gutter, 20px);
+  transition: top 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pqs-pills__inner {
+  position: relative;
+  gap: 0;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(26, 65, 70, 0.07);
+  border: 1px solid rgba(26, 65, 70, 0.08);
+}
+
+.pqs-pills__inner::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc((100% - 8px) / 3);
+  border-radius: 999px;
+  background: var(--petrol, #1a4146);
+  box-shadow: 0 6px 16px rgba(26, 65, 70, 0.25);
+  opacity: 0;
+  transform: translateX(0);
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease;
+}
+
+.pqs-pills__inner:has(a.is-active)::before { opacity: 1; }
+.pqs-pills__inner:has(a:nth-child(2).is-active)::before { transform: translateX(100%); }
+.pqs-pills__inner:has(a:nth-child(3).is-active)::before { transform: translateX(200%); }
+
+.pqs-pills a {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: grid;
+  place-items: center;
+  min-height: 40px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 999px;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.5s ease;
+}
+
+.pqs-pills a:hover {
+  color: var(--text, #3d4948);
+}
+
+.pqs-pills a.is-active,
+.pqs-pills a.is-active:hover {
+  background: transparent;
+  color: var(--text-on-dark, #f1f1e6);
+}
+
+.pqs .solutions-row {
+  scroll-margin-top: calc(var(--nav-height, 64px) + 62px);
+}
+
+/* ---------- Solution rows: snap carousels, no arrows ---------- */
+.solutions-row {
+  padding: 44px var(--gutter, 20px) 36px;
+}
+
+.solutions-row__inner > p {
+  margin-bottom: 20px;
+}
+
+.solutions-row__nav {
+  display: none !important;
+}
+
+.solutions-row__grid {
+  counter-reset: sol;
+}
+
+.solutions-row__grid > .solution-card {
+  flex-basis: min(72%, 290px);
+  aspect-ratio: 4 / 5;
+  border-radius: 16px;
+  counter-increment: sol;
+  box-shadow: 0 14px 30px rgba(26, 65, 70, 0.14);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.solution-card:not(.solution-card--photo) {
+  background:
+    radial-gradient(240px circle at 85% 8%, rgba(76, 200, 192, 0.22), transparent 70%),
+    linear-gradient(165deg, var(--petrol-bright, #167777) -30%, var(--petrol, #1a4146) 48%, #102a2e 100%);
+}
+
+.solutions-row__grid > .solution-card::before {
+  content: counter(sol, decimal-leading-zero);
+  position: absolute;
+  top: 16px;
+  left: 18px;
+  z-index: 1;
+  color: var(--mist, #a9d1d7);
+  letter-spacing: 1.4px;
+  font-size: calc(var(--fs-label, 14px) * var(--fs-scale, 1));
+}
+
+.solutions-row__grid > .solution-card--photo::before {
+  color: var(--text, #3d4948);
+}
+
+.solution-card__label {
+  align-items: flex-end;
+  gap: 14px;
+  padding: 18px 18px 18px;
+}
+
+.solution-card:not(.solution-card--photo) .solution-card__label {
+  background: none;
+}
+
+.solution-card:not(.solution-card--photo) .solution-card__name {
+  font-size: calc(var(--fs-h4, 18px) * var(--fs-scale, 1));
+  line-height: 1.25;
+}
+
+.solution-card--photo .solution-card__label {
+  background: linear-gradient(180deg, rgba(16, 42, 46, 0.72), rgba(16, 42, 46, 0.92));
+}
+
+.solution-card__label .plus {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 140, 64, 0.55);
+  background: rgba(255, 140, 64, 0.12);
+  line-height: 1;
+}
+
+.solution-card:hover .plus {
+  transform: none;
+}
+
+.solution-card:active .plus {
+  transform: rotate(90deg);
+}
+
+/* The sheet does not grow out of the card, so the card stays put */
+.solution-card.is-morphing {
+  opacity: 1;
+}
+
+
+/* ---------- Product dialog: a bottom sheet ----------
+   initSolutionDialog writes the panel's top/left/width/height inline to grow
+   it from the card; on a phone those are overruled and the panel rises from
+   the bottom edge instead. It closes on the button, the backdrop, Escape, or
+   a swipe down from the top of its content (js/m/solution.js). The close
+   transition stays under the 520ms the script waits before hiding it. */
+.sol-dialog__backdrop {
+  background: rgba(10, 26, 28, 0.55);
+  transition: opacity 0.5s ease;
+}
+
+.sol-dialog__panel {
+  top: auto !important;
+  bottom: 0;
+  left: 0 !important;
+  width: 100% !important;
+  height: auto !important;
+  max-height: calc(100vh - 40px);
+  max-height: calc(100svh - 40px);
+  border-radius: 22px 22px 0 0;
+  box-shadow: 0 -18px 50px rgba(0, 0, 0, 0.35);
+  transform: translate3d(0, calc(100% + 24px), 0);
+  transition: transform 0.48s cubic-bezier(0.65, 0, 0.35, 1);
+  will-change: transform;
+}
+
+.sol-dialog.is-open .sol-dialog__panel {
+  transform: translate3d(0, var(--m-drag, 0px), 0);
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sol-dialog.is-open.m-dragging .sol-dialog__panel {
+  transition: none;
+}
+
+.sol-dialog__scroll {
+  width: auto !important;
+  overscroll-behavior: contain;
+}
+
+.sol-dialog__media {
+  height: 230px;
+}
+
+.sol-dialog__content {
+  padding: 24px var(--gutter, 20px) calc(32px + env(safe-area-inset-bottom, 0px));
+}
+
+/* No photo: room for the handle and the close button above the title */
+.sol-dialog__media:empty + .sol-dialog__content {
+  padding-top: 64px;
+}
+
+.sol-dialog__title {
+  padding-right: 8px;
+  margin-bottom: 14px;
+}
+
+.sol-dialog__body p + p {
+  margin-top: 16px;
+}
+
+/* The last line ("Problem addressed") reads as a tag strip */
+.sol-dialog__body p:last-child:has(strong) {
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(241, 241, 230, 0.12);
+}
+
+.sol-dialog__close {
+  top: 14px;
+  right: 14px;
+  width: 44px;
+  height: 44px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Drag handle, injected by the script; a wide strip so the thumb finds it */
+.m-sheet-handle {
+  position: absolute;
+  top: 0;
+  left: 64px;
+  right: 64px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  height: 30px;
+  touch-action: none;
+}
+
+.m-sheet-handle::before {
+  content: "";
+  width: 40px;
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(150, 160, 158, 0.75);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25);
+}
+
+/* Tablet portrait: a sheet that does not run the full width */
+@media (min-width: 600px) {
+  .sol-dialog__panel {
+    left: 50% !important;
+    width: min(100%, 600px) !important;
+    margin-left: max(-50%, -300px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sol-dialog__panel,
+  .sol-dialog.is-open .sol-dialog__panel {
+    transition-duration: 0.01s;
+  }
+
+  .generates__card,
+  .inaction-card,
+  .pqs-card,
+  .solutions-row__grid > .solution-card {
+    scale: none;
+    opacity: 1;
+  }
+}

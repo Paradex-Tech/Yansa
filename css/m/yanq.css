@@ -4,4 +4,586 @@
    media query), so everything here wins over the desktop and old narrow rules
    by order. Written for phones first: carousels, sheets, thumb reach, not
    desktop layouts stacked into a column.
+
+   1. Intro photo band   shorter than a screen, copy anchored bottom-left
+   2. What is YanQ       display type, the Q watermark back, full-width CTA
+   3. How YanQ Works     static fallback (no JS, reduced motion, short
+                         screens), then the pinned phone scene (.yq-m-on,
+                         driven by js/m/yanq.js)
+   4. What YanQ Delivers a 2x2 grid of compact cards that settle in by scroll
+
+   Sizes come from the type tokens (css/m/base.css sets the phone scale);
+   every motion here is a custom property the script writes as a pure
+   function of scroll, so nothing carries a transition.
    ========================================================= */
+
+
+/* =========================================================
+   1. INTRO PHOTO BAND
+   A band rather than a full screen, so the first thing under the bar is a
+   picture and a headline, with the next section already peeking in. The
+   script eases the photo a few px as it scrolls out (--yq-band).
+   ========================================================= */
+.yanq-hero-intro {
+  min-height: 0;
+  text-align: left;
+}
+
+.yanq-hero-intro .header-placeholder {
+  height: clamp(420px, 74svh, 640px);
+  min-height: 0;
+  align-items: flex-end;
+}
+
+.yanq-hero-intro .header-placeholder img {
+  /* The analyser sits left of centre in the shot */
+  object-position: 34% 50%;
+  transform: translate3d(0, calc(var(--yq-band, 0) * 48px), 0) scale(1.08);
+  will-change: transform;
+}
+
+.yanq-hero-intro .header-placeholder__overlay {
+  align-items: flex-start;
+  justify-content: flex-end;
+  text-align: left;
+  padding: 0 var(--gutter, 20px) clamp(32px, 6svh, 48px);
+}
+
+/* Heavier at the foot, where the type sits; the top of the photo stays clear */
+.yanq-hero-intro .header-placeholder__overlay::before {
+  background: linear-gradient(
+    180deg,
+    rgba(4, 25, 23, 0.08) 0%,
+    rgba(4, 25, 23, 0.18) 38%,
+    rgba(4, 25, 23, 0.78) 100%
+  );
+}
+
+.yanq-hero-intro .header-placeholder__overlay > * {
+  max-width: 34ch;
+}
+
+.yanq-hero-intro .header-placeholder__overlay h1 {
+  line-height: var(--lh-heading, 1.14);
+  margin-bottom: 12px;
+}
+
+.yanq-hero-intro .header-placeholder__overlay p {
+  color: rgba(255, 255, 255, 0.86);
+  max-width: 30ch;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+
+/* =========================================================
+   2. WHAT IS YANQ
+   ========================================================= */
+.yanq-hero {
+  padding: clamp(56px, 9svh, 80px) var(--gutter, 20px) clamp(64px, 10svh, 88px);
+}
+
+/* The big Q comes back (style.css hides it below 900px), cropped off the
+   right edge behind the copy, and drifts up a little as the section passes */
+.yanq-hero__watermark {
+  display: block;
+  top: 0;
+  right: -22vw;
+  width: min(78vw, 420px);
+  opacity: 0.38;
+  transform: translate3d(0, calc(-6% + var(--yq-hero, 0) * -40px), 0);
+  will-change: transform;
+}
+
+.yanq-hero__label {
+  margin-bottom: 8px;
+}
+
+.yanq-hero h2 {
+  line-height: var(--lh-display, 1.04);
+  letter-spacing: -1.2px;
+  margin-bottom: 20px;
+  max-width: 11ch;
+}
+
+.yanq-hero__body {
+  margin-bottom: 32px;
+}
+
+/* A thumb-wide call to action */
+.yanq-hero__content .btn {
+  display: flex;
+  width: 100%;
+  max-width: 420px;
+  min-height: var(--tap, 48px);
+}
+
+
+/* =========================================================
+   3. HOW YANQ WORKS
+   ========================================================= */
+
+/* ---------- Static fallback ----------
+   No JS, reduced motion or a screen too short to pin: the stacked layout
+   from style.css, tightened into one card per step, with its diagram on
+   top and every part at its finished state. */
+.yanq-flow:not(.yq-m-on) .yanq-flow__title {
+  margin-bottom: 28px;
+}
+
+.yanq-flow:not(.yq-m-on) .yanq-flow__intro {
+  margin-bottom: 40px;
+}
+
+.yanq-flow:not(.yq-m-on) .yanq-flow__quote {
+  padding-left: 18px;
+}
+
+.yanq-flow:not(.yq-m-on) .yanq-anim {
+  order: calc(var(--i, 1) * 2);
+  max-width: none;
+  aspect-ratio: 4 / 3;
+  margin: 0;
+  padding: 16px;
+  border-color: rgba(229, 229, 229, 0.35);
+  border-radius: 16px 16px 0 0;
+  border-bottom: 0;
+}
+
+.yanq-flow:not(.yq-m-on) .yanq-flow__step {
+  order: calc(var(--i, 1) * 2 + 1);
+  width: 100%;
+  max-width: none;
+  margin: 0 0 24px;
+  padding: 20px 20px 24px;
+  border: 1px solid rgba(229, 229, 229, 0.35);
+  border-top: 0;
+  border-radius: 0 0 16px 16px;
+  background: color-mix(in srgb, var(--petrol, #1a4146) 97%, #ffffff);
+}
+
+.yanq-flow:not(.yq-m-on) .yanq-flow__step[data-step="4"] {
+  margin-bottom: 0;
+}
+
+/* ---------- Step text (both modes) ---------- */
+.yanq-flow__tag-row {
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  margin-bottom: 10px;
+}
+
+.yanq-flow__step h3 {
+  margin-bottom: 8px;
+}
+
+.yanq-flow__step > p {
+  margin-bottom: 14px;
+}
+
+.yanq-flow__pills {
+  gap: 8px;
+}
+
+.yanq-pill {
+  padding: 4px 10px;
+}
+
+/* ---------- Pinned phone scene (.yq-m-on) ----------
+   One sticky stage over a runway, the phone cut of the desktop sequence.
+   js/m/yanq.js writes, as pure functions of scroll:
+     --yq-runway        runway past the stage, in stage heights
+     --yq-bg / --yq-title   cream to petrol and back, heading ink to grey
+     --yq-intro         1 to 0 as the statement leaves
+     --yq-reveal        0 to 1 as card, rail and text arrive
+     --yq-out           0 to 1 over the outro into What YanQ Delivers
+     --yq-swap          How/Works giving way to What/Delivers
+     --yq-v / --yq-dy   per step: visibility and drift of its text and diagram
+   Stage, top to bottom: heading, diagram card, wave rail, step text. The
+   card takes the height left over, so every phone gets the biggest diagram
+   that fits; the bottom keeps clear of the sticky Book a Diagnosis bar. */
+.yanq-flow,
+.yanq-delivers {
+  --yq-stage-h: calc(100vh - var(--nav-height, 64px));
+  --yq-pad-top: clamp(16px, 3svh, 28px);
+  --yq-bar-room: calc(var(--m-bar-h, 52px) + 28px + var(--safe-bottom, 0px));
+}
+
+@supports (height: 100svh) {
+  .yanq-flow,
+  .yanq-delivers {
+    --yq-stage-h: calc(100svh - var(--nav-height, 64px));
+  }
+}
+
+.yanq-flow.yq-m-on {
+  display: block;
+  min-height: 0;
+  padding: 0;
+  height: calc(var(--yq-stage-h) * (1 + var(--yq-runway, 4)));
+  background: var(--yq-bg, var(--cream));
+}
+
+.yq-m-on .yanq-flow__stage {
+  position: sticky;
+  top: var(--nav-height, 64px);
+  height: var(--yq-stage-h);
+  max-width: none;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  /* On wide portrait screens the scene is one centred 560px column */
+  padding: var(--yq-pad-top) max(var(--gutter, 20px), calc((100% - 560px) / 2)) var(--yq-bar-room);
+  overflow: clip;
+}
+
+/* Heading. "YanQ" never moves; on the outro the side words swap round it
+   (the incoming words hang off its edges, as on desktop) */
+.yq-m-on .yanq-flow__title {
+  flex: none;
+  position: relative;
+  z-index: 2;
+  margin: 0 0 clamp(14px, 2.6svh, 24px);
+  color: var(--yq-title, var(--ink));
+  white-space: nowrap;
+}
+
+.yq-m-on .yanq-flow__brand {
+  position: relative;
+  display: inline-block;
+  color: var(--yq-title, var(--ink));
+}
+
+.yq-m-on .yanq-flow__q {
+  color: var(--cyan);
+}
+
+.yq-m-on .yanq-flow__word {
+  display: inline-block;
+  opacity: calc(1 - var(--yq-swap, 0));
+  transform: translateY(calc(var(--yq-swap, 0) * -0.4em));
+}
+
+.yq-m-on .yanq-flow__word-in {
+  display: block;
+  position: absolute;
+  top: 0;
+  white-space: pre;
+  color: var(--yq-title, var(--ink));
+  opacity: var(--yq-swap, 0);
+  transform: translateY(calc((1 - var(--yq-swap, 0)) * 0.4em));
+}
+
+.yq-m-on .yanq-flow__word-in--l {
+  right: 100%;
+}
+
+.yq-m-on .yanq-flow__word-in--r {
+  left: 100%;
+}
+
+/* Body: the statement and the steps share one cell and hand over */
+.yq-m-on .yanq-flow__body {
+  display: grid;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  /* Cut at the heading's bottom edge only, so steps leaving upwards on the
+     outro never pass behind it (the sides and foot stay open for the card's
+     shadow) */
+  clip-path: inset(0 -40px -80px -40px);
+}
+
+.yq-m-on .yanq-flow__intro,
+.yq-m-on .yanq-flow__steps {
+  grid-area: 1 / 1;
+  min-height: 0;
+}
+
+/* The statement: the same read-along as desktop, ink on cream. It rises
+   and fades as the colour turns. */
+.yq-m-on .yanq-flow__intro {
+  align-self: center;
+  margin: 0 0 8svh;
+  opacity: var(--yq-intro, 1);
+  transform: translate3d(0, calc((1 - var(--yq-intro, 1)) * -56px), 0);
+}
+
+.yq-m-on .yanq-flow__quote {
+  padding-left: 18px;
+  line-height: var(--lh-statement, 1.32);
+}
+
+.yq-m-on .yanq-flow__quote::before {
+  background: rgba(57, 89, 93, 0.2);
+}
+
+.yq-m-on .yanq-flow__quote::after {
+  background: #39595d;
+}
+
+.yq-m-on .yanq-flow__lead {
+  color: var(--ink);
+}
+
+.yq-m-on .yanq-flow__rest {
+  color: #6f8b8d;
+}
+
+/* Words switch instantly (a transition would smear lit into unlit) */
+.yq-m-on .yanq-flow__quote .quote__word {
+  color: var(--line);
+}
+
+.yq-m-on .yanq-flow__quote .quote__word.yq-lit {
+  color: inherit;
+}
+
+/* Steps column: card, rail, text. The outro carries it up and out with
+   the page while the petrol gives way to cream. */
+.yq-m-on .yanq-flow__steps {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(12px, 2.2svh, 20px);
+  opacity: calc(var(--yq-reveal, 1) * max(0, 1 - var(--yq-out, 0) * 2.2));
+  transform: translate3d(0, calc(var(--yq-out, 0) * -1 * var(--yq-stage-h) + (1 - var(--yq-reveal, 1)) * 32px), 0);
+  pointer-events: none;
+}
+
+/* The card: one frame that stays put; only the diagrams inside hand over */
+.yq-m-on .yanq-flow__visual {
+  order: 1;
+  display: block;
+  position: relative;
+  flex: 1 1 0;
+  width: 100%;
+  max-width: 560px;
+  min-height: 150px;
+  max-height: min(calc((100vw - 2 * var(--gutter, 20px)) * 0.84), 440px);
+  border: 1px solid rgba(229, 229, 229, 0.28);
+  border-radius: var(--radius-card, 16px);
+  background: color-mix(in srgb, var(--petrol, #1a4146) 97%, #ffffff);
+  box-shadow: 0 10px 24px rgba(4, 25, 23, 0.2);
+  overflow: hidden;
+}
+
+.yq-m-on .yanq-anim {
+  position: absolute;
+  inset: 0;
+  width: auto;
+  max-width: none;
+  aspect-ratio: auto;
+  margin: 0;
+  padding: clamp(12px, 4%, 24px);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  opacity: var(--yq-v, 0);
+  transform: translate3d(0, calc(var(--yq-dy, 0) * 10px), 0);
+}
+
+/* The rail: a dashed wave (drawn by the script, one swing per step) with a
+   node per step and an orange marker riding it */
+.yq-rail {
+  order: 2;
+  flex: none;
+  width: 100%;
+  max-width: 560px;
+  height: 24px;
+}
+
+.yq-rail svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.yq-rail__track {
+  stroke: rgba(217, 217, 217, 0.4);
+}
+
+.yq-rail__fill {
+  stroke: var(--orange);
+}
+
+.yq-rail__node {
+  fill: var(--petrol, #1a4146);
+  stroke: rgba(217, 217, 217, 0.55);
+}
+
+.yq-rail__node.is-on {
+  fill: var(--orange);
+  stroke: var(--orange);
+}
+
+.yq-rail__marker {
+  fill: var(--orange);
+  stroke: rgba(255, 140, 64, 0.26);
+}
+
+/* Step text: all four share one cell (so the block is as tall as the
+   longest) and hand over in place */
+.yq-m-on .yanq-flow__window {
+  order: 3;
+  display: block;
+  flex: none;
+  width: 100%;
+  max-width: 560px;
+}
+
+.yq-m-on .yanq-flow__list {
+  display: grid;
+}
+
+.yq-m-on .yanq-flow__step {
+  grid-area: 1 / 1;
+  max-width: none;
+  margin: 0;
+  opacity: var(--yq-v, 0);
+  transform: translate3d(0, calc(var(--yq-dy, 0) * 14px), 0);
+}
+
+.yq-m-on .yanq-flow__step > p {
+  margin-bottom: 12px;
+}
+
+/* Short phones: smaller copy so the card keeps some height */
+@media (max-height: 760px) {
+  .yq-m-on .yanq-flow__step > p {
+    font-size: calc(var(--fs-small, 14px) * var(--fs-scale, 1));
+    line-height: 1.5;
+  }
+
+  .yq-m-on .yanq-flow__step h3 {
+    margin-bottom: 4px;
+  }
+}
+
+
+/* =========================================================
+   4. WHAT YANQ DELIVERS
+   A 2x2 grid of compact cards: icon tile, numeral, teal bar, title, copy.
+   Each card settles in as it scrolls up the screen (--yq-p, 0 to 1, from
+   the script): it rises a few px, its bar draws and its numeral counts up
+   to its number. Without the script --yq-p is 1 (finished).
+   ========================================================= */
+/* The same centred column as the scene above it, so the pinned heading
+   lands on this section's edge */
+.yanq-delivers {
+  padding: var(--section-pad-y, 64px) max(var(--gutter, 20px), calc((100% - 560px) / 2));
+}
+
+.yanq-delivers h2 {
+  margin-bottom: 24px;
+}
+
+.yanq-delivers__grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.deliver-stat {
+  --yq-p: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 14px 18px;
+  background: var(--ivory-card, #fffefa);
+  border: 1px solid rgba(188, 201, 199, 0.55);
+  border-radius: var(--radius-card, 16px);
+  opacity: calc(0.2 + 0.8 * var(--yq-p));
+  transform: translate3d(0, calc((1 - var(--yq-p)) * 28px), 0);
+}
+
+.deliver-stat:active {
+  background: #fbf9ef;
+}
+
+.deliver-stat__icon {
+  width: 64px;
+  padding: 8px;
+  border-radius: 12px;
+  background: var(--cream, #fafaef);
+}
+
+.deliver-stat__num {
+  color: var(--teal-brand, #007f7f);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 1px;
+}
+
+.deliver-stat__num::after {
+  width: 28px;
+  margin: 6px 0 10px;
+  transform-origin: 0 50%;
+  transform: scaleX(var(--yq-p));
+}
+
+/* Sized so the longest title ("Recommendation") holds on one line in a
+   half-width card */
+.deliver-stat h3 {
+  font-size: calc(var(--fs-lead, 17px) * var(--fs-scale, 1));
+  line-height: 1.25;
+  letter-spacing: -0.2px;
+  margin-bottom: 6px;
+}
+
+@media (max-width: 374px) {
+  .deliver-stat {
+    padding-left: 12px;
+    padding-right: 10px;
+  }
+
+  .deliver-stat h3 {
+    --fs-scale: 0.94;
+  }
+}
+
+.deliver-stat p {
+  font-size: calc(var(--fs-small, 14px) * var(--fs-scale, 1));
+  line-height: 1.5;
+}
+
+/* Tablet portrait: room for the tile beside the title */
+@media (min-width: 600px) {
+  .yanq-delivers__grid {
+    gap: 16px;
+  }
+
+  .deliver-stat {
+    padding: 20px 20px 24px;
+  }
+
+  .deliver-stat__icon {
+    width: 88px;
+  }
+}
+
+/* While How YanQ Works is pinned this section is its outro's end state, as
+   on desktop: pulled up one stage height so it rises into the pinned stage
+   while the steps leave, and lands as the pin releases. Its heading keeps
+   its space under the pinned one but is invisible (screen readers still
+   read it); the top stage height of background is clear so the colour
+   change shows through. */
+.yanq-flow.yq-m-on + .yanq-delivers {
+  position: relative;
+  z-index: 1;
+  min-height: var(--yq-stage-h);
+  margin-top: calc(-1 * var(--yq-stage-h));
+  padding-top: var(--yq-pad-top);
+  justify-content: flex-start;
+  background: linear-gradient(
+    to bottom,
+    transparent var(--yq-stage-h),
+    var(--cream) var(--yq-stage-h)
+  );
+}
+
+.yanq-flow.yq-m-on + .yanq-delivers h2 {
+  opacity: 0;
+  margin-bottom: clamp(14px, 2.6svh, 24px);
+  white-space: nowrap;
+}

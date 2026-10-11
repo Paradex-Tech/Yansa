@@ -4,4 +4,1130 @@
    media query), so everything here wins over the desktop and old narrow rules
    by order. Written for phones first: carousels, sheets, thumb reach, not
    desktop layouts stacked into a column.
+
+   1. Tokens          phone layout and type scale (other phone files use them)
+   2. Base            safety nets: overflow, tap highlight, focus, scroll lock
+   3. Typography      tier line-heights and tracking tuned for small screens
+   4. Buttons         48px targets, tap feedback, no sticky hover lifts
+   5. Navbar          compact bar, refined menu button, full-screen menu
+   6. Bottom bar      the sticky "Book a Diagnosis" pill
+   7. Footer          CTA stack, brand, link grid, end row
+   8. Forms & sheet   48px fields, the brochure dialog as a bottom sheet
    ========================================================= */
+
+
+/* =========================================================
+   1. TOKENS
+   Stable names for every phone file. Type tiers clamp down a touch on the
+   narrowest Androids so a two-word display line still fits at 360px.
+   --m-bar-space is the room the bottom bar takes while it is showing
+   (0 otherwise), for anything pinned to the bottom of the screen.
+   ========================================================= */
+:root {
+  --gutter: 20px;
+  --nav-height: 64px;
+  --section-pad-y: 64px;
+  --header-gap: 32px;
+  --inner-hero-height: calc(100vh - var(--nav-height));
+  --hero-stage-h: calc(100vh - var(--nav-height));
+
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+  --radius-card: 16px;
+  --tap: 48px;
+
+  --m-bar-h: 52px;
+  --m-bar-space: 0px;
+
+  --fs-scale: 1;
+  --fs-display: clamp(38px, 11.3vw, 44px);
+  --fs-numeral: clamp(44px, 12.4vw, 48px);
+  --fs-h1: clamp(30px, 8.8vw, 34px);
+  --fs-h2: clamp(26px, 7.5vw, 29px);
+  --fs-statement: clamp(22px, 6.2vw, 24px);
+  --fs-h3: clamp(22px, 6.2vw, 24px);
+  --fs-h4: 20px;
+  --fs-copy-lg: 18px;
+  --fs-lead: 17px;
+  --fs-body: 16px;
+  --fs-small: 14px;
+  --fs-label: 13px;
+
+  /* Line-heights to pair with the tiers */
+  --lh-display: 1.04;
+  --lh-heading: 1.14;
+  --lh-statement: 1.32;
+  --lh-copy: 1.6;
+}
+
+@supports (height: 100svh) {
+  :root {
+    --inner-hero-height: calc(100svh - var(--nav-height));
+    --hero-stage-h: calc(100svh - var(--nav-height));
+  }
+}
+
+html.m-bar-on {
+  --m-bar-space: calc(var(--m-bar-h) + 24px + var(--safe-bottom));
+}
+
+/* Large phones held sideways and small tablets: a little more air */
+@media (min-width: 600px) {
+  :root {
+    --gutter: 32px;
+    --section-pad-y: 80px;
+    --header-gap: 40px;
+    --fs-display: 54px;
+    --fs-numeral: 56px;
+    --fs-h1: 40px;
+    --fs-h2: 34px;
+    --fs-statement: 27px;
+    --fs-h3: 26px;
+    --fs-h4: 22px;
+    --fs-lead: 18px;
+  }
+}
+
+
+/* =========================================================
+   2. BASE
+   ========================================================= */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* clip, not hidden: hidden would turn body into a scroll container and break
+   every position: sticky on the site */
+html,
+body {
+  overflow-x: hidden;
+}
+
+@supports (overflow-x: clip) {
+  html,
+  body {
+    overflow-x: clip;
+  }
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+video,
+svg {
+  max-width: 100%;
+}
+
+/* Scroll lock for the menu and the sheet. Only on <html> (it goes to the
+   viewport): hidden on body too would make body a scroll box, and the sticky
+   navbar would stick to it and leave the screen. */
+html.m-lock {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+/* In-page targets clear the shorter bar */
+#contact-form,
+#case-studies,
+#faq {
+  scroll-margin-top: calc(var(--nav-height) + 20px);
+}
+
+/* One focus ring for the whole phone site: visible, round-cornered, teal */
+:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 3px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+
+/* =========================================================
+   3. TYPOGRAPHY
+   Sizes come from the tokens above through the tiers in style.css; here
+   only the rhythm changes. Desktop tracking (-2px on display) is far too
+   tight at phone sizes.
+   ========================================================= */
+.pqs-hero h1,
+.diagnosis h2,
+.yanq-hero h2 {
+  line-height: var(--lh-display);
+  letter-spacing: -1.1px;
+}
+
+.hero__heading h1,
+.header-placeholder__overlay h1,
+.yanq-flow__title,
+.yanq-delivers h2 {
+  line-height: var(--lh-heading);
+  letter-spacing: -0.7px;
+}
+
+.pq-entry h2,
+.pqs-fit h2,
+.hero__desc h2,
+.diagnosis__eyebrow,
+.yanq-hero__label,
+.symptoms__header h2,
+.why__header h2,
+.cases__header h2,
+.contact-form-col h2,
+.about-measure h2,
+.about-values h2,
+.industries h2,
+.faq__header h2,
+.generates h2,
+.solutions-row h2,
+.problems h2,
+.inaction h2,
+.results h2,
+.footer__cta h2 {
+  line-height: 1.18;
+  letter-spacing: -0.4px;
+}
+
+.quote p,
+.yanq-flow__quote,
+.about-statement p {
+  line-height: var(--lh-statement);
+  letter-spacing: -0.2px;
+}
+
+/* Long words never push the page sideways */
+h1, h2, h3, h4, p, li, a {
+  overflow-wrap: break-word;
+}
+
+
+/* =========================================================
+   4. BUTTONS
+   ========================================================= */
+.btn {
+  min-height: var(--tap);
+  padding: 13px 26px;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: box-shadow 0.3s var(--ease-out), background-color 0.3s var(--ease-out),
+    border-color 0.3s var(--ease-out), transform 0.35s var(--ease-out);
+}
+
+/* Touch screens keep :hover after a tap; the lift would stick. */
+@media (hover: none) {
+  .btn--orange:hover,
+  .btn--outline-teal:hover,
+  .btn--outline-orange:hover {
+    transform: none;
+  }
+
+  .btn--orange:hover {
+    background: var(--orange);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      0 2px 5px rgba(196, 92, 20, 0.32);
+  }
+
+  .btn--outline-teal:hover,
+  .btn--outline-orange:hover {
+    background: transparent;
+  }
+}
+
+/* Tap feedback: a soft press, quick in, slow out */
+.btn:active,
+.btn--orange:active,
+.btn--outline-teal:active,
+.btn--outline-orange:active {
+  transform: scale(0.975);
+  transition-duration: 0.12s;
+}
+
+.btn:focus-visible {
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+.not-found__links {
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  max-width: 360px;
+}
+
+
+/* =========================================================
+   5. NAVBAR
+   A 64px bar: logo left, menu button right. The header CTA leaves the bar
+   (it lives in the menu and the bottom bar). The menu is a full-screen
+   petrol sheet (.m-menu, built by js/m/base.js inside the navbar so the
+   existing open/close contract in script.js keeps working).
+   The bar's paint is on ::before, not on .navbar: a backdrop-filter on the
+   navbar itself would make it the containing block of the fixed menu.
+   ========================================================= */
+.navbar {
+  padding: 0 var(--gutter);
+  padding-top: var(--safe-top);
+  background: transparent;
+  border-bottom: 0;
+  transition: transform 0.6s var(--ease-out);
+}
+
+.navbar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid rgba(188, 201, 199, 0.7);
+  -webkit-backdrop-filter: saturate(1.6) blur(14px);
+  backdrop-filter: saturate(1.6) blur(14px);
+  transition: opacity 0.5s var(--ease-inout), border-color 0.5s var(--ease-inout);
+  pointer-events: none;
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .navbar::before {
+    background: #ffffff;
+  }
+}
+
+.navbar__inner {
+  position: relative;
+  z-index: 2;
+  height: var(--nav-height); /* the hairline is drawn on ::before, inside */
+  gap: 12px;
+}
+
+.navbar__logo {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.navbar__logo img {
+  height: 24px;
+  transition: filter 0.5s var(--ease-inout);
+}
+
+/* The CTA moves to the menu and the bottom bar */
+.navbar__cta {
+  display: none;
+}
+
+/* The old drop-down is replaced by .m-menu */
+.navbar__links,
+.navbar.is-open .navbar__links {
+  display: none !important;
+}
+
+/* Menu button: two lines, the lower one shorter, folding into a cross */
+.navbar__toggle {
+  display: block;
+  margin-left: auto;
+  margin-right: -10px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  touch-action: manipulation;
+  transition: color 0.5s var(--ease-inout), background-color 0.3s ease;
+}
+
+.navbar__toggle:active {
+  background: rgba(26, 65, 70, 0.08);
+}
+
+.navbar__toggle-bar,
+.navbar.is-open .navbar__toggle-bar {
+  top: 23px;
+  left: 13px;
+  width: 22px;
+  height: 2px;
+  background: transparent;
+}
+
+.navbar__toggle-bar::before,
+.navbar__toggle-bar::after {
+  left: auto;
+  right: 0;
+  height: 1.75px;
+  border-radius: 2px;
+  transition: transform 0.6s var(--ease-inout), width 0.6s var(--ease-inout);
+}
+
+.navbar__toggle-bar::before {
+  width: 22px;
+  transform: translateY(-4px);
+}
+
+.navbar__toggle-bar::after {
+  width: 14px;
+  transform: translateY(4px);
+}
+
+.navbar.is-open .navbar__toggle-bar::before {
+  width: 22px;
+  transform: rotate(45deg);
+}
+
+.navbar.is-open .navbar__toggle-bar::after {
+  width: 22px;
+  transform: rotate(-45deg);
+}
+
+/* The open menu always wins over auto-hide and the home hero's fade */
+.navbar.is-open {
+  transform: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.navbar.is-open::before {
+  opacity: 0;
+  border-bottom-color: transparent;
+}
+
+.navbar.is-open .navbar__logo img {
+  filter: brightness(0) invert(1);
+}
+
+.navbar.is-open .navbar__toggle {
+  color: var(--text-on-dark);
+}
+
+.navbar.is-open .navbar__toggle:active {
+  background: rgba(241, 241, 230, 0.12);
+}
+
+/* ---------- Full-screen menu ---------- */
+.m-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: calc(var(--nav-height) + var(--safe-top) + 20px) var(--gutter)
+    calc(24px + var(--safe-bottom));
+  background:
+    radial-gradient(120% 60% at 100% 0%, rgba(52, 182, 175, 0.16) 0%, rgba(52, 182, 175, 0) 60%),
+    radial-gradient(90% 50% at 0% 100%, rgba(22, 119, 119, 0.28) 0%, rgba(22, 119, 119, 0) 70%),
+    var(--petrol);
+  color: var(--text-on-dark);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  visibility: hidden;
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 0.55s var(--ease-inout), visibility 0s linear 0.55s;
+}
+
+@supports (height: 100dvh) {
+  .m-menu {
+    height: 100dvh;
+  }
+}
+
+.navbar.is-open .m-menu {
+  visibility: visible;
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 0.75s var(--ease-inout), visibility 0s;
+}
+
+.m-menu:focus {
+  outline: none;
+}
+
+.m-menu__label {
+  color: var(--mist);
+  font-size: var(--fs-label);
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-bottom: 8px;
+}
+
+.m-menu__list {
+  display: flex;
+  flex-direction: column;
+}
+
+.m-menu__link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(169, 209, 215, 0.16);
+  color: var(--text-on-dark);
+  font-family: 'Liberation Sans', Arial, Helvetica, sans-serif;
+  font-size: var(--fs-h1);
+  line-height: 1.15;
+  letter-spacing: -0.6px;
+  touch-action: manipulation;
+}
+
+.m-menu__num {
+  flex: 0 0 auto;
+  width: 22px;
+  color: var(--mist);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: var(--fs-label);
+  letter-spacing: 1px;
+  opacity: 0.6;
+  align-self: flex-start;
+  padding-top: 4px;
+}
+
+.m-menu__text {
+  flex: 1 1 auto;
+  transition: transform 0.4s var(--ease-out), color 0.4s var(--ease-out);
+}
+
+.m-menu__go svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.m-menu__go {
+  flex: 0 0 auto;
+  display: flex;
+  width: 20px;
+  height: 20px;
+  color: var(--mist);
+  opacity: 0.45;
+  transition: transform 0.4s var(--ease-out), opacity 0.4s var(--ease-out);
+}
+
+.m-menu__link:active .m-menu__text {
+  transform: translateX(6px);
+  color: var(--cyan);
+}
+
+.m-menu__link:active .m-menu__go {
+  transform: translateX(4px);
+  opacity: 1;
+}
+
+/* Current page: cyan word and a small dot before the arrow */
+.m-menu__link[aria-current="page"] .m-menu__text {
+  color: var(--cyan);
+}
+
+.m-menu__link[aria-current="page"] .m-menu__go {
+  color: var(--cyan);
+  opacity: 1;
+}
+
+.m-menu__link[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 48px;
+  height: 1px;
+  background: var(--cyan);
+}
+
+.m-menu__link:focus-visible {
+  outline-offset: -2px;
+  outline-color: var(--cyan);
+}
+
+.m-menu__foot {
+  margin-top: auto;
+  padding-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.m-menu__cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 54px;
+  border-radius: 999px;
+  background: var(--orange);
+  color: #ffffff;
+  font-size: var(--fs-body);
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 10px 26px rgba(4, 25, 23, 0.35);
+  touch-action: manipulation;
+  transition: transform 0.35s var(--ease-out), background-color 0.3s ease;
+}
+
+.m-menu__cta:active {
+  transform: scale(0.975);
+  background: var(--orange-edge);
+  transition-duration: 0.12s;
+}
+
+.m-menu__cta svg {
+  width: 18px;
+  height: 18px;
+}
+
+.m-menu__sub {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 44px;
+}
+
+.m-menu__note {
+  color: var(--mist);
+  font-size: var(--fs-small);
+  line-height: 1.5;
+  opacity: 0.8;
+  max-width: 30ch;
+}
+
+.m-menu__brochure {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  color: var(--text-on-dark);
+  font-size: var(--fs-small);
+  text-decoration: underline;
+  text-decoration-color: rgba(241, 241, 230, 0.35);
+  text-underline-offset: 4px;
+}
+
+/* Staggered entrance: each row rises and fades in a beat after the last */
+.m-menu__label,
+.m-menu__link,
+.m-menu__foot {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.navbar.is-open .m-menu__label,
+.navbar.is-open .m-menu__link,
+.navbar.is-open .m-menu__foot {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.8s var(--ease-out), transform 0.9s var(--ease-out);
+  transition-delay: calc(0.22s + var(--i, 0) * 0.07s);
+}
+
+@media (max-height: 560px) {
+  .m-menu__link {
+    padding: 9px 0;
+    font-size: var(--fs-h3);
+  }
+
+  .m-menu__foot {
+    padding-top: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navbar,
+  .m-menu,
+  .navbar.is-open .m-menu {
+    transition: opacity 0.2s ease, visibility 0s linear 0.2s;
+    clip-path: none;
+  }
+
+  .m-menu {
+    opacity: 0;
+  }
+
+  .navbar.is-open .m-menu {
+    opacity: 1;
+    transition: opacity 0.2s ease, visibility 0s;
+  }
+
+  .m-menu__label,
+  .m-menu__link,
+  .m-menu__foot,
+  .navbar.is-open .m-menu__label,
+  .navbar.is-open .m-menu__link,
+  .navbar.is-open .m-menu__foot {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+
+/* =========================================================
+   6. BOTTOM BAR
+   Injected by js/m/base.js. Hidden until a screen has been scrolled; tucks
+   away on a fast scroll down, near the footer CTA, with the menu or a dialog
+   open, and while a field has focus (the keyboard is up).
+   ========================================================= */
+.m-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 90;
+  display: flex;
+  justify-content: center;
+  padding: 0 var(--gutter) calc(14px + var(--safe-bottom));
+  pointer-events: none;
+}
+
+.m-bar__btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 420px;
+  min-height: var(--m-bar-h);
+  padding: 0 20px;
+  border-radius: 999px;
+  background: var(--orange);
+  color: #ffffff;
+  font-size: var(--fs-body);
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.32),
+    0 1px 2px rgba(120, 52, 6, 0.2),
+    0 12px 30px rgba(26, 65, 70, 0.28);
+  pointer-events: auto;
+  touch-action: manipulation;
+  transform: translateY(calc(100% + 24px + var(--safe-bottom)));
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    transform 0.7s var(--ease-out),
+    opacity 0.5s var(--ease-out),
+    visibility 0s linear 0.7s,
+    background-color 0.3s ease;
+}
+
+.m-bar.is-shown .m-bar__btn {
+  transform: none;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    transform 0.9s var(--ease-out),
+    opacity 0.6s var(--ease-out),
+    visibility 0s,
+    background-color 0.3s ease;
+}
+
+.m-bar__btn:active {
+  background: var(--orange-edge);
+}
+
+.m-bar__btn svg {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.4s var(--ease-out);
+}
+
+.m-bar__btn:active svg {
+  transform: translateX(3px);
+}
+
+.m-bar__btn:focus-visible {
+  outline-color: var(--petrol);
+  border-radius: 999px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .m-bar__btn,
+  .m-bar.is-shown .m-bar__btn {
+    transform: none;
+    transition: opacity 0.2s ease, visibility 0s linear 0.2s;
+  }
+
+  .m-bar.is-shown .m-bar__btn {
+    transition: opacity 0.2s ease, visibility 0s;
+  }
+}
+
+
+/* =========================================================
+   7. FOOTER
+   ========================================================= */
+.footer__cta {
+  max-width: none;
+  margin: 0;
+  padding: 56px var(--gutter) 40px;
+  text-align: left;
+}
+
+.footer__icon {
+  width: 44px;
+  height: 44px;
+  margin: 0 0 20px;
+}
+
+.footer__cta h2 {
+  margin-bottom: 12px;
+  max-width: 16ch;
+}
+
+.footer__cta p {
+  margin-bottom: 28px;
+  max-width: 34ch;
+}
+
+.footer__buttons {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.footer__buttons .btn {
+  width: 100%;
+  min-height: 52px;
+  padding: 14px 24px;
+  border-radius: 999px;
+}
+
+.footer__buttons .btn::before {
+  border-radius: 999px;
+}
+
+.footer__bottom {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 32px;
+  width: auto;
+  margin: 0 var(--gutter);
+  padding: 32px 0 8px;
+  border-top: 1px solid rgba(169, 209, 215, 0.18);
+}
+
+/* Small tablets: the two buttons sit side by side */
+@media (min-width: 600px) {
+  .footer__buttons {
+    flex-direction: row;
+    max-width: 560px;
+  }
+
+  .footer__buttons .btn {
+    flex: 1 1 0;
+  }
+}
+
+/* The 404 footer has no CTA above it */
+.footer > .footer__bottom:first-child {
+  border-top: 0;
+  padding-top: 48px;
+}
+
+.footer__brand {
+  max-width: none;
+}
+
+.footer__brand img {
+  height: 28px;
+  margin-bottom: 14px;
+}
+
+.footer__brand p {
+  max-width: 36ch;
+  margin-bottom: 18px;
+  font-size: var(--fs-small);
+  line-height: 1.55;
+  opacity: 0.9;
+}
+
+.footer__socials {
+  gap: 10px;
+}
+
+/* Each mark sits in a 44px round chip so it reads as a tappable control */
+.footer__socials img,
+.footer__socials a {
+  box-sizing: content-box;
+  width: 17px;
+  height: 17px;
+  object-fit: contain;
+  padding: 13px;
+  border-radius: 50%;
+  background: rgba(241, 241, 230, 0.07);
+  border: 1px solid rgba(169, 209, 215, 0.16);
+}
+
+.footer__socials a {
+  display: inline-flex;
+  width: 17px;
+}
+
+.footer__socials a img {
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+/* Two columns of 48px rows with hairlines between them */
+.footer__links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 20px;
+}
+
+.footer__col {
+  gap: 0;
+}
+
+.footer__col a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--tap);
+  border-bottom: 1px solid rgba(169, 209, 215, 0.14);
+  color: var(--text-on-dark);
+  touch-action: manipulation;
+  transition: color 0.3s ease, padding-left 0.4s var(--ease-out);
+}
+
+.footer__col a::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  margin-right: 4px;
+  border-top: 1.5px solid var(--mist);
+  border-right: 1.5px solid var(--mist);
+  transform: rotate(45deg);
+  opacity: 0.5;
+}
+
+.footer__col a:active {
+  color: var(--cyan);
+  padding-left: 4px;
+}
+
+/* End row (injected): copyright and back to top */
+.m-footer-end {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 var(--gutter);
+  padding: 20px 0 calc(24px + var(--safe-bottom));
+  color: var(--mist);
+  font-size: var(--fs-label);
+  letter-spacing: 0.4px;
+}
+
+.m-footer-end small {
+  font-size: inherit;
+  opacity: 0.7;
+}
+
+.m-footer-end button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 4px 0 14px;
+  border: 0;
+  background: none;
+  color: var(--text-on-dark);
+  font: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.m-footer-end button span {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(169, 209, 215, 0.3);
+  transition: transform 0.4s var(--ease-out), background-color 0.3s ease;
+}
+
+.m-footer-end button:active span {
+  transform: translateY(-3px);
+  background: rgba(241, 241, 230, 0.08);
+}
+
+.m-footer-end svg {
+  width: 14px;
+  height: 14px;
+}
+
+
+/* =========================================================
+   8. FORMS & SHEET
+   ========================================================= */
+.form-field input,
+.form-field textarea,
+.form-field select,
+.brochure-form input,
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="search"],
+textarea,
+select {
+  font-size: 16px; /* under 16px iOS zooms the page on focus */
+}
+
+.form-field input,
+.form-field select,
+.brochure-form input {
+  min-height: var(--tap);
+}
+
+.form-field input,
+.form-field textarea,
+.brochure-form input {
+  -webkit-appearance: none;
+  appearance: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-field input:focus,
+.form-field textarea:focus,
+.brochure-form input:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(52, 182, 175, 0.18);
+}
+
+.contact-form .btn {
+  align-self: stretch;
+  min-height: 52px;
+}
+
+/* ---------- Brochure dialog as a bottom sheet ---------- */
+.brochure-dialog {
+  inset: auto 0 0 0;
+  top: auto;
+  margin: 0;
+  width: 100%;
+  max-width: none;
+  height: auto;
+  max-height: calc(100% - var(--safe-top) - 24px);
+  padding: 40px var(--gutter) calc(24px + var(--safe-bottom));
+  border-radius: 22px 22px 0 0;
+  box-shadow: 0 -12px 40px rgba(4, 25, 23, 0.22);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+}
+
+/* Drag handle */
+.brochure-dialog::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  width: 40px;
+  height: 4px;
+  margin-left: -20px;
+  border-radius: 2px;
+  background: var(--line);
+}
+
+.brochure-dialog[open]:not(.is-ready) {
+  animation: m-sheet-in 0.7s var(--ease-out) both;
+}
+
+.brochure-dialog[open]::backdrop {
+  animation: m-fade-in 0.6s ease both;
+}
+
+.brochure-dialog.is-settling {
+  transition: transform 0.45s var(--ease-out);
+}
+
+.brochure-dialog.is-closing {
+  animation: m-sheet-out 0.45s var(--ease-inout) forwards;
+}
+
+.brochure-dialog.is-closing::backdrop {
+  animation: m-fade-out 0.45s ease forwards;
+}
+
+.brochure-dialog h2 {
+  font-size: var(--fs-h3);
+  line-height: 1.2;
+  margin: 0 0 8px;
+}
+
+.brochure-dialog__close {
+  top: 14px;
+  right: 12px;
+  width: 44px;
+  height: 44px;
+  font-size: 28px;
+}
+
+.brochure-form {
+  gap: 12px;
+}
+
+.brochure-form input {
+  padding: 13px 14px;
+}
+
+.brochure-form .btn {
+  min-height: 52px;
+  margin-top: 8px;
+  border-radius: 999px;
+}
+
+.brochure-form .btn::before {
+  border-radius: 999px;
+}
+
+.brochure-thanks p {
+  font-size: var(--fs-body);
+  line-height: 1.55;
+  padding-bottom: 8px;
+}
+
+@keyframes m-sheet-in {
+  from { transform: translateY(100%); }
+  to { transform: none; }
+}
+
+@keyframes m-sheet-out {
+  from { transform: translateY(var(--m-drag, 0px)); }
+  to { transform: translateY(100%); }
+}
+
+@keyframes m-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes m-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
