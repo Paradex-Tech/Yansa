@@ -161,3 +161,19 @@ Commit these once the user confirms they look right.
   browser screenshots or measurement unless asked.
 - Don't undo a style or design choice the user explicitly asked for.
 - Commit when asked; push only with an explicit OK.
+
+## Phone layer (added 2026-10-11)
+- Phones (<= 768px) have their own layer, separate from the desktop files: `css/m/<area>.css` (linked with
+  `media="(max-width: 768px)"`, loaded after style.css so it wins by order) and `js/m/<area>.js` (each gated by
+  `isPhone()`, builds/tears down on the media query `change`, cleans up the DOM it injects). Areas: `base` (every
+  page: tokens, compact navbar + full-screen menu, sticky bottom CTA bar, footer, brochure bottom sheet), `home`,
+  `solution` (solution.html + pq-solved.html), `about`, `contact` (contact + 404), `yanq`.
+- Phone design is not the desktop stacked: hero pinned scene, swipe decks, sticky stacks, bottom sheets, scrubbed
+  YanQ scene with its own copy of the diagram player. Desktop must stay untouched: never edit style.css/script.js
+  for phone-only needs.
+- Test phones with the harness `.claude/phone.html` (gitignored; an iframe gives a true narrow viewport):
+  `http://localhost:8001/.claude/phone.html?u=/index.html&w=390&h=844&s=1500`. Headless Chrome cannot go under 500px
+  wide on its own. See `.claude/MOBILE_BRIEF.md`.
+- Known gaps: widths 769-900px (landscape phones, small tablets) still use the desktop menu/layout; contact page
+  has no tap-to-call/mail/maps cards because the site holds no phone/email/address yet; hero video on phones is the
+  10.8 MB 1280 cut.
