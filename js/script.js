@@ -318,13 +318,8 @@
     ];
 
     var FADE_MS = 300;  // matches .about-values__copy's opacity transition
-    var LOCK_MS = 700;  // least time between two values
-    var GAP_MS = 180;   // a pause this long ends a gesture (and its inertia)
     var index = -1;     // -1 so the first pass always paints
     var swapTimer = null;
-    var lastStep = 0;
-    var lastInput = 0;
-    var spent = false;  // the current gesture has already moved the panel
 
     function layout(active) {
       for (var i = 0; i < bars.length; i++) {
@@ -367,78 +362,6 @@
       }, FADE_MS);
     }
 
-    /* How far the panel's middle sits from the viewport's middle, or null
-       when it is too far off (or too tall) to take over the scroll. */
-    function offsetFromCentre() {
-      var rect = values.getBoundingClientRect();
-      if (rect.height > window.innerHeight) return null;
-      var offset = rect.top + rect.height / 2 - window.innerHeight / 2;
-      return Math.abs(offset) < window.innerHeight * 0.2 ? offset : null;
-    }
-
-    // Phones never hold the scroll here; the values cycle on their own
-    var phone = window.matchMedia('(max-width: 768px)');
-
-    // True when the gesture was spent on the panel rather than the page
-    function jack(dir) {
-      if (phone.matches) return false;
-      var offset = offsetFromCentre();
-      if (offset === null) return false;
-
-      // A gesture keeps firing (trackpad inertia, held keys) until it pauses
-      var now = Date.now();
-      if (now - lastInput > GAP_MS) spent = false;
-      lastInput = now;
-      if (spent || now - lastStep < LOCK_MS) return true;
-
-      var next = index + dir;
-      if (next < 0 || next >= VALUES.length) return false;
-
-      lastStep = now;
-      spent = true;
-      if (Math.abs(offset) > 4) {
-        window.scrollBy({ top: offset, behavior: reduceMotion ? 'auto' : 'smooth' });
-        return true;
-      }
-      show(next);
-      return true;
-    }
-
-    window.addEventListener('wheel', function (e) {
-      if (e.ctrlKey || !e.deltaY) return;
-      if (jack(e.deltaY > 0 ? 1 : -1)) e.preventDefault();
-    }, { passive: false });
-
-    var touchY = null;
-    var touchHeld = false;
-    window.addEventListener('touchstart', function (e) {
-      touchY = e.touches[0].clientY;
-      touchHeld = false;
-    }, { passive: true });
-    window.addEventListener('touchmove', function (e) {
-      if (touchY === null) return;
-      if (touchHeld) {
-        e.preventDefault();
-        return;
-      }
-      var dy = touchY - e.touches[0].clientY;
-      if (Math.abs(dy) < 12) return;
-      if (jack(dy > 0 ? 1 : -1)) {
-        touchHeld = true;
-        e.preventDefault();
-      }
-    }, { passive: false });
-
-    var KEYS = { ArrowDown: 1, PageDown: 1, ' ': 1, ArrowUp: -1, PageUp: -1 };
-    window.addEventListener('keydown', function (e) {
-      var dir = KEYS[e.key];
-      if (!dir || e.altKey || e.ctrlKey || e.metaKey) return;
-      if (e.key === ' ' && e.shiftKey) dir = -1;
-      var t = e.target;
-      if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT|BUTTON|SUMMARY)$/.test(t.tagName))) return;
-      if (jack(dir)) e.preventDefault();
-    });
-
     // Seeded without transitions so the bars are in place on first view
     track.classList.add('is-static');
     show(0);
@@ -449,9 +372,10 @@
       valueCopy.style.height = '';
     }, 200);
 
-    /* Phones: the values advance by themselves while the panel is on screen
-       (client request, 11 Oct), and a tap on a bar jumps to that value.
-       Reduced motion keeps them still until tapped. */
+    /* The values advance by themselves, in a loop, while the panel is on
+       screen, and a click or tap on a bar jumps to that value. Phones first
+       (client request, 11 Oct), desktop too since 12 Oct, replacing the
+       scroll-held version. Reduced motion keeps them still until clicked. */
     var AUTO_MS = 3500;
     var autoTimer = null;
     var onScreen = false;
@@ -464,8 +388,8 @@
     function startAuto() {
       stopAuto();
       // An announcement every few seconds would talk over a screen reader
-      if (valueLive) valueLive.setAttribute('aria-live', phone.matches && !reduceMotion ? 'off' : 'polite');
-      if (!phone.matches || !onScreen || reduceMotion) return;
+      if (valueLive) valueLive.setAttribute('aria-live', reduceMotion ? 'polite' : 'off');
+      if (!onScreen || reduceMotion) return;
       autoTimer = window.setInterval(function () {
         show((index + 1) % VALUES.length);
       }, AUTO_MS);
@@ -473,7 +397,6 @@
 
     bars.forEach(function (bar, i) {
       bar.addEventListener('click', function () {
-        if (!phone.matches) return;
         show(i);
         startAuto();
       });
@@ -485,7 +408,6 @@
         if (onScreen) startAuto(); else stopAuto();
       }, { threshold: 0.4 }).observe(values);
     }
-    phone.addEventListener('change', startAuto);
 
     if (panel && !reduceMotion && hasObserver) {
       values.classList.add('is-armed');

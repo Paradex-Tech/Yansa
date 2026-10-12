@@ -1101,8 +1101,8 @@
 
 
 /* ---------- Solutions We Offer + team statement ----------
-   The four product groups stack as compact cards; services wrap as chips on
-   their petrol band. The statement mirrors the About page's phone treatment. */
+   The four groups (Active, Passive, Hybrid, Services) stack as compact
+   cards. The statement mirrors the About page's phone treatment. */
 .offered {
   padding: var(--section-pad-y, 64px) var(--gutter, 20px);
 }
@@ -1125,20 +1125,6 @@
   display: flex;
   align-items: center;
   padding: 0;
-}
-
-.offered-services {
-  padding: 20px;
-}
-
-.offered-services h3 {
-  flex-basis: 100%;
-}
-
-.offered-services a {
-  min-height: 44px;
-  display: inline-flex;
-  align-items: center;
 }
 
 .about-statement {

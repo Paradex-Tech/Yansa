@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>PQ Solved | Yansa</title>
-  <meta name="description" content="PQ Solved: the active and passive power quality solutions and services behind every Yansa diagnosis.">
+  <meta name="description" content="PQ Solved: the active, passive and hybrid power quality solutions and services behind every Yansa diagnosis.">
   <meta name="robots" content="noindex">
   <meta name="theme-color" content="#1a4146">
 
@@ -12,7 +12,7 @@
   <meta property="og:site_name" content="Yansa">
   <meta property="og:locale" content="en_IN">
   <meta property="og:title" content="PQ Solved | Yansa">
-  <meta property="og:description" content="The active and passive power quality solutions and services behind every Yansa diagnosis.">
+  <meta property="og:description" content="The active, passive and hybrid power quality solutions and services behind every Yansa diagnosis.">
     <meta property="og:image" content="https://yansa.in/images/og-image.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -76,14 +76,14 @@
           <li>Low power factor <b>&rarr;</b> Detuned APFC</li>
           <li>Fast load swings <b>&rarr;</b> SVG</li>
           <li>Welding &amp; cranes <b>&rarr;</b> Thyristor switching</li>
-          <li>Neutral overload <b>&rarr;</b> Neutral current balancing</li>
+          <li>Mixed duty <b>&rarr;</b> Hybrid panel</li>
         </ul>
         <ul aria-hidden="true">
           <li>Harmonics <b>&rarr;</b> Active harmonic filter</li>
           <li>Low power factor <b>&rarr;</b> Detuned APFC</li>
           <li>Fast load swings <b>&rarr;</b> SVG</li>
           <li>Welding &amp; cranes <b>&rarr;</b> Thyristor switching</li>
-          <li>Neutral overload <b>&rarr;</b> Neutral current balancing</li>
+          <li>Mixed duty <b>&rarr;</b> Hybrid panel</li>
         </ul>
       </div>
     </section>
@@ -130,6 +130,7 @@
       <div class="pqs-pills__inner">
         <a href="#active">Active</a>
         <a href="#passive">Passive</a>
+        <a href="#hybrid">Hybrid</a>
         <a href="#services">Services</a>
       </div>
     </nav>
@@ -146,14 +147,6 @@
             <div class="solution-card__detail" hidden>
               <p>An IGBT-based inverter that injects or absorbs reactive current continuously, correcting leading or lagging power factor within a cycle. There are no capacitor steps to switch, so there is no inrush and no resonance risk, and the output holds even when grid voltage sags. Suited to fast, fluctuating loads such as welding lines, cranes and compressors.</p>
               <p><strong>Problem addressed:</strong> Leading &amp; lagging power factor, load imbalance</p>
-            </div>
-          </button>
-          <button class="solution-card solution-card--photo" type="button">
-            <img src="images/products/svg-plus.jpg" alt="SVG+ monitoring screen showing the transformer, loads and filter" loading="lazy" decoding="async">
-            <div class="solution-card__label"><span class="solution-card__name">Static VAR Generator Plus (SVG+)</span><span class="plus">+</span></div>
-            <div class="solution-card__detail" hidden>
-              <p>The SVG platform with harmonic mitigation built in. Alongside stepless reactive compensation and phase balancing, it cancels selected low-order harmonic currents, so a single unit covers both power factor and distortion on sites where harmonic levels are moderate.</p>
-              <p><strong>Problem addressed:</strong> Power factor, load imbalance &amp; moderate harmonics</p>
             </div>
           </button>
           <button class="solution-card solution-card--photo" type="button">
@@ -199,14 +192,6 @@
             </div>
           </button>
           <button class="solution-card solution-card--photo solution-card--product" type="button">
-            <img src="images/products/apfc-relay.jpg" alt="APFC relay power factor controller" loading="lazy" decoding="async">
-            <div class="solution-card__label"><span class="solution-card__name">APFC Relay</span><span class="plus">+</span></div>
-            <div class="solution-card__detail" hidden>
-              <p>The controller at the heart of an automatic power factor correction panel. It measures power factor continuously and switches capacitor steps in and out to hold the target, rotating steps to share wear and raising alarms for over-voltage, high harmonics or a failed step.</p>
-              <p><strong>Problem addressed:</strong> Lagging power factor</p>
-            </div>
-          </button>
-          <button class="solution-card solution-card--photo solution-card--product" type="button">
             <img src="images/products/line-chokes.jpg" alt="Three-phase line choke" loading="lazy" decoding="async">
             <div class="solution-card__label"><span class="solution-card__name">Line Chokes</span><span class="plus">+</span></div>
             <div class="solution-card__detail" hidden>
@@ -219,49 +204,49 @@
     </section>
 
     <!-- SERVICES -->
+    <!-- HYBRID SOLUTIONS: active and passive in one panel. Text-only cards
+         until Yansa sends photos of its own panels. -->
+    <section class="solutions-row" id="hybrid">
+      <div class="solutions-row__inner">
+        <h2><span class="solutions-row__label solutions-row__label--hybrid">Hybrid</span> Solutions</h2>
+        <p>Active and passive correction engineered into one panel. The passive stage carries the steady load economically, while the active stage handles what changes fast.</p>
+        <div class="solutions-row__grid">
+          <button class="solution-card" type="button">
+            <div class="solution-card__label"><span class="solution-card__name">APFC Panel</span><span class="plus">+</span></div>
+            <div class="solution-card__detail" hidden>
+              <p>An automatic power factor correction panel: capacitor steps with series reactors, switched by an APFC controller through contactors or thyristor modules. It holds power factor at the target as the load changes, without letting harmonics resonate with the capacitors.</p>
+              <p><strong>Problem addressed:</strong> Lagging power factor</p>
+            </div>
+          </button>
+          <button class="solution-card" type="button">
+            <div class="solution-card__label"><span class="solution-card__name">AHF Panel</span><span class="plus">+</span></div>
+            <div class="solution-card__detail" hidden>
+              <p>A complete panel built around an active harmonic filter, with its protection and switchgear, and a detuned capacitor stage where the site also needs power factor correction. The filter cancels harmonics in real time while the passive stage carries the steady reactive load.</p>
+              <p><strong>Problem addressed:</strong> High harmonics &amp; power factor</p>
+            </div>
+          </button>
+        </div>
+      </div>
+    </section>
+
     <section class="solutions-row" id="services">
       <div class="solutions-row__inner">
         <h2><span class="solutions-row__label solutions-row__label--services">Services</span></h2>
         <p>Engineering that starts before the equipment and stays long after it is installed.</p>
         <div class="solutions-row__grid">
           <button class="solution-card solution-card--photo" type="button">
-            <img src="images/products/yanq-analysis.jpg" alt="Yan-Q report: plant currents and harmonic levels before and after correction" loading="lazy" decoding="async">
-            <div class="solution-card__label"><span class="solution-card__name">Yan-Q Power Quality Analysis</span><span class="plus">+</span></div>
-            <div class="solution-card__detail" hidden>
-              <p>A measured study before anything is specified. Analysers log voltage, current, harmonics and power factor at the incomer and key feeders, and every parameter is benchmarked against IEEE 519-2022. The outcome is a clear diagnosis and a correction sized to the site&#8217;s own data, not to a rule of thumb.</p>
-              <p><strong>Problem addressed:</strong> Power factor and harmonics</p>
-            </div>
-          </button>
-          <button class="solution-card solution-card--photo" type="button">
-            <img src="images/products/service-power-factor.jpg" alt="Engineer inspecting an open capacitor bank panel" loading="lazy" decoding="async">
-            <div class="solution-card__label"><span class="solution-card__name">Power Factor Correction</span><span class="plus">+</span></div>
-            <div class="solution-card__detail" hidden>
-              <p>Correction designed from measured demand, using capacitors, SVGs or both together, so the site stops paying for reactive power and frees up transformer and cable capacity.</p>
-              <p><strong>Problem addressed:</strong> Low power factor &amp; penalties</p>
-            </div>
-          </button>
-          <button class="solution-card solution-card--photo" type="button">
-            <img src="images/products/service-harmonics.jpg" alt="Power quality analyser showing distorted waveforms and a harmonic spectrum" loading="lazy" decoding="async">
-            <div class="solution-card__label"><span class="solution-card__name">Harmonic Mitigation</span><span class="plus">+</span></div>
-            <div class="solution-card__detail" hidden>
-              <p>Passive or active filtering chosen from the harmonic spectrum actually measured, bringing distortion within IEEE 519-2022 limits and protecting connected equipment.</p>
-              <p><strong>Problem addressed:</strong> Harmonics</p>
-            </div>
-          </button>
-          <button class="solution-card solution-card--photo" type="button">
-            <img src="images/products/service-neutral.jpg" alt="Clamp meter measuring current on a neutral cable beside the three phase cables" loading="lazy" decoding="async">
-            <div class="solution-card__label"><span class="solution-card__name">Neutral Current Balancing</span><span class="plus">+</span></div>
-            <div class="solution-card__detail" hidden>
-              <p>Uneven single-phase and nonlinear loads push excess current into the neutral. Balancing the phases brings that current down, cutting heating in cables and transformers.</p>
-              <p><strong>Problem addressed:</strong> Neutral overcurrent, phase imbalance</p>
-            </div>
-          </button>
-          <button class="solution-card solution-card--photo" type="button">
             <img src="images/products/service-amc.jpg" alt="Technician servicing a power factor correction panel on a maintenance visit" loading="lazy" decoding="async">
             <div class="solution-card__label"><span class="solution-card__name">Annual Maintenance Contract (AMC)</span><span class="plus">+</span></div>
             <div class="solution-card__detail" hidden>
               <p>Scheduled inspection, testing and servicing of installed correction equipment, so it keeps performing as designed and faults are caught before they cost production time.</p>
               <p><strong>Problem addressed:</strong> Long-term reliability</p>
+            </div>
+          </button>
+          <button class="solution-card" type="button">
+            <div class="solution-card__label"><span class="solution-card__name">Commissioning Support (Online &amp; Offline)</span><span class="plus">+</span></div>
+            <div class="solution-card__detail" hidden>
+              <p>Our engineers commission new installations on site, and support your team remotely through start-up, settings and troubleshooting, so the equipment is proven to work as designed before it is handed over.</p>
+              <p><strong>Problem addressed:</strong> A verified, trouble-free start-up</p>
             </div>
           </button>
         </div>
