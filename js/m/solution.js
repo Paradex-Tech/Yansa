@@ -385,7 +385,8 @@
       var p = reduce ? 1 : ease(clamp01((vh * 0.92 - r.top) / (vh * 0.6)));
       fan.style.setProperty('--pq-fan', p.toFixed(4));
 
-      var phase = reduce ? 0 : window.pageYOffset * 0.006;
+      // The small waves hold still, drawn clean (client request, 12 Oct)
+      var phase = 0;
       waves.forEach(function (svg) {
         var box = svg.viewBox.baseVal;
         var cycles = parseFloat(svg.getAttribute('data-cycles')) || 3;
@@ -393,10 +394,10 @@
         var raw = svg.querySelector('.pq-wave__raw');
         var clean = svg.querySelector('.pq-wave__clean');
         if (!raw || !clean) return;
-        raw.setAttribute('d', wavePath(box.width, box.height, amp, cycles, (1 - p) * 1.15, phase));
-        raw.style.opacity = ((1 - p) * 0.9).toFixed(3);
+        raw.setAttribute('d', wavePath(box.width, box.height, amp, cycles, 0, phase));
+        raw.style.opacity = '0';
         clean.setAttribute('d', wavePath(box.width, box.height, amp, cycles, 0, phase));
-        clean.style.opacity = (0.4 + 0.6 * p).toFixed(3);
+        clean.style.opacity = '1';
       });
     }
 

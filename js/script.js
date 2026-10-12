@@ -422,10 +422,12 @@
 
 
   /* ---------- The Problems These Loads Create (solutions) ----------
-     Scroll position picks the front card as the section's middle travels
-     from 70% to 30% of the viewport. Cards already passed lift away and the
-     rest cascade behind the front one; each card keeps its slot as a class
-     so every move is one CSS transition. */
+     Wider than a phone, the three cards sit still in one row (.is-row) with
+     their icons drawn and still (client request, 12 Oct). On phones, scroll
+     position picks the front card as the section's middle travels from 70%
+     to 30% of the viewport. Cards already passed lift away and the rest
+     cascade behind the front one; each card keeps its slot as a class so
+     every move is one CSS transition. */
   function initProblems() {
     var problems = document.querySelector('.problems');
     if (!problems) return;
@@ -437,6 +439,7 @@
 
     var SLOTS = ['is-front', 'is-next', 'is-later'];
     var index = -1;
+    var wide = window.matchMedia('(min-width: 769px)');
 
     function deal(front) {
       if (front === index) return;
@@ -466,12 +469,18 @@
 
     function redeal() {
       index = -1;
+      problems.classList.toggle('is-row', wide.matches);
+      if (wide.matches) {
+        cards.forEach(function (card) { card.className = 'problem-card'; });
+        return;
+      }
       deal(fromScroll());
     }
 
     onScrollFrame(function () {
-      deal(fromScroll());
+      if (!wide.matches) deal(fromScroll());
     });
+    wide.addEventListener('change', redeal);
 
     // First deal without transitions
     stack.classList.add('is-static');
@@ -934,8 +943,8 @@
         var p = progress(it, rect);
         it.el.style.setProperty('--pq-p', p.toFixed(4));
         it.el.style.setProperty('--pq-fan', p.toFixed(4));
-        var phase = reduceMotion ? 0 : window.pageYOffset * 0.006;
-        it.waves.forEach(function (svg) { draw(svg, p, phase); });
+        // The small waves hold still, drawn clean (client request, 12 Oct)
+        it.waves.forEach(function (svg) { draw(svg, 1, 0); });
         if (it.rings.length) {
           // Distance travelled since the section started entering, past p = 1 too
           it.q = Math.max(0, (window.innerHeight * 0.85 - rect.top) / (window.innerHeight * 0.8));

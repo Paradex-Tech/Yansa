@@ -960,12 +960,14 @@ ul {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(4, 25, 23, 0.55) 0%,
-    rgba(4, 25, 23, 0.35) 50%,
-    rgba(4, 25, 23, 0.55) 100%
-  );
+  background:
+    radial-gradient(ellipse 46% 30% at 50% 45%, rgba(4, 25, 23, 0.4) 0%, rgba(4, 25, 23, 0) 100%),
+    linear-gradient(
+      180deg,
+      rgba(4, 25, 23, 0.55) 0%,
+      rgba(4, 25, 23, 0.35) 50%,
+      rgba(4, 25, 23, 0.55) 100%
+    );
 }
 
 .header-placeholder__overlay > * {
@@ -978,32 +980,58 @@ ul {
   color: #ffffff;
   margin-bottom: 16px;
   font-weight: 600;
-  text-shadow: 0 1px 2px rgba(4, 25, 23, 0.5), 0 2px 28px rgba(4, 25, 23, 0.55);
+  text-shadow: 0 1px 3px rgba(4, 25, 23, 0.7), 0 2px 32px rgba(4, 25, 23, 0.75);
 }
 
 .header-placeholder__overlay p {
   color: #ffffff;
   margin: 0 auto;
   font-weight: 500;
-  text-shadow: 0 1px 2px rgba(4, 25, 23, 0.6), 0 1px 18px rgba(4, 25, 23, 0.6);
+  text-shadow: 0 1px 3px rgba(4, 25, 23, 0.75), 0 1px 18px rgba(4, 25, 23, 0.7);
 }
 
 .contact-hero .header-placeholder__overlay p {
   max-width: 672px;
 }
 
-/* About and Solution: regular weight titles, as on Home */
-.about-hero .header-placeholder__overlay h1,
-.solution-hero .header-placeholder__overlay h1 {
+/* Every hero title in regular weight, as on Home */
+.header-placeholder__overlay h1 {
   font-weight: 400;
 }
 
-/* About and Solution land their titles where Home's sits: the h1 on the
+/* Same size on every hero: Home's script shows its title and subline at
+   1.5 times the H1 and Lead tiers, so the inner pages match that scale */
+@media (min-width: 769px) {
+  .about-hero .header-placeholder__overlay,
+  .solution-hero .header-placeholder__overlay,
+  .contact-hero .header-placeholder__overlay,
+  .yanq-hero-intro .header-placeholder__overlay {
+    --fs-scale: 1.5;
+  }
+
+  /* The YanQ tagline keeps its own size between title and subline */
+  .header-placeholder__overlay .yanq-hero-intro__tag {
+    --fs-scale: 1;
+  }
+
+  .yanq-hero-intro .header-placeholder__overlay h1 {
+    font-size: calc(var(--fs-h1) * var(--fs-scale, 1));
+    line-height: 1.15;
+    letter-spacing: -1px;
+  }
+
+  .header-placeholder__overlay > * {
+    max-width: 1100px;
+  }
+}
+
+/* About, Solution and Contact land their titles where Home's sits: the h1 on the
    middle of the screen (the extra bottom padding equals the navbar above
    the photo), the subline hanging below it, as in the Home hero. */
 @media (min-width: 769px) {
   .about-hero .header-placeholder__overlay,
-  .solution-hero .header-placeholder__overlay {
+  .solution-hero .header-placeholder__overlay,
+  .contact-hero .header-placeholder__overlay {
     display: grid;
     grid-template-rows: 1fr auto 1fr;
     justify-items: center;
@@ -1011,13 +1039,15 @@ ul {
   }
 
   .about-hero .header-placeholder__overlay h1,
-  .solution-hero .header-placeholder__overlay h1 {
+  .solution-hero .header-placeholder__overlay h1,
+  .contact-hero .header-placeholder__overlay h1 {
     grid-row: 2;
     margin-bottom: 0;
   }
 
   .about-hero .header-placeholder__overlay p,
-  .solution-hero .header-placeholder__overlay p {
+  .solution-hero .header-placeholder__overlay p,
+  .contact-hero .header-placeholder__overlay p {
     grid-row: 3;
     align-self: start;
     margin-top: 16px;
@@ -1130,7 +1160,10 @@ ul {
   color: #ffffff;
   /* Legible over bright film without bringing back the full overlay the
      client removed: a tight edge shadow plus a wide soft halo */
-  text-shadow: 0 1px 2px rgba(4, 25, 23, 0.55), 0 2px 32px rgba(4, 25, 23, 0.6);
+  text-shadow: 0 1px 3px rgba(4, 25, 23, 0.7), 0 2px 32px rgba(4, 25, 23, 0.75);
+  /* A soft dark pool behind the words only, so they read over the brightest
+     frames of the film while the edges of the picture stay untouched */
+  background: radial-gradient(ellipse 52% 34% at 50% 50%, rgba(4, 25, 23, 0.7) 0%, rgba(4, 25, 23, 0.34) 55%, rgba(4, 25, 23, 0) 100%);
 }
 
 .hero__heading h1 {
@@ -2260,6 +2293,72 @@ ul {
   }
 }
 
+/* Wider than a phone: the three cards sit still in one row, icons drawn
+   and at rest (client request, 12 Oct). The section is light so it does
+   not run into the dark PQ entry below it. */
+@media (min-width: 769px) {
+  .problems {
+    background: var(--ivory);
+  }
+
+  .problems h2 {
+    color: var(--ink);
+  }
+
+  .problems h2 .accent {
+    color: var(--highlight);
+  }
+
+  .problems.is-row .problems__sticky {
+    padding: 112px 0;
+  }
+
+  .problems.is-row .problems__stack {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    max-width: 1152px;
+    margin: 0 auto;
+  }
+
+  /* Simple cards: icon, title, copy. The big numerals are dropped. */
+  .problems.is-row .problem-card {
+    grid-area: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 32px 28px 36px;
+    transform: none;
+    opacity: 1;
+    transition: none;
+    pointer-events: auto;
+  }
+
+  .problems.is-row .problem-card > * {
+    opacity: 1;
+    transition: none;
+  }
+
+  .problems.is-row .problem-card__num {
+    display: none;
+  }
+
+  .problems.is-row .problem-card__icon {
+    order: -1;
+    width: 84px;
+    height: 56px;
+    margin-left: 0;
+  }
+
+  .problems.is-row .problem-card__text p {
+    max-width: none;
+  }
+
+  .problems.is-row .problems__dots {
+    display: none;
+  }
+}
+
 /* ---------- Active / Passive / Hybrid solution rows ---------- */
 .solutions-row {
   background: var(--cream);
@@ -2536,6 +2635,24 @@ ul {
 @media (max-width: 900px) {
   .inaction__grid {
     grid-template-columns: 1fr;
+  }
+}
+
+
+/* ---------- What Inaction Costs: light on wider screens ----------
+   Between the dark PQ entry and the dark footer, so each dark band reads as
+   its own section. The cards keep their dark face. */
+@media (min-width: 769px) {
+  .inaction {
+    background: var(--cream);
+  }
+
+  .inaction h2 {
+    color: var(--ink);
+  }
+
+  .inaction__inner > p {
+    color: var(--text);
   }
 }
 
