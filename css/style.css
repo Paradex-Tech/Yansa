@@ -2765,8 +2765,7 @@ ul {
   overflow: visible;
 }
 
-.pq-wave path,
-.glimpse__wave path {
+.pq-wave path {
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -2942,11 +2941,13 @@ ul {
   outline: none;
 }
 
-.glimpse__wave {
+/* One still icon per family, orange as every graphic accent is */
+.glimpse__icon {
   display: block;
-  width: 100%;
-  height: 44px;
-  margin-bottom: 14px;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 16px;
+  color: var(--orange);
 }
 
 .glimpse__tag {
@@ -4697,7 +4698,7 @@ ul {
   width: 100%;
   max-width: 1152px;
   margin: 0 auto 60px;
-  color: #989898;
+  color: var(--ink);
 }
 
 /* Two columns; a hairline divides each row, centred on it and short of
@@ -4752,7 +4753,7 @@ ul {
 
 .deliver-stat__num {
   display: block;
-  color: #989898;
+  color: var(--text);
   letter-spacing: 0.5px;
 }
 
@@ -4767,12 +4768,12 @@ ul {
 }
 
 .deliver-stat h3 {
-  color: #008484;
+  color: var(--teal-deep);
   margin-bottom: 10px;
 }
 
 .deliver-stat p {
-  color: #7d7d7d;
+  color: var(--text);
 }
 
 /* While How YanQ Works is pinned, this section is its outro's end state.

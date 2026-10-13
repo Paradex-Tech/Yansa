@@ -2389,7 +2389,10 @@
 
       flow.style.setProperty('--yanq-flow-bg', out > 0 ?
         mix(PETROL, CREAM, smooth(clamp01(out / 0.7))) : mix(CREAM, PETROL, turn));
-      flow.style.setProperty('--yanq-flow-title', mix(INK, GREY, turn));
+      // Back on cream, the heading darkens again so What YanQ Delivers
+      // reads in ink, not the grey it wore on petrol (client request, 12 Oct)
+      flow.style.setProperty('--yanq-flow-title', out > 0 ?
+        mix(GREY, INK, smooth(clamp01(out / 0.7))) : mix(INK, GREY, turn));
       flow.style.setProperty('--yanq-flow-brand', mix(INK, CYAN, turn));
       flow.style.setProperty('--yanq-flow-intro', (1 - smooth(clamp01((u - READ) / half))).toFixed(4));
       flow.style.setProperty('--yanq-flow-reveal', smooth(clamp01((u - READ - half) / half)).toFixed(4));

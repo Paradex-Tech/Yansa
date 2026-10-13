@@ -603,8 +603,9 @@
   background: color-mix(in srgb, var(--petrol, #1a4146) 78%, #ffffff 22%);
 }
 
-.glimpse__wave {
-  height: 30px;
+.glimpse__icon {
+  width: 32px;
+  height: 32px;
   margin-bottom: 10px;
 }
 
