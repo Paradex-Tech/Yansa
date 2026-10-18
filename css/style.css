@@ -4142,9 +4142,15 @@ ul {
   color: var(--cyan);
 }
 
+/* Tagline and subline sit softer than pure white, with the same weight as the
+   Solution hero's subline */
 .header-placeholder__overlay .yanq-hero-intro__tag {
-  font-weight: 600;
+  font-weight: 500;
   margin-bottom: 8px;
+}
+
+.yanq-hero-intro .header-placeholder__overlay p {
+  color: rgba(255, 255, 255, 0.86);
 }
 
 .yanq-hero h2 {
@@ -4333,6 +4339,15 @@ ul {
   align-items: center;
   gap: 16px;
   flex-wrap: wrap;
+}
+
+/* Step 4 hands over to the Solution page's PQ Solved entry */
+.yanq-flow__cta {
+  margin-top: 24px;
+}
+
+.yanq-flow__cta:hover .pq-arrow {
+  transform: translateX(6px);
 }
 
 .yanq-pill {
