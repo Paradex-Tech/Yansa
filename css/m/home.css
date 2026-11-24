@@ -70,8 +70,8 @@
    position. svh keeps the runway steady while the browser's toolbar slides;
    the stage itself follows the visible height (dvh). */
 .hero.m-hero-on {
-  height: calc(100vh - var(--m-hero-top, 0px) + 65vh);
-  height: calc(100svh - var(--m-hero-top, 0px) + var(--m-hero-runway, 65svh));
+  height: calc(100vh - var(--m-hero-top, 0px) + 60vh);
+  height: calc(100svh - var(--m-hero-top, 0px) + var(--m-hero-runway, 60svh));
   overflow-x: clip;
 }
 
@@ -159,7 +159,7 @@
    word that gets the room. The wave lies low behind the button, dimmed so
    it never sits on the copy, and drifts sideways with the scroll. */
 .diagnosis {
-  padding: calc(var(--section-pad-y, 64px) + 8px) var(--gutter, 20px) calc(var(--section-pad-y, 64px) + 56px);
+  padding: calc(var(--section-pad-y, 64px) + 8px) var(--gutter, 20px) calc(var(--section-pad-y, 64px) + 8px);
 }
 
 .diagnosis__eyebrow {
@@ -217,7 +217,7 @@
   display: flex;
   gap: 12px;
   margin: 0 calc(-1 * var(--gutter, 20px));
-  padding: 8px var(--gutter, 20px) 20px;
+  padding: 8px var(--gutter, 20px) 12px;
   width: auto;
   max-width: none;
   overflow-x: auto;
@@ -238,7 +238,7 @@
   flex: 0 0 min(80%, 340px);
   min-height: 300px;
   padding: 24px 22px 26px;
-  gap: 32px;
+  gap: 20px;
   scroll-snap-align: start;
   scroll-snap-stop: always;
   counter-increment: symptom;
@@ -310,12 +310,18 @@
   transition-delay: 0.12s;
 }
 
+/* The dots already space the link from the deck */
+.symptoms__more {
+  margin-top: 8px;
+  text-align: left;
+}
+
 /* Progress dots: a 44px tap target each, the drawn dot inside it */
 .m-deck-dots {
   display: flex;
   justify-content: center;
   gap: 0;
-  margin-top: 4px;
+  margin-top: 0;
 }
 
 .m-deck-dot {
@@ -398,7 +404,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
   padding-left: 52px;
   counter-reset: why;
 }
@@ -488,14 +494,16 @@
 .why.m-why-on .why-card p {
   grid-column: 1 / -1;
   margin-top: 14px;
+  margin-bottom: 0;
 }
 
 /* The card is one link: its foot is the tap cue, and a press tints the border
    (the desktop lift is off here) */
 .why.m-why-on .why-card__go {
   grid-column: 1 / -1;
-  margin-top: 4px;
-  padding-top: 14px;
+  margin-top: 8px;
+  padding-top: 0;
+  border-top: 0;
 }
 
 .why-card {

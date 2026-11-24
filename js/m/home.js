@@ -80,7 +80,7 @@
   /* ---------- Hero: portrait scroll scene ----------
      The phone version of initHero (which bails out at 768px and below). The
      stage sticks under the navbar and one scrubbed timeline p (0 to 1) plays
-     over a runway of 0.65 screens (it was 1.3 with the film; the stages
+     over a runway of 0.6 screens (it was 1.3 with the film; the stages
      overlap more now), followed with a damped lerp:
        0    to 0.18  the navbar and the heading fade, leaving the bare still.
                      The still already reaches up under the navbar, so nothing
@@ -119,7 +119,7 @@
     ];
     var PHOTO_LEN = 0.38; // how much of p each photo takes to arrive
     var STILL_ZOOM = 1.06;
-    var RUNWAY = 0.65;   // screens of scroll the scene takes
+    var RUNWAY = 0.6;    // screens of scroll the scene takes
     var CARD_W = 0.6;    // of the screen width
     var CARD_RATIO = 1.25;
     var CARD_MAX_W = 340;
