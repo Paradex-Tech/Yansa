@@ -1049,15 +1049,13 @@ ul {
   justify-content: center;
 }
 
-/* Full screen: large display statements */
-.diagnosis,
+/* Full screen: large display statements. (Home's Diagnosis, Symptoms and
+   Why Yansa sit at their content height with the normal section padding.) */
 .yanq-hero {
   min-height: 100vh;
 }
 
 /* Content sections: card grids, forms, lists */
-.symptoms,
-.why,
 .cases,
 .contact-body,
 .inaction,
