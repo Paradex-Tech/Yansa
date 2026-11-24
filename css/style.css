@@ -4473,6 +4473,11 @@ ul {
   color: #c5d9d0;
 }
 
+/* The standard's name never breaks across lines */
+.yanq-step__tag .nb {
+  white-space: nowrap;
+}
+
 /* Arrow: a thin line and head, orange, the drawings' stroke weight */
 .yanq-arrow {
   position: absolute;
