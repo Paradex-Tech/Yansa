@@ -112,3 +112,7 @@ Commits fb3928b (strict-img on privacy/terms footers, 404 description, yanq-wave
 f9d30a3 (AGENTS.md rewritten). All scripts pass: links (+ --strict-img), check-nav-footer, check-head, check-site,
 measure (0 errors). check-dead-css found no CSS from retired sections left (only about-hero__decor--1..4, accent-*,
 results__* leftovers, listed not deleted). Unused images and the 35 MB videos/ folder are listed in AGENTS.md open items.
+
+## 2026-11-24 changes after Shrey's review
+- S9 nav drop-down panels (2 UI rounds): 551b0b5 spec, c1554f4, ee1b518, 3d0f498, 4f175d6.
+- S10 audit-2 small fixes (see audit-2.md), S11 Solutions statement band + chips, S12 Services engagement hover, S13 Home hero video back (Shrey overrides the sitemap's video removal; the still was a stand-in).

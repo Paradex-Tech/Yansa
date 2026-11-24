@@ -22,7 +22,7 @@ Phone footer cut from 1.35 screens to under 1 on every page.
 
 | # | Section | What it shows | Why here / what changed |
 |---|---|---|---|
-| 1 | Hero | "Engineering Power Quality", the same shrink-to-card move with the four photos, then "We Measure What Others Miss." + Explore Solutions / Contact Us | Keeps the old signature. **Video removed** (Sanya): a still photo plays the same choreography. Pinned runway cut from 2.8 to about 1.8 screens |
+| 1 | Hero | "Engineering Power Quality", the same shrink-to-card move with the four photos, then "We Measure What Others Miss." + Explore Solutions / Contact Us | Keeps the old signature. ~~Video removed~~ **Video back** (Shrey, 2026-11-24, overrides Sanya's ask): the old hero video plays the same choreography; the still was a stand-in. Pinned runway cut from 2.8 to about 1.8 screens |
 | 2 | Precision starts with Diagnosis. | Same paragraph and CTA, plus a new line: a team of doctorates in power electronics, backed by engineers and associates | Sanya's sub point. One line, no new section |
 | 3 | Symptoms precede failure. Always. | The four symptom cards, each with a small drawn animation of what the failure means: breaker tripping, motor running hot, bill meter climbing, efficiency gauge falling. Link: "Which loads cause these? Know Your Loads" | Sanya: more descriptive visuals. Links the reader into the new page |
 | 4 | Quote | Same pull quote | Unchanged |
@@ -124,7 +124,7 @@ Unchanged apart from the form heading: **"Your Facility. Our Solution."** ("Tell
 ## Open items (not blocking the build)
 1. **Real hybrid panel photos** from Yansa. Stand-ins: `images/products/apfc-relay.jpg` (APFC panel) and
    `images/products/svg-plus.jpg` (AHF panel).
-2. Red VFD light in the hero (Sanya marked it optional): skipped, since the hero video goes.
+2. Red VFD light in the hero (Sanya marked it optional): skipped (decided when the video was out; the video is back as of 2026-11-24).
 3. Wording I chose without Sanya: "YanQ Power Quality Study" as one service; "Energy Transition" tab;
    "Power Quality" dropped from industries.
 4. The Yansa presentation PDF has an electricity-bill case study. Case Studies stay hidden unless you want
