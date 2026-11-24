@@ -4761,6 +4761,102 @@ ul {
   }
 }
 
+/* ---------- Engagement row: progress on hover and focus ----------
+   A second line (the first step's ::before, so no new markup) scales from
+   step 1 to the active step; the script writes --to (0 to 4) and marks steps
+   .is-active / .is-later. Earlier steps stay lit, later ones go quiet.
+   Transform, opacity and colour only. Nothing here changes the row's size.
+   Armed by .is-ready, once the draw-in has finished. */
+.svc-step:first-child::before {
+  content: "";
+  position: absolute;
+  top: 21px;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--teal-deep);
+  z-index: 1;
+  pointer-events: none;
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform var(--svc-t, 240ms) cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.svc-flow__row.is-engaged .svc-step:first-child::before {
+  transform: scaleX(calc(var(--to, 0) / 4));
+}
+
+.svc-step__num {
+  transition: transform var(--svc-t, 240ms) cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.js-svc .svc-flow__row.is-ready { --svc-t: 240ms; }
+.js-svc .svc-flow__row.is-ready.is-engaged { --svc-t: 320ms; }
+
+/* Once the draw-in is done, its staggered delays are dropped */
+.js-svc .svc-flow__row.is-ready .svc-step__word,
+.js-svc .svc-flow__row.is-ready .svc-step__line {
+  transition: opacity var(--svc-t) cubic-bezier(0.2, 0.7, 0.2, 1), transform var(--svc-t) cubic-bezier(0.2, 0.7, 0.2, 1), color var(--svc-t) cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.js-svc .svc-flow__row.is-ready .svc-step__num::before,
+.js-svc .svc-flow__row.is-ready .svc-step__num::after {
+  transition: opacity var(--svc-t) cubic-bezier(0.2, 0.7, 0.2, 1), color var(--svc-t) cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.js-svc .svc-flow__row.is-engaged .svc-step.is-later .svc-step__word,
+.js-svc .svc-flow__row.is-engaged .svc-step.is-later .svc-step__line {
+  opacity: 0.45;
+}
+
+.js-svc .svc-flow__row.is-engaged .svc-step.is-later .svc-step__num::before,
+.js-svc .svc-flow__row.is-engaged .svc-step.is-later .svc-step__num::after {
+  opacity: 0.6;
+}
+
+.js-svc .svc-flow__row.is-engaged .svc-step:not(.is-later) .svc-step__num::after {
+  color: var(--ivory-card);
+}
+
+.js-svc .svc-flow__row.is-engaged .svc-step.is-active .svc-step__num {
+  transform: scale(1.08);
+}
+
+.js-svc .svc-flow__row.is-engaged .svc-step.is-active .svc-step__line {
+  transform: translateY(-2px);
+  color: var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Instant, with no scaling or travel: the fill becomes a width, the rest is colour and opacity */
+  .svc-step:first-child::before,
+  .svc-flow__row.is-engaged .svc-step:first-child::before {
+    transform: none;
+    right: auto;
+    transition: none;
+  }
+
+  .svc-step:first-child::before { width: 0; }
+
+  .svc-flow__row.is-engaged .svc-step:first-child::before {
+    width: calc(var(--to, 0) * 20%);
+  }
+
+  .js-svc .svc-flow__row.is-engaged .svc-step.is-active .svc-step__num,
+  .js-svc .svc-flow__row.is-engaged .svc-step.is-active .svc-step__line {
+    transform: none;
+  }
+
+  .svc-step__num,
+  .js-svc .svc-flow__row.is-ready .svc-step__word,
+  .js-svc .svc-flow__row.is-ready .svc-step__line,
+  .js-svc .svc-flow__row.is-ready .svc-step__num::before,
+  .js-svc .svc-flow__row.is-ready .svc-step__num::after {
+    transition: none !important;
+  }
+}
+
 /* Tablet: the lines wrap under their words, keep the nodes apart */
 @media (max-width: 900px) {
   .svc-step a { padding: 0 4px; }

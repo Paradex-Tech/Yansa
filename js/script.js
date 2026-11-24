@@ -3107,6 +3107,97 @@
   }
 
 
+  /* ---------- Services: engagement row, hover and focus ----------
+     Hovering or focusing a step fills a second line from step 1 to it. The
+     script only sets --to (0 to 4) on the row and marks each step; CSS does
+     the motion. Earlier steps stay lit, later ones go quiet. Leaving resets
+     after a beat, so moving between steps never flickers. On touch (phone,
+     no hover) the same fill runs once, step 1 to 5, when the row is first
+     seen, and stays lit. Reduced motion on touch: nothing runs, the row is
+     already fully lit. Everything waits for the draw-in (.is-ready). */
+  function initSvcFlow() {
+    var row = document.querySelector('.svc-flow__row');
+    if (!row || !hasObserver) return;
+    var steps = toArray(row.querySelectorAll('.svc-step'));
+    var phoneTouch = window.matchMedia('(max-width: 768px) and (hover: none)');
+    var canHover = window.matchMedia('(hover: hover)');
+    var timer = null;
+    var ready = false;
+
+    function show(to, active) {
+      row.style.setProperty('--to', to);
+      row.classList.add('is-engaged');
+      steps.forEach(function (li, i) {
+        li.classList.toggle('is-later', i > to);
+        li.classList.toggle('is-active', active && i === to);
+      });
+    }
+
+    function clear() {
+      row.classList.remove('is-engaged');
+      row.style.setProperty('--to', 0);
+      steps.forEach(function (li) { li.classList.remove('is-later', 'is-active'); });
+    }
+
+    function focused() {
+      var el = document.activeElement;
+      if (!el || !row.contains(el) || !el.matches(':focus-visible')) return -1;
+      return steps.indexOf(el.closest('.svc-step'));
+    }
+
+    function settle() {
+      timer = null;
+      if (row.matches(':hover')) return;
+      var f = focused();
+      if (f >= 0) show(f, true); else clear();
+    }
+
+    function later() {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(settle, 120);
+    }
+
+    function runOnce() {
+      var i = 0;
+      show(0, false);
+      var id = window.setInterval(function () {
+        i++;
+        show(i, false);
+        if (i >= steps.length - 1) window.clearInterval(id);
+      }, 300);
+    }
+
+    steps.forEach(function (li, i) {
+      li.addEventListener('pointerenter', function (e) {
+        if (!ready || e.pointerType !== 'mouse' || phoneTouch.matches || !canHover.matches) return;
+        window.clearTimeout(timer);
+        show(i, true);
+      });
+      li.addEventListener('focusin', function (e) {
+        if (!ready || phoneTouch.matches || !e.target.matches(':focus-visible')) return;
+        window.clearTimeout(timer);
+        show(i, true);
+      });
+    });
+    row.addEventListener('pointerleave', function (e) {
+      if (e.pointerType === 'mouse') later();
+    });
+    row.addEventListener('focusout', later);
+
+    function arm() {
+      ready = true;
+      row.classList.add('is-ready');
+      if (phoneTouch.matches && !reduceMotion) runOnce();
+    }
+
+    onFirstView(row, 0.22, function () {
+      if (reduceMotion) { arm(); return; }
+      // the draw-in takes about 1.5 s; state changes wait for it
+      window.setTimeout(arm, 1700);
+    });
+  }
+
+
   /* ---------- Start ---------- */
   initCardMotion();
   initMeasureRotator();
@@ -3139,5 +3230,6 @@
   initContactForm();
   initBrochure();
   initServices();
+  initSvcFlow();
 
 })();

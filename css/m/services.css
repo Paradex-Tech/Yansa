@@ -190,3 +190,36 @@
 .js-svc .svc-flow__row.is-in .svc-step__line {
   transform: none;
 }
+
+/* Hover and focus progress runs down the rail (scaleY from the top). The
+   fill is the first step's ::before, laid out like the rail. */
+.svc-step:first-child::before,
+.svc-flow__row.is-engaged .svc-step:first-child::before {
+  top: 22px;
+  left: 21px;
+  right: auto;
+  width: 2px;
+  height: calc(100% - 44px);
+  transform-origin: center top;
+}
+
+.svc-step:first-child::before {
+  transform: scaleY(0);
+}
+
+.svc-flow__row.is-engaged .svc-step:first-child::before {
+  transform: scaleY(calc(var(--to, 0) / 4));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .svc-step:first-child::before,
+  .svc-flow__row.is-engaged .svc-step:first-child::before {
+    transform: none;
+  }
+
+  .svc-step:first-child::before { height: 0; }
+
+  .svc-flow__row.is-engaged .svc-step:first-child::before {
+    height: calc(var(--to, 0) * (100% - 44px) / 4);
+  }
+}
