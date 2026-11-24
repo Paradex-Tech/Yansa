@@ -555,3 +555,58 @@
     transition: none;
   }
 }
+
+
+/* =========================================================
+   S15 phone scale (<= 599px only)
+   Tiers unscaled, section rhythm 64/64, tidier symptom card, 44px hit areas.
+   ========================================================= */
+@media (max-width: 599px) {
+  /* Hero title sits on the Display tier (was x1.1) */
+  .hero__heading h1 {
+    --fs-scale: 1;
+  }
+
+  /* "Diagnosis." on the Display tier (was x1.5); the section on 64/64 */
+  .diagnosis {
+    padding-top: var(--section-pad-y, 64px);
+    padding-bottom: var(--section-pad-y, 64px);
+  }
+
+  .diagnosis h2 {
+    --fs-scale: 1;
+    line-height: 1.05;
+  }
+
+  /* Quote on the Statement tier (was x1.2), 64/64 */
+  .quote {
+    padding-top: var(--section-pad-y, 64px);
+    padding-bottom: var(--section-pad-y, 64px);
+  }
+
+  .quote p {
+    --fs-scale: 1;
+    line-height: 1.32;
+  }
+
+  /* Deck card takes its height from its content: icon, a 32px gap, title,
+     copy. Cards still share the tallest card's height, content from the top. */
+  .symptoms.m-deck-on .symptom-card {
+    min-height: 0;
+    gap: 32px;
+    justify-content: flex-start;
+  }
+
+  /* Progress dots: 44x44 hit area, the drawn dot is unchanged */
+  .m-deck-dot {
+    width: 44px;
+  }
+
+  /* "Know Your Loads ->": 44px+ tall hit area; the negative margin keeps the
+     text exactly where it was */
+  .symptoms__more a {
+    display: inline-block;
+    padding: 10px 0;
+    margin: -10px 0;
+  }
+}
