@@ -4,12 +4,11 @@
 
    Serves know-your-loads.html only. The load explorer's tabs, tiles and
    crossfade are the desktop script's (initLoadExplorer); this file adds the
-   two swipe decks (Problems, Inaction) and the fan's
-   scroll progress. Everything here is built by build() and taken apart by
-   teardown(), so leaving the phone width (a rotation, a resized window)
-   hands the page back to the desktop scripts with no classes, nodes or
-   inline styles left behind. Scroll-linked values are pure functions of
-   scroll position; time only drives the icon replay on the Problems deck. */
+   two swipe decks (Problems, Inaction). Everything here is built by build()
+   and taken apart by teardown(), so leaving the phone width (a rotation, a
+   resized window) hands the page back to the desktop scripts with no classes,
+   nodes or inline styles left behind. Time only drives the icon replay on the
+   Problems deck. */
 (function () {
   'use strict';
   var phone = window.matchMedia('(max-width: 768px)');
@@ -21,15 +20,6 @@
 
   function toArray(list) {
     return Array.prototype.slice.call(list);
-  }
-
-  function clamp01(v) {
-    return v < 0 ? 0 : v > 1 ? 1 : v;
-  }
-
-  // Slow in, slow out: the curve every scroll-linked move here follows
-  function ease(t) {
-    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   }
 
   /* Every listener, observer, timer and injected node registers its undo
@@ -46,27 +36,6 @@
     undo.push(function () { node.remove(); });
     return node;
   }
-
-  /* One rAF per scroll for every scroll-linked piece on the page. */
-  var scrollers = [];
-  var queued = false;
-
-  function runScroll() {
-    queued = false;
-    scrollers.forEach(function (fn) { fn(); });
-  }
-
-  function queue() {
-    if (!queued) {
-      queued = true;
-      requestAnimationFrame(runScroll);
-    }
-  }
-
-  function onScroll(fn) {
-    scrollers.push(fn);
-  }
-
 
   // Strips the reveal from cards that start off to the side of a deck: they
   // are clipped by the track, so the observer would only fire mid-swipe.
@@ -174,8 +143,8 @@
   /* ---------- The Problems These Loads Create: swipe deck ----------
      Three cards side by side in a scroll-snap track. The card in view draws
      its icon (data-m-front, keyed in the CSS) once the deck is on screen.
-     initProblems in script.js still deals its own classes by scroll; the CSS
-     overrides them, and the state here lives in data attributes. */
+     (initProblemCards in script.js plays the same icons on wider screens; its
+     [data-play] rules only apply from 769px.) */
   function initProblems() {
     var section = document.querySelector('.problems');
     var track = section && section.querySelector('.problems__stack');
@@ -223,32 +192,6 @@
   }
 
 
-  /* ---------- Now see it solved: the fan ----------
-     On a phone the fan sits a screen below the section's top, so it is
-     driven by its own position instead of the section's: it opens as it
-     rises from the bottom of the screen to a little above the middle. */
-  function initEntry() {
-    var section = document.querySelector('.pq-entry');
-    var fan = section && section.querySelector('.pq-entry__fan');
-    if (!fan) return;
-
-    function frame() {
-      var r = fan.getBoundingClientRect();
-      var vh = window.innerHeight;
-      if (r.bottom < -100 || r.top > vh + 100) return;
-      var p = reduce ? 1 : ease(clamp01((vh * 0.92 - r.top) / (vh * 0.6)));
-      fan.style.setProperty('--pq-fan', p.toFixed(4));
-    }
-
-    onScroll(frame);
-    on(window, 'resize', frame);
-    on(window, 'load', frame);
-    frame();
-
-    undo.push(function () { fan.style.removeProperty('--pq-fan'); });
-  }
-
-
   /* ---------- Build / tear down with the phone media query ---------- */
   var built = false;
 
@@ -257,19 +200,12 @@
     built = true;
     initProblems();
     initInaction();
-    initEntry();
-    on(window, 'scroll', queue, { passive: true });
-    on(window, 'resize', queue);
-    runScroll();
   }
 
   function teardown() {
     if (!built) return;
     built = false;
     while (undo.length) undo.pop()();
-    scrollers = [];
-    // Let script.js redraw what it owns (problem cards, fan) for this width
-    window.dispatchEvent(new Event('scroll'));
   }
 
   function sync() {

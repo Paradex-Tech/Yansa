@@ -2191,6 +2191,7 @@
       { sel: '.yanq-delivers > h2', step: 0 },
       /* PQ Solved */
       { sel: '.pq-entry__copy > *', step: 90 },
+      { sel: '.pq-entry__cards > *', step: 90 },
 
       /* Solutions */
       { sel: '.pqs-intro h2', step: 0 },

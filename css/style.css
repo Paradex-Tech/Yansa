@@ -387,7 +387,6 @@ ul {
 .why-card p,
 .symptom-card__detail p,
 .deliver-stat p,
-.glimpse p,
 .glimpse__go,
 .loads-x__load,
 .loads-x__item > p,
@@ -413,6 +412,7 @@ ul {
 .yanq-step__tag,
 .loads-x__chips li,
 .loads-x__seen,
+.glimpse p,
 .problem-card__text p,
 .inaction-card p,
 .svc-step__line,
@@ -3702,84 +3702,12 @@ ul {
 }
 
 
-/* ---------- PQ Solved: the entry on Solutions, and the page itself ----------
-   A glimpse section after The Problems These Loads Create, and the
-   Solutions page it leads to. Both share the wave (initPqScroll writes
-   --pq-p, 0 to 1, from scroll position; the distorted wave straightens as it
-   rises) and the cursor spotlight on [data-spot] cards. With no script,
-   under reduced motion and on phones the cards simply sit in their final
-   place. */
-.pq-entry,
-.pqs-hero {
-  --pq-p: 1;
-  --pq-fan: 1;
-}
-
+/* ---------- PQ Solved page pieces, and Know Your Loads' "Now see it solved" ----------
+   .pq-arrow nudges in links across the site. The ripples and eyebrow of the
+   Solutions hero sit here too. */
 .pq-arrow {
   display: inline-block;
   transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-/* Cursor spotlight on the glimpse cards */
-[data-spot] {
-  position: relative;
-  overflow: hidden;
-}
-
-[data-spot]::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), rgba(76, 200, 192, 0.2), transparent 70%);
-  opacity: 0;
-  transition: opacity 0.6s ease;
-  pointer-events: none;
-}
-
-[data-spot]:hover::before {
-  opacity: 1;
-}
-
-/* ----- Entry on the Solutions page ----- */
-/* overflow: clip, not hidden: hidden would make this a scroll container and
-   stop the stage inside it from pinning */
-.pq-entry {
-  position: relative;
-  overflow: clip;
-  background: var(--petrol);
-  /* The footer is petrol too: a hairline keeps the two bands apart */
-  border-bottom: 1px solid rgba(241, 241, 230, 0.32);
-}
-
-.pq-entry__stage {
-  position: relative;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  padding: var(--section-pad-y) var(--gutter) calc(var(--section-pad-y) - 64px);
-}
-
-/* Ripples, two centres of four rings: scroll writes each ring's size (--rs)
-   and strength (--ro), so they spread as the section scrolls in and draw
-   back as it scrolls out. One centre sits behind the cards, one low on the
-   left. */
-.pq-entry__rings span {
-  position: absolute;
-  left: 72%;
-  top: 46%;
-  width: 1100px;
-  aspect-ratio: 1;
-  border: 1px solid rgba(76, 200, 192, 0.5);
-  border-radius: 50%;
-  pointer-events: none;
-  transform: translate(-50%, -50%) scale(var(--rs, 0.6));
-  opacity: var(--ro, 0.2);
-}
-
-.pq-entry__rings span:nth-child(n + 5) {
-  left: 12%;
-  top: 84%;
-  width: 900px;
 }
 
 .pqs-hero__rings span {
@@ -3799,18 +3727,6 @@ ul {
   100% { scale: 1.25; opacity: 0; }
 }
 
-.pq-entry__inner {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
-  gap: 64px;
-  align-items: center;
-  max-width: 1152px;
-  margin: 0 auto;
-}
-
-.pq-entry__eyebrow,
 .pqs-eyebrow {
   color: var(--cyan);
   text-transform: uppercase;
@@ -3818,85 +3734,146 @@ ul {
   margin-bottom: 20px;
 }
 
+/* ----- Know Your Loads: Match the fix to the problem -----
+   The last section before the petrol footer, so it is light (a cream band
+   with a hairline top, like Solutions' closing band): the copy on the left,
+   the four fixes as whole-card links in a 2 x 2 grid of ivory cards on the
+   right. The cards are the Home "Why Yansa" cards: they lift 4px with a
+   stronger border and shadow on hover and keyboard focus, and the arrow
+   nudges. They settle in once with a short stagger as the section comes
+   into view (the reveal in initScrollReveal). */
+.pq-entry {
+  background: var(--cream);
+  border-top: 1px solid rgba(188, 201, 199, 0.55);
+  padding: 64px var(--gutter);
+}
+
+.pq-entry__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.4fr);
+  gap: 56px;
+  align-items: center;
+  max-width: 1152px;
+  margin: 0 auto;
+}
+
+.pq-entry__eyebrow {
+  color: var(--highlight);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+}
+
 .pq-entry h2 {
-  color: var(--text-on-dark);
-  margin-bottom: 20px;
+  color: var(--ink);
+  margin-bottom: 16px;
 }
 
 .pq-entry__accent {
-  color: var(--cyan);
+  color: var(--highlight);
 }
 
 .pq-entry__lead {
-  color: var(--mist);
+  color: var(--text);
   max-width: 460px;
-  margin-bottom: 36px;
+  margin-bottom: 28px;
 }
 
 .pq-entry__cta:hover .pq-arrow,
-.glimpse:hover .pq-arrow {
-  transform: translateX(6px);
+.pq-entry__cta:focus-visible .pq-arrow,
+.glimpse:hover .pq-arrow,
+.glimpse:focus-visible .pq-arrow {
+  transform: translateX(5px);
 }
 
-/* The stack: each card sits (1 - p) of its own height up the one above it,
-   leaning slightly, and settles into a column as the section scrolls in. */
-.pq-entry__fan {
+.pq-entry__cards {
   display: grid;
-  gap: 16px;
-  padding: 24px 0 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
 }
 
 .glimpse {
-  --k: 0;
-  display: block;
-  padding: 22px 24px 22px;
-  border: 1px solid rgba(169, 209, 215, 0.28);
-  border-radius: 14px;
-  background: color-mix(in srgb, var(--petrol) 84%, #ffffff 16%);
-  color: var(--text-on-dark);
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  border: 1px solid #a6cdd3;
+  border-radius: 8px;
+  background: var(--ivory-card);
+  color: inherit;
   text-decoration: none;
-  /* Later cards lie on top, so the card beneath shows its top strip (wave and
-     tag) and nothing of its text runs through the one above */
-  z-index: calc(1 + var(--k));
-  transform-origin: 50% 0;
-  transform:
-    translateY(calc((1 - var(--pq-fan)) * var(--k) * -68%))
-    rotate(calc((1 - var(--pq-fan)) * (var(--k) - 1) * -1.6deg))
-    scale(calc(0.95 + 0.05 * var(--pq-fan)));
-  transition: translate 0.6s cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 0.5s ease, background-color 0.5s ease;
+  will-change: transform;
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.35s ease, border-color 0.35s ease;
 }
 
 .glimpse:hover,
 .glimpse:focus-visible {
-  translate: 0 -4px;
-  border-color: var(--cyan);
-  background: color-mix(in srgb, var(--petrol) 78%, #ffffff 22%);
-  outline: none;
+  transform: translateY(-4px);
+  border-color: var(--teal);
+  box-shadow: 0 20px 44px rgba(26, 65, 70, 0.2);
+}
+
+.glimpse:focus-visible {
+  outline: 2px solid var(--teal-deep);
+  outline-offset: 4px;
 }
 
 .glimpse__tag {
   display: block;
-  color: var(--cyan);
+  color: var(--teal-deep);
   letter-spacing: 1.4px;
   text-transform: uppercase;
-  margin-bottom: 6px;
+  margin-bottom: 10px;
 }
 
 .glimpse h3 {
-  margin-bottom: 4px;
+  position: relative;
+  color: var(--ink);
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* The underline draws out from the left on hover, as on the Home cards */
+.glimpse h3::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(52, 182, 175, 0.55),
+    rgba(52, 182, 175, 0.25),
+    transparent
+  );
+  transform: scaleX(0.3);
+  transform-origin: left;
+  transition: transform 0.4s ease-out;
+}
+
+.glimpse:hover h3,
+.glimpse:focus-visible h3 {
+  transform: translateX(4px);
+}
+
+.glimpse:hover h3::after,
+.glimpse:focus-visible h3::after {
+  transform: scaleX(1);
 }
 
 .glimpse p {
-  color: var(--mist);
+  color: var(--text);
+  margin-bottom: 16px;
 }
 
-/* The cards carry no icon: "Explore" sits on the tag's line, so each is a row shorter */
+/* The foot: margin-top:auto lines the four up whatever the copy runs to */
 .glimpse__go {
-  position: absolute;
-  top: 22px;
-  right: 24px;
-  color: var(--text-on-dark);
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  color: var(--teal-deep);
 }
 
 /* ----- The PQ Solved page ----- */
@@ -4213,15 +4190,11 @@ ul {
 @media (max-width: 900px) {
   .pq-entry__inner {
     grid-template-columns: 1fr;
-    gap: 40px;
+    gap: 32px;
   }
 
-  .glimpse {
-    transform: none;
-  }
-
-  .pq-entry__rings span {
-    left: 50%;
+  .pq-entry__lead {
+    max-width: 560px;
   }
 }
 
@@ -4246,8 +4219,21 @@ ul {
   }
 
   .glimpse,
+  .glimpse h3,
+  .glimpse h3::after,
   .pq-arrow {
     transition: none;
+  }
+
+  .glimpse:hover,
+  .glimpse:focus-visible,
+  .glimpse:hover h3,
+  .glimpse:focus-visible h3,
+  .glimpse:hover .pq-arrow,
+  .glimpse:focus-visible .pq-arrow,
+  .pq-entry__cta:hover .pq-arrow,
+  .pq-entry__cta:focus-visible .pq-arrow {
+    transform: none;
   }
 }
 

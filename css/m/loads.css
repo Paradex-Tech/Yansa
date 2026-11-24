@@ -5,16 +5,16 @@
    by order. Written for phones first: a tile grid, swipe decks, thumb reach,
    not the desktop layout stacked into a column. Tokens come from :root (BASE
    sets the phone values); every var() carries a fallback so this file reads
-   correctly on its own. Scroll-linked values (--m-d, --pq-fan) are
-   written by js/m/loads.js; without it each one falls back to the finished,
-   resting state.
+   correctly on its own. The swipe cards' distance value (--m-d) is
+   written by js/m/loads.js; without it each card falls back to its resting
+   state.
 
    1. Hero
    2. Load explorer
    3. Shared: snap carousel and its dots
    4. The Problems These Loads Create (swipe cards)
    5. What Inaction Costs (swipe cards)
-   6. Now see it solved (the fan)
+   6. Now see it solved (four compact rows)
    ========================================================= */
 
 
@@ -359,16 +359,14 @@
 
 
 /* =========================================================
-   6. NOW SEE IT SOLVED (the fan)
-   One column: the line, the fan, then the way in. The copy block is
-   dissolved (display: contents) so the button can close the section under
-   the cards. The fan keeps the desktop idea, sized down: the four cards lie
-   stacked and leaning, and settle into a column as the fan itself rises up
-   the screen (--pq-fan, written on .pq-entry__fan by js/m/loads.js).
+   6. NOW SEE IT SOLVED (match the fix)
+   One column: the line, four compact rows, then the way in. The copy block
+   is dissolved (display: contents) so the button can close the section
+   under the rows. Each row is a whole-card link: the tag, the title with
+   its Explore arrow beside it, then the text.
    ========================================================= */
-.pq-entry__stage {
-  display: block;
-  padding: var(--section-pad-y, 64px) var(--gutter, 20px) calc(var(--section-pad-y, 64px) - 16px);
+.pq-entry {
+  padding: var(--section-pad-y, 64px) var(--gutter, 20px) calc(var(--section-pad-y, 64px) - 8px);
 }
 
 .pq-entry__inner {
@@ -384,12 +382,12 @@
 
 .pq-entry__eyebrow {
   order: 0;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 
 .pq-entry h2 {
   order: 1;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .pq-entry__lead {
@@ -397,10 +395,11 @@
   margin-bottom: 0;
 }
 
-.pq-entry__fan {
+.pq-entry__cards {
   order: 3;
-  gap: 12px;
-  padding: 28px 0 32px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  padding: 28px 0 28px;
 }
 
 .pq-entry__cta {
@@ -411,55 +410,66 @@
 }
 
 .pq-entry .glimpse {
-  padding: 16px 18px 18px;
-  border-radius: 16px;
-  transform:
-    translateY(calc((1 - var(--pq-fan, 1)) * var(--k) * -74%))
-    rotate(calc((1 - var(--pq-fan, 1)) * (var(--k) - 1.5) * -2.2deg))
-    scale(calc(0.94 + 0.06 * var(--pq-fan, 1)));
-  box-shadow: 0 -8px 24px rgba(4, 25, 23, calc(0.3 * (1 - var(--pq-fan, 1))));
-  transition: border-color 0.5s ease, background-color 0.5s ease;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  column-gap: 12px;
+  padding: 14px 16px 16px;
+  border-radius: 9px;
   -webkit-tap-highlight-color: transparent;
 }
 
+/* No hover lift on touch; a press tints the card */
 .pq-entry .glimpse:hover {
-  translate: none;
+  transform: none;
+  box-shadow: none;
+  border-color: #a6cdd3;
 }
 
 .pq-entry .glimpse:active {
-  border-color: var(--cyan, #4cc8c0);
-  background: color-mix(in srgb, var(--petrol, #1a4146) 78%, #ffffff 22%);
+  border-color: var(--teal, #34b6af);
+  background: color-mix(in srgb, var(--teal, #34b6af) 8%, var(--ivory-card, #fffefa));
+}
+
+.pq-entry .glimpse:hover h3 {
+  transform: none;
+}
+
+.pq-entry .glimpse__tag {
+  grid-column: 1 / -1;
+  margin-bottom: 4px;
+}
+
+.pq-entry .glimpse h3 {
+  grid-column: 1;
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.pq-entry .glimpse h3::after {
+  display: none;
 }
 
 .pq-entry .glimpse__go {
-  top: 16px;
-  right: 18px;
+  grid-column: 2;
+  grid-row: 2;
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
-/* Ripples: two centres, one high behind the heading, one behind the fan */
-.pq-entry__rings span {
-  left: 88%;
-  top: 14%;
-  width: 620px;
-}
-
-.pq-entry__rings span:nth-child(n + 5) {
-  left: 18%;
-  top: 66%;
-  width: 560px;
+.pq-entry .glimpse p {
+  grid-column: 1 / -1;
+  margin: 6px 0 0;
+  line-height: 1.5;
 }
 
 
-/* Reduced motion: no lean, no scale, nothing scroll-linked on the cards */
+/* Reduced motion: no scale or dimming on the swipe cards */
 @media (prefers-reduced-motion: reduce) {
   .problems .problems__stack .problem-card,
   .inaction-card {
     scale: none;
     opacity: 1;
-  }
-
-  .pq-entry .glimpse {
-    transform: none;
-    box-shadow: none;
   }
 }
