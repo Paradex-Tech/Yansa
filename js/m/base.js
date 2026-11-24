@@ -70,7 +70,8 @@
     links.forEach(function (item, i) {
       var isGroup = item.classList.contains('nav-item');
       var link = isGroup ? item.querySelector('.nav-item__link') : item;
-      var kids = isGroup ? toArray(item.querySelectorAll('.nav-menu a')) : [];
+      // Titles only: the panel's descriptions, icons and featured tile stay on the desktop
+      var kids = isGroup ? toArray(item.querySelectorAll('.nav-menu a:not([data-nav-feature])')) : [];
       var current = link.classList.contains('is-active') || link.getAttribute('aria-current') === 'page';
       var row = '<a class="m-menu__link" style="--i:' + (++step) + '" href="' + link.getAttribute('href') + '"' +
         (current ? ' aria-current="page"' : '') + '>' +
@@ -83,7 +84,7 @@
       kids.forEach(function (kid) {
         html += '<a class="m-menu__kid" style="--i:' + (++step) + '" href="' + kid.getAttribute('href') + '"' +
           (kid.getAttribute('aria-current') === 'page' ? ' aria-current="page"' : '') + '>' +
-          kid.textContent.trim() + '</a>';
+          (kid.querySelector('.nav-menu__title') || kid).textContent.trim() + '</a>';
       });
       html += '</div></div>';
     });
