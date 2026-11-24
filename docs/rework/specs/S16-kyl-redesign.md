@@ -1,4 +1,4 @@
-# S16 Know Your Loads redesign                         status: FROZEN 2026-11-24
+# S16 Know Your Loads redesign                         status: FROZEN 2026-11-24 (revised round 1: solution pills, short name 'Welding')
 
 Goal: Know Your Loads looks and moves like the approved pages (Home, Solutions, Services, YanQ) on desktop and phone,
 with the load explorer as a polished interactive tool. Direction A "Field guide" from `docs/rework/kyl-redesign.md`
@@ -32,13 +32,13 @@ Every other page. Shared components (nav, footer, buttons, tiers' sizes, `.heade
        holding the load's existing drawing in teal/cream line colour; "Seen in" label + text; H3 problem title; body
        at Body size; the chips as quiet hairline tags (no coloured dots).
      - Solution pane (about 45 %, faint teal or cream tint): eyebrow "Yansa's solution" in teal; title; body; the
-       product links as the Solutions offered-pill component (same look as `solutions.html` offered pills), pinned to
-       the bottom of the pane.
+       product links as the Solutions offered-pill component (same look as `solutions.html` offered pills), placed
+       28-32 px under the body (REVISED 2026-11-24 round 1: pinning them to the pane foot left a 200 px hole).
      - One small connector on the divider (petrol circle, cream arrow) that pulses once on each change. No other
        arrow buttons, one eyebrow style (Services `svc-block__label` look or the site eyebrow), no three dot colours.
    - 600-1099 px: the loads become a 4 x 2 grid of tiles above the sheet (number + name; selected tile petrol with
      cream text); sheet panes side by side.
-   - < 600 px: a 2 x 4 grid of tiles with short names (Drives, Textile, Welding & presses, UPS & servers, Offices,
+   - < 600 px: a 2 x 4 grid of tiles with short names (Drives, Textile, Welding, UPS & servers, Offices,
      Furnaces, Motors, Paint shops; the full name stays the tab's accessible name via `aria-label` or visible text on
      wider screens), then the Problem pane, then the Solution pane, stacked in one card. All eight loads visible
      without scrolling sideways. Picking a tile never scrolls the page.
