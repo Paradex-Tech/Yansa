@@ -1330,6 +1330,60 @@
     });
   }
 
+  /* A jump to Active, Passive or Hybrid (a chip, a drop-down link, the URL
+     hash) lands with the row's heading a fixed 24px under the sticky bar. The
+     navbar slides away on a downward scroll and returns on an upward one, and
+     the bar follows it, so the landing is worked out for the state the page
+     will be in once it arrives (and that state is set up front). */
+  var ROW_GAP = 24;
+
+  function landOnRow(id, instant) {
+    var row = document.getElementById(id);
+    var bar = document.querySelector('.pqs-pills');
+    var heading = row && row.querySelector('h2');
+    var navbar = document.querySelector('.navbar');
+    if (!row || !bar || !heading || !navbar) return false;
+
+    var from = instant ? 0 : window.pageYOffset;
+    // From the row, not the heading: the heading is still shifted by its reveal
+    var headingTop = row.getBoundingClientRect().top + window.pageYOffset +
+      (parseFloat(window.getComputedStyle(row).paddingTop) || 0);
+    var down = headingTop - bar.offsetHeight - ROW_GAP;           // navbar hidden: the bar sits at the top
+    var up = down - navbar.offsetHeight;                          // navbar shown: the bar sits under it
+    var hide = down > from + 8;
+    document.dispatchEvent(new CustomEvent('yansa:navhold', { detail: { hide: hide } }));
+    window.scrollTo({ top: Math.max(0, hide ? down : up), behavior: instant || reduceMotion ? 'auto' : 'smooth' });
+    return true;
+  }
+
+  function initRowJumps() {
+    var ids = { active: 1, passive: 1, hybrid: 1 };
+    if (!document.querySelector('.pqs-pills')) return;
+
+    document.addEventListener('click', function (event) {
+      var a = event.target.closest && event.target.closest('a[href*="#"]');
+      if (!a || event.defaultPrevented || event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      var id = a.hash.slice(1);
+      if (!ids[id] || a.pathname.replace(/.html$/, '') !== location.pathname.replace(/.html$/, '')) return;
+      event.preventDefault();
+      history.pushState(null, '', '#' + id);
+      requestAnimationFrame(function () { landOnRow(id, false); });
+    });
+
+    window.addEventListener('hashchange', function () {
+      var id = location.hash.slice(1);
+      if (ids[id]) landOnRow(id, false);
+    });
+
+    // Arriving with the hash in the URL: once the images have their space
+    var start = location.hash.slice(1);
+    if (ids[start]) {
+      var arrive = function () { landOnRow(start, true); };
+      requestAnimationFrame(arrive);
+      window.addEventListener('load', arrive);
+    }
+  }
+
   // The pill bar on PQ Solved marks the solution row in view
   function initPqPills() {
     var pills = toArray(document.querySelectorAll('.pqs-pills a'));
@@ -1407,6 +1461,13 @@
         requestAnimationFrame(update);
       }
     }, { passive: true });
+
+    // A jump to a row (initPqPills) knows which way it is travelling, so it
+    // sets the bar's state up front and the landing is the same every time
+    document.addEventListener('yansa:navhold', function (event) {
+      set(!!event.detail.hide);
+      last = window.pageYOffset;
+    });
   }
 
   /* ---------- Industries We Serve: category tabs (About) ----------
@@ -3151,6 +3212,7 @@
   initYanqWorks();
   initAboutDecor();
   initContactForm();
+  initRowJumps();
   initBrochure();
   initServices();
   initSvcFlow();
