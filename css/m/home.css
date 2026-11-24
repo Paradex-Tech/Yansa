@@ -490,6 +490,22 @@
   margin-top: 14px;
 }
 
+/* The card is one link: its foot is the tap cue, and a press tints the border
+   (the desktop lift is off here) */
+.why.m-why-on .why-card__go {
+  grid-column: 1 / -1;
+  margin-top: 4px;
+  padding-top: 14px;
+}
+
+.why-card {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.why-card:active {
+  border-color: var(--teal);
+}
+
 .why.m-why-on .why-card > * {
   transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }

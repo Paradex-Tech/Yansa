@@ -66,8 +66,8 @@
   /* ---------- Card hover motion (home) ----------
      A hovered card lifts slightly; symptom cards also tilt toward the
      cursor by up to 3 degrees. Both are eased toward their target each
-     frame so the card settles like a spring. The Why Yansa cards only
-     lift, since a tilt fought the underline drawn under their heading. */
+     frame so the card settles like a spring. The Why Yansa cards are links
+     now and lift by CSS (a 4px rise), so they are not handled here. */
   function initCardMotion() {
     if (reduceMotion) return;
 
@@ -75,7 +75,7 @@
     var HOVER_SCALE = 1.012;
     var EASE = 0.12;
 
-    toArray(document.querySelectorAll('.symptom-card, .why-card')).forEach(function (card) {
+    toArray(document.querySelectorAll('.symptom-card')).forEach(function (card) {
       var tilts = card.classList.contains('symptom-card');
       var target = { x: 0, y: 0, scale: 1 };
       var current = { x: 0, y: 0, scale: 1 };
