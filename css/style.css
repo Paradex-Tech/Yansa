@@ -1708,6 +1708,14 @@ ul {
   }
 }
 
+/* Narrower columns wrap the opened copy to five lines: keep room for it so
+   the card still does not grow on hover */
+@media (min-width: 901px) and (max-width: 1100px) {
+  .symptom-card {
+    min-height: 372px;
+  }
+}
+
 /* Touch screens have no hover, so the detail is simply shown */
 @media (hover: none) {
   .symptom-card__detail {
