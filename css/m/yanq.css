@@ -324,6 +324,11 @@
    Delivers cards with a 48px tile and 16px padding in two columns.
    ========================================================= */
 @media (max-width: 599px) {
+  /* Eyebrow over the H1-tier title: H4, so it reads as a lead-in, not a second heading */
+  .yanq-hero__label {
+    font-size: var(--fs-h4);
+  }
+
   .yanq-hero h2 {
     font-size: var(--fs-h1);
     line-height: 1.12;
