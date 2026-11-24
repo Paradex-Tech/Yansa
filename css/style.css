@@ -461,6 +461,10 @@ ul {
 /* Navbar fit: with six items on one line, the bar steps down a tier
    between laptop and tablet widths (hamburger menu starts at 768px) */
 @media (min-width: 769px) and (max-width: 1100px) {
+  .nav-menu__feature-title {
+    font-size: calc(var(--fs-body) * var(--fs-scale, 1));
+  }
+
   .navbar__links > a,
   .navbar__links .nav-item__link,
   .navbar__cta {
@@ -721,7 +725,7 @@ ul {
   top: calc(100% + 10px);
   left: var(--menu-x);
   z-index: 5;
-  width: 564px;
+  width: 588px;
   padding: 8px;
   display: flex;
   gap: 8px;
@@ -860,6 +864,7 @@ ul {
 }
 
 .nav-menu__desc {
+  text-wrap: pretty;
   min-height: 2lh;   /* both menus' rows share one height, so the panels match */
   color: var(--text);
 }
@@ -931,8 +936,8 @@ ul {
   z-index: 1;
   background: linear-gradient(
     to top,
-    color-mix(in srgb, var(--petrol) 96%, transparent) 0%,
-    color-mix(in srgb, var(--petrol) 84%, transparent) 50%,
+    color-mix(in srgb, var(--petrol) 98%, transparent) 0%,
+    color-mix(in srgb, var(--petrol) 92%, transparent) 58%,
     color-mix(in srgb, var(--petrol) 0%, transparent) 100%
   );
 }
@@ -947,7 +952,8 @@ ul {
 }
 
 .nav-menu__eyebrow {
-  color: var(--mist);
+  color: var(--text-on-dark);
+  opacity: 0.75;
 }
 
 .nav-menu__feature-title,
@@ -956,7 +962,9 @@ ul {
 }
 
 .nav-menu__feature-go {
-  display: inline-flex;
+  display: inline-block;
+  margin-left: 4px;
+  vertical-align: -3px;
   color: var(--text-on-dark);
   transition: transform 0.2s ease;
 }
