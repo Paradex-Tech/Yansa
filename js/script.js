@@ -1309,11 +1309,14 @@
      cards in the markup, so the copy lives in one place. Roving tabindex:
      Tab reaches the row once, arrows, Home and End move within it.
      A 2px bar under the row slides to the chosen tab (transform only).
-     Choosing a tab fades the table out, sets the new words and layout (3 or
-     2 across, the last row stretching), and fades it back in with a 6px
-     rise. The table's height is reserved for the tallest category, so the
-     page below never moves. Under reduced motion, or without the Web
-     Animations API, it just swaps. */
+     Choosing a tab runs one morph:
+       1  the "+" marks turn half a turn, and the words turn away (staggered)
+       2  new words and a new layout are set (3 or 2 across, the last row
+          stretching), then each cell glides from its old box to its new one
+          (FLIP), cells that did not exist grow in, and the new words turn back
+     The table's height is reserved for the tallest category, so the page
+     below never moves. Under reduced motion, or without the Web Animations
+     API, it just swaps. */
   function initIndustryTabs() {
     var box = document.querySelector('.industry-tabs');
     if (!box) return;
@@ -1381,6 +1384,8 @@
     var narrow = window.matchMedia('(max-width: 560px)');
     var animated = !reduceMotion && typeof grid.animate === 'function';
     var current = 0;
+    var angle = 0;
+    var busyUntil = 0;
     var seq = 0;
     var running = [];
 
@@ -1450,14 +1455,16 @@
       return out;
     }
 
-    function place() {
+    function place(turn) {
       var spots = crossings();
+      if (turn) angle += 180;
       var rest = spots.length ? spots[spots.length - 1] : { x: grid.clientWidth / 2, y: grid.clientHeight / 2 };
       pluses.forEach(function (el, k) {
         var spot = spots[k];
         el.style.setProperty('--px', (spot || rest).x + 'px');
         el.style.setProperty('--py', (spot || rest).y + 'px');
         el.style.setProperty('--ps', spot ? '1' : '0');
+        el.style.setProperty('--pr', (k ? -angle : angle) + 'deg');
       });
     }
 
@@ -1482,33 +1489,70 @@
       apply(current);
     }
 
-    // Fade out, swap while invisible, fade in rising 6px
-    function swap(index) {
+    function morph(index) {
       var mine = ++seq;
       running.forEach(function (anim) { anim.cancel(); });
       running = [];
 
-      var out = grid.animate(
-        [{ opacity: 1, transform: 'translateY(0)' }, { opacity: 0, transform: 'translateY(0)' }],
-        { duration: 130, easing: 'ease-out', fill: 'forwards' }
-      );
-      running.push(out);
-      out.finished.then(function () {
+      var before = cells.map(function (cell) {
+        return cell.style.display === 'none' ? null : cell.getBoundingClientRect();
+      });
+      var top0 = grid.getBoundingClientRect();
+
+      var items = data[index];
+      var outs = [];
+      cells.forEach(function (cell, k) {
+        if (!before[k]) return;
+        var anim = texts[k].animate(
+          [{ transform: 'perspective(600px) rotateX(0deg) translateY(0)', opacity: 1 },
+           { transform: 'perspective(600px) rotateX(55deg) translateY(-6px)', opacity: 0 }],
+          { duration: 380, delay: k * 45, easing: 'cubic-bezier(0.45, 0, 0.55, 1)', fill: 'forwards' }
+        );
+        outs.push(anim);
+        running.push(anim);
+      });
+      busyUntil = Date.now() + 1800;
+
+      var wait = outs.length ? Promise.all(outs.map(function (a) { return a.finished; })) : Promise.resolve();
+      wait.then(function () {
         if (mine !== seq) return;
-        apply(index);
-        running.forEach(function (anim) { anim.cancel(); });
-        running = [grid.animate(
-          [{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'translateY(0)' }],
-          { duration: 300, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }
-        )];
-      }, function () {});
+        outs.forEach(function (anim) { anim.cancel(); });
+        running = [];
+
+        setWords(items);
+        layout(items.length);
+        place(true);
+
+        cells.forEach(function (cell, k) {
+          if (cell.style.display === 'none') return;
+          var after = cell.getBoundingClientRect();
+          var old = before[k];
+          var move;
+          if (old) {
+            var dx = old.left - after.left;
+            var dy = old.top - after.top;
+            var sx = old.width / after.width;
+            var sy = old.height / after.height;
+            move = [{ transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + sx + ',' + sy + ')' },
+                    { transform: 'none' }];
+          } else {
+            move = [{ opacity: 0, transform: 'scale(0.6)' }, { opacity: 1, transform: 'none' }];
+          }
+          running.push(cell.animate(move, { duration: 850, easing: 'cubic-bezier(0.65, 0, 0.35, 1)' }));
+          running.push(texts[k].animate(
+            [{ transform: 'perspective(600px) rotateX(-55deg) translateY(6px)', opacity: 0 },
+             { transform: 'perspective(600px) rotateX(0deg) translateY(0)', opacity: 1 }],
+            { duration: 600, delay: 260 + k * 60, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'backwards' }
+          ));
+        });
+      });
     }
 
     function choose(index) {
       if (index === current) return;
       current = index;
       select(index);
-      if (animated) swap(index);
+      if (animated) morph(index);
       else apply(index);
     }
 
@@ -1540,7 +1584,9 @@
     onResizeEnd(onSize, 200);
 
     if (window.ResizeObserver) {
-      new ResizeObserver(function () { place(); }).observe(grid);
+      new ResizeObserver(function () {
+        if (Date.now() > busyUntil) place(false);
+      }).observe(grid);
     }
 
     // Keep the bar on its tab when the row changes width (resize, web font)
