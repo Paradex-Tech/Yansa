@@ -1,5 +1,12 @@
 # Handoff for the build (fresh FRIDAY)
 
+> **Status 2026-11-24 (end of build):** S1-S8 built and committed on `restructure-v2` (see `progress.md` for every
+> slice, round and height). Waiting for Shrey's review on localhost. Open choices for Shrey: Home desktop is 5.64
+> screens (target 5; reaching it needs dropping a section or changing the symptom hover); hybrid panel photos are
+> stand-ins; unused images and the 35 MB `videos/` folder are listed in AGENTS.md. Checks to rerun:
+> `node docs/rework/tools/links.mjs --strict-img`, `measure.mjs`, `check-nav-footer.mjs`, `check-head.mjs`,
+> `check-site.mjs`, `check-dead-css.mjs`. Nothing is pushed.
+
 Sitemap v2 (`sitemap.md`) is **approved by Shrey as written**. Build it, section by section. Read `audit.md`
 and `sitemap.md` first; this file holds only what those don't.
 
