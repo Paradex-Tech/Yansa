@@ -1620,7 +1620,7 @@ ul {
    6. HOME
    ========================================================= */
 
-/* ---------- Hero: scroll-driven still reveal ----------
+/* ---------- Hero: scroll-driven film reveal ----------
    What is written first IS the settled design: heading, framed media,
    buttons. It stands on its own with no JavaScript, which is also what
    narrow screens and reduced-motion users get.
@@ -1642,7 +1642,7 @@ ul {
   position: relative;
 }
 
-/* Plain stack: the still with the heading on it, then the description */
+/* Plain stack: the film with the heading on it, then the description */
 .hero__media {
   position: relative;
   height: 72vh;
@@ -1651,16 +1651,12 @@ ul {
   background: #1a2a2c;
 }
 
-.hero__media img {
+.hero__media img,
+.hero__media video {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-/* The script eases the still from a slight zoom to rest as the hero scrolls */
-.hero.is-scrolly .hero__media img {
-  will-change: transform;
 }
 
 .hero__heading {
@@ -1739,9 +1735,9 @@ ul {
   height: var(--hero-stage-h);
 }
 
-/* The still is in front of the photos (they come out from behind it) and
+/* The film is in front of the photos (they come out from behind it) and
    behind the heading. It reaches up under the navbar so that, once the navbar
-   fades, the still is already there and nothing has to move. */
+   fades, the film is already there and nothing has to move. */
 .hero.is-scrolly .hero__media {
   position: absolute;
   z-index: 2;

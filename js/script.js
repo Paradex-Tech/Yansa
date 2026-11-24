@@ -1884,6 +1884,17 @@
   }
 
 
+  /* ---------- Home hero: film ----------
+     The hero video autoplays muted and loops. With reduced motion it is
+     held on its poster (its first frame) instead. */
+  function initHeroVideo() {
+    var video = document.querySelector('.hero__media video');
+    if (!video || !reduceMotion) return;
+    video.removeAttribute('autoplay');
+    video.pause();
+  }
+
+
   /* ---------- Home hero: scroll-driven sequence ----------
      Adds .is-scrolly, which pins the stage, then plays one scrubbed timeline
      (p, 0 to 1) as the page scrolls. The page's own scroll bar drives it
@@ -1891,17 +1902,15 @@
      wheel notch glides. The runway is 90vh (--hero-runway), so the whole hero
      is 1.8 screens and the stages overlap more than they once did:
        0    to 0.18  the navbar and the heading fade away together, leaving
-                     the still bare. The still does not move. It already
+                     the film bare. The film does not move. It already
                      reaches up under the navbar, so nothing shifts as the
                      navbar goes (it comes back once the hero is scrolled past)
-       0.18 to 0.20  a beat with just the still
-       0.20 to 0.56  the still shrinks to a card
+       0.18 to 0.20  a beat with just the film
+       0.20 to 0.56  the film shrinks to a card
        0.34 to 0.78  the card lifts to the top; four photos slide out from
                      BEHIND it (the card is in front of them)
        0.78 to 0.98  the description and buttons arrive under the card
        0.88 on       the photos and the card drift with the cursor
-     Through the whole runway the still itself eases from a 1.06 zoom to 1,
-     a pure function of p, so a still picture never reads as frozen.
      Not run under reduced motion, on phones, or on screens too short to
      hold the whole end state; those get the plain stack. */
   function initHero() {
@@ -1911,7 +1920,6 @@
     var navbar = document.querySelector('.navbar');
     var stage = hero.querySelector('.hero__stage');
     var media = hero.querySelector('.hero__media');
-    var still = media.querySelector('img');
     var heading = hero.querySelector('.hero__heading');
     var desc = hero.querySelector('.hero__desc');
     var floats = toArray(hero.querySelectorAll('.hero__float'));
@@ -1927,7 +1935,6 @@
       { x: 0.17, y: 0.30, at: 0.51, w: 170, drift: 0.10 }
     ];
     var PHOTO_LEN = 0.40;  // how much of p each photo takes to arrive
-    var STILL_ZOOM = 1.06; // the still's scale at p = 0, easing to 1 at p = 1
     var CARD_W = 210;      // px at scale 1
     var CARD_RATIO = 1.3;  // height over width
     var CARD_DRIFT = 0.06;
@@ -1987,7 +1994,6 @@
       media.style.height = h.toFixed(2) + 'px';
       media.style.borderRadius = lerp(0, 18, shrink).toFixed(2) + 'px';
       media.style.boxShadow = '0 20px 50px rgba(26, 65, 70, ' + (0.28 * shrink).toFixed(3) + ')';
-      if (still) still.style.transform = 'scale(' + lerp(STILL_ZOOM, 1, p).toFixed(4) + ')';
 
       heading.style.opacity = (1 - fade).toFixed(3);
       heading.style.visibility = fade >= 1 ? 'hidden' : '';
@@ -2024,7 +2030,7 @@
 
     // Hand every property back to the stylesheet
     function reset() {
-      [media, still, heading, desc].concat(floats).forEach(function (el) {
+      [media, heading, desc].concat(floats).forEach(function (el) {
         if (!el) return;
         ['left', 'top', 'width', 'height', 'borderRadius', 'boxShadow', 'opacity', 'visibility', 'transform']
           .forEach(function (name) { el.style[name] = ''; });
@@ -3080,6 +3086,7 @@
   initPqWave();
   initPqPills();
   initTypewriter();
+  initHeroVideo();
   initHero();
   initScrollReveal();
   initQuote();

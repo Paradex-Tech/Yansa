@@ -82,16 +82,15 @@
      stage sticks under the navbar and one scrubbed timeline p (0 to 1) plays
      over a runway of 0.6 screens (it was 1.3 with the film; the stages
      overlap more now), followed with a damped lerp:
-       0    to 0.18  the navbar and the heading fade, leaving the bare still.
-                     The still already reaches up under the navbar, so nothing
+       0    to 0.18  the navbar and the heading fade, leaving the bare film.
+                     The film already reaches up under the navbar, so nothing
                      moves as the bar goes (it returns once the hero is past)
-       0.20 to 0.56  the still shrinks to a portrait card (60vw wide)
+       0.20 to 0.56  the film shrinks to a portrait card (60vw wide)
        0.32 to 0.74  the card rises to its resting place; three photos slide
                      out from behind it to the sides (the card stays in front)
        0.72 to 0.94  the description and the buttons arrive under the card
        0.88 on       the photos float slowly in place (touch has no cursor
                      to drift with)
-     Through the whole runway the still eases from a 1.06 zoom to 1.
      The resting layout is worked out from the real heights (the copy wraps
      differently on every phone) and keeps clear of a bar fixed to the bottom
      of the screen. Under reduced motion, on landscape phones and on screens
@@ -104,7 +103,6 @@
     var navbar = document.querySelector('.navbar');
     var stage = hero.querySelector('.hero__stage');
     var media = hero.querySelector('.hero__media');
-    var still = media.querySelector('img');
     var heading = hero.querySelector('.hero__heading');
     var desc = hero.querySelector('.hero__desc');
     var floats = toArray(hero.querySelectorAll('.hero__float')).slice(0, 3);
@@ -118,7 +116,6 @@
       { side: -1, y: 0.31, w: 0.25, rot: 2, at: 0.46, amp: 4, period: 8.2, phase: 4.2 }
     ];
     var PHOTO_LEN = 0.38; // how much of p each photo takes to arrive
-    var STILL_ZOOM = 1.06;
     var RUNWAY = 0.6;    // screens of scroll the scene takes
     var CARD_W = 0.6;    // of the screen width
     var CARD_RATIO = 1.25;
@@ -251,7 +248,6 @@
       media.style.height = h.toFixed(2) + 'px';
       media.style.borderRadius = lerp(0, 20, shrink).toFixed(2) + 'px';
       media.style.boxShadow = '0 18px 44px rgba(26, 65, 70, ' + (0.3 * shrink).toFixed(3) + ')';
-      if (still) still.style.transform = 'scale(' + lerp(STILL_ZOOM, 1, p).toFixed(4) + ')';
 
       heading.style.opacity = (1 - fade).toFixed(3);
       heading.style.visibility = fade >= 1 ? 'hidden' : '';
@@ -310,7 +306,7 @@
     }
 
     function reset() {
-      [media, still, heading, desc].concat(floats).forEach(function (el) {
+      [media, heading, desc].concat(floats).forEach(function (el) {
         if (!el) return;
         ['left', 'top', 'width', 'height', 'borderRadius', 'boxShadow', 'opacity', 'visibility', 'transform']
           .forEach(function (name) { el.style[name] = ''; });
