@@ -827,37 +827,51 @@ h1, h2, h3, h4, p, li, a {
 .footer__cta {
   max-width: none;
   margin: 0;
-  padding: 56px var(--gutter) 40px;
+  padding: 36px var(--gutter) 24px;
   text-align: left;
 }
 
 .footer__icon {
-  width: 44px;
-  height: 44px;
-  margin: 0 0 20px;
+  width: 36px;
+  height: 36px;
+  margin: 0 0 12px;
 }
 
 .footer__cta h2 {
-  margin-bottom: 12px;
-  max-width: 16ch;
+  margin-bottom: 8px;
+  max-width: 20ch;
 }
 
 .footer__cta p {
-  margin-bottom: 28px;
-  max-width: 34ch;
+  margin-bottom: 18px;
+  max-width: 40ch;
 }
 
+/* Stacked on the narrowest phones, side by side from 360px up */
 .footer__buttons {
   flex-direction: column;
   align-items: stretch;
-  gap: 12px;
+  gap: 10px;
 }
 
 .footer__buttons .btn {
   width: 100%;
-  min-height: 52px;
-  padding: 14px 24px;
+  min-height: 48px;
+  padding: 12px 20px;
   border-radius: 999px;
+}
+
+@media (min-width: 360px) {
+  .footer__buttons {
+    flex-direction: row;
+  }
+
+  .footer__buttons .btn {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 12px 8px;
+    letter-spacing: 0.2px;
+  }
 }
 
 .footer__buttons .btn::before {
@@ -867,10 +881,10 @@ h1, h2, h3, h4, p, li, a {
 .footer__bottom {
   flex-direction: column;
   align-items: stretch;
-  gap: 32px;
+  gap: 18px;
   width: auto;
   margin: 0 var(--gutter);
-  padding: 32px 0 8px;
+  padding: 22px 0 0;
   border-top: 1px solid rgba(169, 209, 215, 0.18);
 }
 
@@ -889,31 +903,45 @@ h1, h2, h3, h4, p, li, a {
 /* The 404 footer has no CTA above it */
 .footer > .footer__bottom:first-child {
   border-top: 0;
-  padding-top: 48px;
+  padding-top: 40px;
 }
 
 .footer__brand {
   max-width: none;
 }
 
+/* Logo and social marks share one row; the line sits under them */
+.footer__brand {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  column-gap: 12px;
+  row-gap: 8px;
+}
+
 .footer__brand img {
   height: 28px;
-  margin-bottom: 14px;
+  margin-bottom: 0;
 }
 
 .footer__brand p {
-  max-width: 36ch;
-  margin-bottom: 18px;
+  grid-column: 1 / -1;
+  grid-row: 2;
+  max-width: 44ch;
+  margin-bottom: 0;
   font-size: var(--fs-small);
-  line-height: 1.55;
+  line-height: 1.5;
   opacity: 0.9;
 }
 
 .footer__socials {
+  grid-column: 2;
+  grid-row: 1;
   gap: 10px;
 }
 
-/* Each mark sits in a 44px round chip so it reads as a tappable control */
+/* Each mark sits in a 44px round chip so it reads as a tappable control
+   (13px of padding around the 17px mark; the row is 44px, so no extra height) */
 .footer__socials img,
 .footer__socials a {
   box-sizing: content-box;
@@ -937,22 +965,24 @@ h1, h2, h3, h4, p, li, a {
   background: none;
 }
 
-/* Two columns of 48px rows with hairlines between them */
+/* One 2-column grid of 40px rows with hairlines between them. The three
+   desktop columns dissolve into it, so the links read across in order. */
 .footer__links {
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 20px;
+  row-gap: 0;
 }
 
 .footer__col {
-  gap: 0;
+  display: contents;
 }
 
 .footer__col a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: var(--tap);
+  min-height: 40px;
   border-bottom: 1px solid rgba(169, 209, 215, 0.14);
   color: var(--text-on-dark);
   touch-action: manipulation;
@@ -982,7 +1012,7 @@ h1, h2, h3, h4, p, li, a {
   justify-content: space-between;
   gap: 16px;
   margin: 0 var(--gutter);
-  padding: 20px 0 calc(24px + var(--safe-bottom));
+  padding: 6px 0 calc(10px + var(--safe-bottom));
   color: var(--mist);
   font-size: var(--fs-label);
   letter-spacing: 0.4px;
