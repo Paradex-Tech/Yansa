@@ -320,6 +320,7 @@ ul {
 
 /* H3 — sub-section headings and figure labels */
 .yanq-next__line,
+.pqs-next h2,
 .deliver-stat h3,
 .case-card__num,
 .case-card__title {
@@ -373,6 +374,7 @@ ul {
 .yanq-hero__body,
 .about-values__copy,
 .generates > p,
+.pqs-next p,
 .solutions-row__inner > p,
 .inaction__inner > p,
 .results__inner > p,
@@ -3571,6 +3573,39 @@ ul {
   background: var(--petrol);
   border-color: var(--petrol);
   color: var(--text-on-dark);
+}
+
+/* Closing band: the same cream strip as YanQ's next step, with a heading */
+.pqs-next {
+  background: var(--cream);
+  border-top: 1px solid rgba(188, 201, 199, 0.55);
+  padding: 72px var(--gutter);
+}
+
+.pqs-next__inner {
+  max-width: 1152px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px 48px;
+  flex-wrap: wrap;
+}
+
+.pqs-next h2 {
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.pqs-next p {
+  color: var(--text);
+  max-width: 560px;
+}
+
+.pqs-next__buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .pqs .solutions-row {
