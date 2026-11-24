@@ -56,7 +56,7 @@
   --header-gap: 48px;
 
   /* Home hero scroll animation */
-  --hero-runway: 190vh;
+  --hero-runway: 90vh;
   --hero-stage-h: calc(100vh - var(--nav-height));
   --hero-frame-w: 762px;
 
@@ -1333,7 +1333,7 @@ ul {
    6. HOME
    ========================================================= */
 
-/* ---------- Hero: scroll-driven video reveal ----------
+/* ---------- Hero: scroll-driven still reveal ----------
    What is written first IS the settled design: heading, framed media,
    buttons. It stands on its own with no JavaScript, which is also what
    narrow screens and reduced-motion users get.
@@ -1355,7 +1355,7 @@ ul {
   position: relative;
 }
 
-/* Plain stack: the film with the heading on it, then the description */
+/* Plain stack: the still with the heading on it, then the description */
 .hero__media {
   position: relative;
   height: 72vh;
@@ -1364,11 +1364,16 @@ ul {
   background: #1a2a2c;
 }
 
-.hero__media img,
-.hero__media video {
+.hero__media img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* The script eases the still from a slight zoom to rest as the hero scrolls */
+.hero.is-scrolly .hero__media img {
+  will-change: transform;
 }
 
 .hero__heading {
@@ -1386,11 +1391,11 @@ ul {
   padding: 0 var(--gutter);
   text-align: center;
   color: #ffffff;
-  /* Legible over bright film without bringing back the full overlay the
+  /* Legible over the bright still without bringing back the full overlay the
      client removed: a tight edge shadow plus a wide soft halo */
   text-shadow: 0 1px 3px rgba(4, 25, 23, 0.7), 0 2px 32px rgba(4, 25, 23, 0.75);
   /* A soft dark pool behind the words only, so they read over the brightest
-     frames of the film while the edges of the picture stay untouched */
+     parts of the picture while its edges stay untouched */
   background: radial-gradient(ellipse 52% 34% at 50% 50%, rgba(4, 25, 23, 0.7) 0%, rgba(4, 25, 23, 0.34) 55%, rgba(4, 25, 23, 0) 100%);
 }
 
@@ -1437,7 +1442,7 @@ ul {
 .hero.is-scrolly {
   height: calc(var(--hero-stage-h) + var(--hero-runway));
   /* The scaled heading is wider than the screen: clip the sides only, since
-     the film must still reach up over the navbar */
+     the still must still reach up over the navbar */
   overflow-x: clip;
 }
 
@@ -1447,9 +1452,9 @@ ul {
   height: var(--hero-stage-h);
 }
 
-/* The film is in front of the photos (they come out from behind it) and
+/* The still is in front of the photos (they come out from behind it) and
    behind the heading. It reaches up under the navbar so that, once the navbar
-   fades, the film is already there and nothing has to move. */
+   fades, the still is already there and nothing has to move. */
 .hero.is-scrolly .hero__media {
   position: absolute;
   z-index: 2;

@@ -14,7 +14,7 @@
 
 /* ---------- Hero ----------
    Static composition (no script, reduced motion, landscape, short screens):
-   the film as a rounded card inset in the gutter with the heading on it,
+   the still as a rounded card inset in the gutter with the heading on it,
    then the description. */
 .hero__stage {
   padding: 12px var(--gutter, 20px) 0;
@@ -70,8 +70,8 @@
    position. svh keeps the runway steady while the browser's toolbar slides;
    the stage itself follows the visible height (dvh). */
 .hero.m-hero-on {
-  height: calc(100vh - var(--m-hero-top, 0px) + 130vh);
-  height: calc(100svh - var(--m-hero-top, 0px) + var(--m-hero-runway, 130svh));
+  height: calc(100vh - var(--m-hero-top, 0px) + 65vh);
+  height: calc(100svh - var(--m-hero-top, 0px) + var(--m-hero-runway, 65svh));
   overflow-x: clip;
 }
 
@@ -95,6 +95,10 @@
   min-height: 0;
   border-radius: 0;
   will-change: left, top, width, height;
+}
+
+.hero.m-hero-on .hero__media img {
+  will-change: transform;
 }
 
 /* Centred on the whole screen, navbar strip included */

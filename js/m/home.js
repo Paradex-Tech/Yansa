@@ -80,16 +80,18 @@
   /* ---------- Hero: portrait scroll scene ----------
      The phone version of initHero (which bails out at 768px and below). The
      stage sticks under the navbar and one scrubbed timeline p (0 to 1) plays
-     over a runway of 1.3 screens, followed with a damped lerp:
-       0    to 0.20  the navbar and the heading fade, leaving the bare film.
-                     The film already reaches up under the navbar, so nothing
+     over a runway of 0.65 screens (it was 1.3 with the film; the stages
+     overlap more now), followed with a damped lerp:
+       0    to 0.18  the navbar and the heading fade, leaving the bare still.
+                     The still already reaches up under the navbar, so nothing
                      moves as the bar goes (it returns once the hero is past)
-       0.24 to 0.60  the film shrinks to a portrait card (60vw wide)
-       0.34 to 0.74  the card rises to its resting place; three photos slide
+       0.20 to 0.56  the still shrinks to a portrait card (60vw wide)
+       0.32 to 0.74  the card rises to its resting place; three photos slide
                      out from behind it to the sides (the card stays in front)
-       0.74 to 0.96  the description and the buttons arrive under the card
-       0.85 on       the photos float slowly in place (touch has no cursor
+       0.72 to 0.94  the description and the buttons arrive under the card
+       0.88 on       the photos float slowly in place (touch has no cursor
                      to drift with)
+     Through the whole runway the still eases from a 1.06 zoom to 1.
      The resting layout is worked out from the real heights (the copy wraps
      differently on every phone) and keeps clear of a bar fixed to the bottom
      of the screen. Under reduced motion, on landscape phones and on screens
@@ -102,6 +104,7 @@
     var navbar = document.querySelector('.navbar');
     var stage = hero.querySelector('.hero__stage');
     var media = hero.querySelector('.hero__media');
+    var still = media.querySelector('img');
     var heading = hero.querySelector('.hero__heading');
     var desc = hero.querySelector('.hero__desc');
     var floats = toArray(hero.querySelectorAll('.hero__float')).slice(0, 3);
@@ -110,11 +113,13 @@
     // of the card's height from its centre, width as a fraction of the
     // screen, a slight tilt, when it starts, and its idle float.
     var SPOTS = [
-      { side: -1, y: -0.25, w: 0.30, rot: -3, at: 0.38, amp: 5, period: 7.5, phase: 0 },
-      { side: 1, y: 0.02, w: 0.31, rot: 2.5, at: 0.44, amp: 6, period: 9, phase: 2.1 },
-      { side: -1, y: 0.31, w: 0.25, rot: 2, at: 0.50, amp: 4, period: 8.2, phase: 4.2 }
+      { side: -1, y: -0.25, w: 0.30, rot: -3, at: 0.34, amp: 5, period: 7.5, phase: 0 },
+      { side: 1, y: 0.02, w: 0.31, rot: 2.5, at: 0.40, amp: 6, period: 9, phase: 2.1 },
+      { side: -1, y: 0.31, w: 0.25, rot: 2, at: 0.46, amp: 4, period: 8.2, phase: 4.2 }
     ];
-    var RUNWAY = 1.3;    // screens of scroll the scene takes
+    var PHOTO_LEN = 0.38; // how much of p each photo takes to arrive
+    var STILL_ZOOM = 1.06;
+    var RUNWAY = 0.65;   // screens of scroll the scene takes
     var CARD_W = 0.6;    // of the screen width
     var CARD_RATIO = 1.25;
     var CARD_MAX_W = 340;
@@ -200,7 +205,7 @@
       var spot = SPOTS[i];
       var fw = Math.min(spot.w * geo.W, 210);
       var fh = fw * 0.75;
-      var cy = lerp(geo.cy0, geo.cyEnd, ease(clamp01((p - 0.34) / 0.40)));
+      var cy = lerp(geo.cy0, geo.cyEnd, ease(clamp01((p - 0.32) / 0.42)));
       // A third of the photo stays tucked behind the card, but never closer
       // to the screen edge than EDGE
       var cardLeft = (geo.W - geo.cardW) / 2;
@@ -220,14 +225,14 @@
     }
 
     function idleAmount(p) {
-      return reduce ? 0 : clamp01((p - 0.85) / 0.15);
+      return reduce ? 0 : clamp01((p - 0.88) / 0.12);
     }
 
     function apply(p) {
       if (!geo) return;
-      var fade = clamp01(p / 0.20);
-      var shrink = ease(clamp01((p - 0.24) / 0.36));
-      var lift = ease(clamp01((p - 0.34) / 0.40));
+      var fade = clamp01(p / 0.18);
+      var shrink = ease(clamp01((p - 0.20) / 0.36));
+      var lift = ease(clamp01((p - 0.32) / 0.42));
 
       var cy = lerp(geo.cy0, geo.cyEnd, lift);
       var w = lerp(geo.W, geo.cardW, shrink);
@@ -239,6 +244,7 @@
       media.style.height = h.toFixed(2) + 'px';
       media.style.borderRadius = lerp(0, 20, shrink).toFixed(2) + 'px';
       media.style.boxShadow = '0 18px 44px rgba(26, 65, 70, ' + (0.3 * shrink).toFixed(3) + ')';
+      if (still) still.style.transform = 'scale(' + lerp(STILL_ZOOM, 1, p).toFixed(4) + ')';
 
       heading.style.opacity = (1 - fade).toFixed(3);
       heading.style.visibility = fade >= 1 ? 'hidden' : '';
@@ -256,13 +262,13 @@
 
       var idle = idleAmount(p);
       floats.forEach(function (el, i) {
-        var t = ease(clamp01((p - SPOTS[i].at) / 0.36));
+        var t = ease(clamp01((p - SPOTS[i].at) / PHOTO_LEN));
         el.style.width = Math.min(SPOTS[i].w * geo.W, 210).toFixed(2) + 'px';
         el.style.visibility = t <= 0 ? 'hidden' : 'visible';
         el.style.transform = photo(i, p, t, idle);
       });
 
-      var d = easeOut(clamp01((p - 0.74) / 0.22));
+      var d = easeOut(clamp01((p - 0.72) / 0.22));
       desc.style.opacity = d.toFixed(3);
       desc.style.visibility = d <= 0 ? 'hidden' : 'visible';
       desc.style.top = (cy + h / 2 + TEXT_GAP).toFixed(2) + 'px';
@@ -283,7 +289,7 @@
           return;
         }
         floats.forEach(function (el, i) {
-          var t = ease(clamp01((p - SPOTS[i].at) / 0.36));
+          var t = ease(clamp01((p - SPOTS[i].at) / PHOTO_LEN));
           el.style.transform = photo(i, p, t, idle);
         });
         idleRaf = requestAnimationFrame(step);
@@ -297,7 +303,8 @@
     }
 
     function reset() {
-      [media, heading, desc].concat(floats).forEach(function (el) {
+      [media, still, heading, desc].concat(floats).forEach(function (el) {
+        if (!el) return;
         ['left', 'top', 'width', 'height', 'borderRadius', 'boxShadow', 'opacity', 'visibility', 'transform']
           .forEach(function (name) { el.style[name] = ''; });
       });

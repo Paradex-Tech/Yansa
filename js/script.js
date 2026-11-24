@@ -1904,32 +1904,24 @@
   }
 
 
-  /* ---------- Home hero: film ----------
-     The hero video autoplays muted and loops. With reduced motion it is
-     held on its poster (its first frame) instead. */
-  function initHeroVideo() {
-    var video = document.querySelector('.hero__media video');
-    if (!video || !reduceMotion) return;
-    video.removeAttribute('autoplay');
-    video.pause();
-  }
-
-
   /* ---------- Home hero: scroll-driven sequence ----------
      Adds .is-scrolly, which pins the stage, then plays one scrubbed timeline
      (p, 0 to 1) as the page scrolls. The page's own scroll bar drives it
      (sticky, never a wheel hijack), followed with a damped lerp so a coarse
-     wheel notch glides.
-       0    to 0.22  the navbar and the heading fade away together, leaving
-                     the film bare. The film does not move. It already
+     wheel notch glides. The runway is 90vh (--hero-runway), so the whole hero
+     is 1.8 screens and the stages overlap more than they once did:
+       0    to 0.18  the navbar and the heading fade away together, leaving
+                     the still bare. The still does not move. It already
                      reaches up under the navbar, so nothing shifts as the
                      navbar goes (it comes back once the hero is scrolled past)
-       0.22 to 0.28  a beat with just the film
-       0.28 to 0.62  the film shrinks to a card
-       0.40 to 0.80  the card lifts to the top; four photos slide out from
+       0.18 to 0.20  a beat with just the still
+       0.20 to 0.56  the still shrinks to a card
+       0.34 to 0.78  the card lifts to the top; four photos slide out from
                      BEHIND it (the card is in front of them)
-       0.80 to 1     the description and buttons arrive under the card
-       0.85 on       the photos and the card drift with the cursor
+       0.78 to 0.98  the description and buttons arrive under the card
+       0.88 on       the photos and the card drift with the cursor
+     Through the whole runway the still itself eases from a 1.06 zoom to 1,
+     a pure function of p, so a still picture never reads as frozen.
      Not run under reduced motion, on phones, or on screens too short to
      hold the whole end state; those get the plain stack. */
   function initHero() {
@@ -1939,6 +1931,7 @@
     var navbar = document.querySelector('.navbar');
     var stage = hero.querySelector('.hero__stage');
     var media = hero.querySelector('.hero__media');
+    var still = media.querySelector('img');
     var heading = hero.querySelector('.hero__heading');
     var desc = hero.querySelector('.hero__desc');
     var floats = toArray(hero.querySelectorAll('.hero__float'));
@@ -1948,11 +1941,13 @@
     // starts; its width at 1440px; and how far the cursor moves it. The lower
     // ones stay shallow so they keep clear of the text under the card.
     var SPOTS = [
-      { x: -0.33, y: -0.16, at: 0.42, w: 200, drift: 0.12 },
-      { x: 0.33, y: -0.16, at: 0.48, w: 200, drift: 0.08 },
-      { x: -0.17, y: 0.30, at: 0.54, w: 170, drift: 0.15 },
-      { x: 0.17, y: 0.30, at: 0.60, w: 170, drift: 0.10 }
+      { x: -0.33, y: -0.16, at: 0.36, w: 200, drift: 0.12 },
+      { x: 0.33, y: -0.16, at: 0.41, w: 200, drift: 0.08 },
+      { x: -0.17, y: 0.30, at: 0.46, w: 170, drift: 0.15 },
+      { x: 0.17, y: 0.30, at: 0.51, w: 170, drift: 0.10 }
     ];
+    var PHOTO_LEN = 0.40;  // how much of p each photo takes to arrive
+    var STILL_ZOOM = 1.06; // the still's scale at p = 0, easing to 1 at p = 1
     var CARD_W = 210;      // px at scale 1
     var CARD_RATIO = 1.3;  // height over width
     var CARD_DRIFT = 0.06;
@@ -1993,10 +1988,10 @@
 
     function apply(p) {
       if (!geo) return;
-      var fade = clamp01(p / 0.22);
-      var shrink = ease(clamp01((p - 0.28) / 0.34));
-      var lift = ease(clamp01((p - 0.40) / 0.40));
-      var drift = clamp01((p - 0.85) / 0.15);
+      var fade = clamp01(p / 0.18);
+      var shrink = ease(clamp01((p - 0.20) / 0.36));
+      var lift = ease(clamp01((p - 0.34) / 0.44));
+      var drift = clamp01((p - 0.88) / 0.12);
       var dx = -mouseNow.x * drift;
       var dy = -mouseNow.y * drift;
 
@@ -2012,6 +2007,7 @@
       media.style.height = h.toFixed(2) + 'px';
       media.style.borderRadius = lerp(0, 18, shrink).toFixed(2) + 'px';
       media.style.boxShadow = '0 20px 50px rgba(26, 65, 70, ' + (0.28 * shrink).toFixed(3) + ')';
+      if (still) still.style.transform = 'scale(' + lerp(STILL_ZOOM, 1, p).toFixed(4) + ')';
 
       heading.style.opacity = (1 - fade).toFixed(3);
       heading.style.visibility = fade >= 1 ? 'hidden' : '';
@@ -2029,7 +2025,7 @@
 
       floats.forEach(function (el, i) {
         var spot = SPOTS[i];
-        var t = ease(clamp01((p - spot.at) / 0.38));
+        var t = ease(clamp01((p - spot.at) / PHOTO_LEN));
         var fw = spot.w * geo.scale;
         var fh = fw * 0.75;
         var x = geo.W / 2 + spot.x * geo.W * t + dx * spot.drift * DRIFT_PX - fw / 2;
@@ -2039,7 +2035,7 @@
           'scale(' + lerp(0.8, 1, t).toFixed(4) + ')';
       });
 
-      var d = clamp01((p - 0.80) / 0.20);
+      var d = clamp01((p - 0.78) / 0.20);
       desc.style.opacity = d.toFixed(3);
       desc.style.visibility = d <= 0 ? 'hidden' : '';
       desc.style.top = (cy + h / 2 + TEXT_GAP + cardY).toFixed(2) + 'px';
@@ -2048,7 +2044,8 @@
 
     // Hand every property back to the stylesheet
     function reset() {
-      [media, heading, desc].concat(floats).forEach(function (el) {
+      [media, still, heading, desc].concat(floats).forEach(function (el) {
+        if (!el) return;
         ['left', 'top', 'width', 'height', 'borderRadius', 'boxShadow', 'opacity', 'visibility', 'transform']
           .forEach(function (name) { el.style[name] = ''; });
       });
@@ -2126,12 +2123,12 @@
       if (!on || (e.pointerType && e.pointerType !== 'mouse')) return;
       mouse.x = e.clientX / window.innerWidth - 0.5;
       mouse.y = e.clientY / window.innerHeight - 0.5;
-      if (target > 0.85) kick();
+      if (target > 0.88) kick();
     });
 
     onResizeEnd(sync, 120);
 
-    // The film's size depends on the media, so re-measure once loaded
+    // The stage's size depends on the media, so re-measure once loaded
     window.addEventListener('load', sync);
   }
 
@@ -3103,7 +3100,6 @@
   initPqWave();
   initPqPills();
   initTypewriter();
-  initHeroVideo();
   initHero();
   initScrollReveal();
   initQuote();

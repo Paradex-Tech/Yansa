@@ -95,25 +95,21 @@
 
   <main>
 
-    <!-- HERO: pinned and scrubbed by initHero. The film starts full bleed and shrinks to a
+    <!-- HERO: pinned and scrubbed by initHero. The still starts full bleed and shrinks to a
          card, the heading fades, four photos spread round the card, the group lifts and
          the description arrives. Without the script (or on a phone) it is a plain stack:
-         film with the heading on it, then the description. -->
+         still with the heading on it, then the description. -->
     <section class="hero">
       <div class="hero__stage">
-        <!-- Hero film: muted, looping, no audio track. The 1920 cut is for
-             wide screens, 1280 for the rest; the poster is its first frame.
-             With reduced motion the script pauses it on the poster. -->
+        <!-- Hero still: the first frame of the old film. The script eases it from a
+             slight zoom (1.06) to rest as the page scrolls, so it never sits frozen. -->
         <div class="hero__media">
-          <video autoplay muted loop playsinline preload="auto" poster="images/hero-poster.jpg" width="1920" height="1080" aria-hidden="true">
-            <source src="videos/hero-1920.mp4" type="video/mp4" media="(min-width: 1400px)">
-            <source src="videos/hero-1280.mp4" type="video/mp4">
-          </video>
+          <img src="images/hero-poster.jpg" alt="" width="1920" height="1080" fetchpriority="high" decoding="async" aria-hidden="true">
         </div>
-        <div class="hero__float" aria-hidden="true"><img src="images/case-01-photo.jpg" alt="" decoding="async"></div>
-        <div class="hero__float" aria-hidden="true"><img src="images/hero-plant.jpg" alt="" decoding="async"></div>
-        <div class="hero__float" aria-hidden="true"><img src="images/case-02-photo.jpg" alt="" decoding="async"></div>
-        <div class="hero__float" aria-hidden="true"><img src="images/case-03-photo.jpg" alt="" decoding="async"></div>
+        <div class="hero__float" aria-hidden="true"><img src="images/case-01-photo.jpg" alt="" width="738" height="393" decoding="async"></div>
+        <div class="hero__float" aria-hidden="true"><img src="images/hero-plant.jpg" alt="" width="1672" height="941" decoding="async"></div>
+        <div class="hero__float" aria-hidden="true"><img src="images/case-02-photo.jpg" alt="" width="384" height="254" decoding="async"></div>
+        <div class="hero__float" aria-hidden="true"><img src="images/case-03-photo.jpg" alt="" width="662" height="463" decoding="async"></div>
         <div class="hero__heading">
           <h1>Engineering Power Quality</h1>
           <p>An end to end power quality engineering company.</p>
