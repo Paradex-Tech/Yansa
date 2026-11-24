@@ -1145,18 +1145,19 @@ h1, h2, h3, h4, p, li, a {
   }
 
   /* Privacy, Terms and Back to top stay on one row */
-  .footer__legal {
-    gap: 0 12px;
+  .footer__legal.footer__legal {
+    gap: 0 8px;
   }
 
-  .footer__legal-links {
+  .footer__legal .footer__legal-links {
     flex-wrap: nowrap;
-    gap: 0 16px;
+    gap: 0 12px;
     white-space: nowrap;
   }
 
   .m-footer-end button {
     padding-left: 4px;
+    white-space: nowrap;
   }
 }
 
