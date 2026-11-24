@@ -962,6 +962,84 @@
   }
 
 
+  /* ---------- Symptom drawings ----------
+     Each symptom card holds a small line drawing (.sym-art, drawn in CSS to
+     its failure frame). Here the card is put on the start frame (.is-armed)
+     and released the first time it is half in view, so the drawing plays by
+     transition (breaker trips, motor heats, meter climbs, gauge falls).
+     While a mouse hovers the card, the drawing winds back and plays again
+     every few seconds; on leaving it settles on the finished frame. A
+     keyboard focus replays it once. Touch has no hover, so it only plays on
+     entering view. Reduced motion never arms the card: the finished frame
+     just shows. */
+  function initSymptomArt() {
+    var cards = toArray(document.querySelectorAll('.symptom-card'));
+    if (!cards.length || reduceMotion || !hasObserver) return;
+
+    var canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    var WIND = 450;    // ms for the drawing to wind back to its start frame
+    var EVERY = 3400;  // ms between replays while hovered
+
+    cards.forEach(function (card) {
+      if (!card.querySelector('.sym-art')) return;
+      var seen = false;
+      var timer = null;
+
+      function arm() {
+        card.classList.remove('is-play');
+        card.classList.add('is-armed');
+      }
+
+      function play() {
+        card.classList.remove('is-armed');
+        card.classList.add('is-play');
+      }
+
+      // Wind back, play, wait, repeat: only while the pointer stays on the card
+      function loop() {
+        arm();
+        timer = window.setTimeout(function () {
+          play();
+          timer = window.setTimeout(loop, EVERY);
+        }, WIND);
+      }
+
+      function stop() {
+        window.clearTimeout(timer);
+        timer = null;
+      }
+
+      arm();
+      onFirstView(card, 0.5, function () {
+        seen = true;
+        play();
+      });
+
+      if (canHover) {
+        card.addEventListener('mouseenter', function () {
+          if (!seen) return;
+          stop();
+          loop();
+        });
+        card.addEventListener('mouseleave', function () {
+          if (!seen) return;
+          stop();
+          play();
+        });
+      }
+
+      card.addEventListener('focusin', function () {
+        if (!seen || timer) return;
+        arm();
+        timer = window.setTimeout(function () {
+          timer = null;
+          play();
+        }, WIND);
+      });
+    });
+  }
+
+
   /* ---------- PQ Solved: scroll-linked wave, cursor spotlight, jump bar ----------
      initPqScroll writes --pq-p (0 to 1) on every [data-pq-progress]
      section, a pure function of scroll position:
@@ -3091,6 +3169,7 @@
   initNavIndicator();
   initNavMenus();
   initSymptomFocus();
+  initSymptomArt();
   initFaq();
   initIndustryTabs();
   initNavAutoHide();

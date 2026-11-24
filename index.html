@@ -145,7 +145,19 @@
       </div>
       <div class="symptoms__grid">
         <div class="symptom-card">
-          <img src="images/icons/icon-breaker-trip.svg" alt="">
+          <svg class="sym-art sym-breaker" viewBox="0 0 120 120" width="104" height="104" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M60 16 V5 M60 104 V115"/>
+            <rect x="35" y="16" width="50" height="88" rx="7" stroke-width="2.4"/>
+            <rect x="49" y="40" width="22" height="40" rx="5" stroke-width="1.8"/>
+            <path d="M60 25 V33"/>
+            <circle cx="60" cy="92" r="3.6"/>
+            <g class="sym-lever">
+              <rect class="sym-lever-on yd-clean" x="54" y="44" width="12" height="17" rx="3.5"/>
+              <rect class="sym-lever-off yd-raw" x="54" y="44" width="12" height="17" rx="3.5"/>
+            </g>
+            <path class="sym-bolt yd-raw" pathLength="1" d="M24 48 L16 62 H25 L17 78"/>
+            <path class="sym-spark yd-raw" d="M94 44 L102 38 M96 53 H106 M94 62 L102 68"/>
+          </svg>
           <div class="symptom-card__body">
             <p class="symptom-card__title">Increased downtime</p>
             <div class="symptom-card__detail">
@@ -154,7 +166,25 @@
           </div>
         </div>
         <div class="symptom-card">
-          <img src="images/icons/icon-overheat.svg" alt="">
+          <svg class="sym-art sym-motor" viewBox="0 0 120 120" width="104" height="104" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="8" y="52" width="9" height="26" rx="3" stroke-width="1.8"/>
+            <rect x="17" y="46" width="56" height="38" rx="7" stroke-width="2.4"/>
+            <rect class="sym-heat yd-raw" x="17" y="46" width="56" height="38" rx="7" stroke-width="2.4"/>
+            <path d="M29 53 V77 M39 53 V77 M49 53 V77 M59 53 V77" stroke-width="1.6"/>
+            <path d="M73 65 H88" stroke-width="2.4"/>
+            <path d="M24 84 V93 M66 84 V93 M16 93 H76"/>
+            <g class="yd-raw">
+              <path class="sym-wave sym-wave-1" pathLength="1" d="M30 40 C25 34 35 30 30 24 C25 18 35 14 30 8"/>
+              <path class="sym-wave sym-wave-2" pathLength="1" d="M45 40 C40 34 50 30 45 24 C40 18 50 14 45 8"/>
+              <path class="sym-wave sym-wave-3" pathLength="1" d="M60 40 C55 34 65 30 60 24 C55 18 65 14 60 8"/>
+            </g>
+            <path d="M97 83.3 V21 A5 5 0 0 1 107 21 V83.3 A10 10 0 1 1 97 83.3 Z"/>
+            <path class="yd-guide" d="M111 30 H115 M111 42 H115 M111 54 H115 M111 66 H115" stroke-width="1.4"/>
+            <circle class="sym-bulb-cool yd-clean" cx="102" cy="92" r="5.4" fill="currentColor" stroke="none"/>
+            <circle class="sym-bulb-hot yd-raw" cx="102" cy="92" r="5.4" fill="currentColor" stroke="none"/>
+            <path class="sym-merc-cool yd-clean" pathLength="1" d="M102 90 V30" stroke-width="4.5"/>
+            <path class="sym-merc-hot yd-raw" pathLength="1" d="M102 90 V30" stroke-width="4.5"/>
+          </svg>
           <div class="symptom-card__body">
             <p class="symptom-card__title">Equipment failure</p>
             <div class="symptom-card__detail">
@@ -163,7 +193,27 @@
           </div>
         </div>
         <div class="symptom-card">
-          <img src="images/icons/icon-bills.svg" alt="">
+          <svg class="sym-art sym-meter" viewBox="0 0 120 120" width="104" height="104" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <defs><clipPath id="sym-meter-clip"><rect x="54" y="25" width="12" height="13"/></clipPath></defs>
+            <rect x="10" y="10" width="74" height="86" rx="9" stroke-width="2.4"/>
+            <rect x="20" y="20" width="54" height="22" rx="4" stroke-width="1.8"/>
+            <g stroke-width="1.6">
+              <rect x="29" y="26.5" width="6" height="9" rx="3"/>
+              <path d="M44 28.5 L46.5 26.5 V35.5"/>
+            </g>
+            <g clip-path="url(#sym-meter-clip)" stroke-width="1.6">
+              <g class="sym-roll"><rect x="57" y="26.5" width="6" height="9" rx="3"/><path d="M58 42.5 L60.5 40.5 V49.5"/><path d="M57 57.0 Q57 54.5 60 54.5 T63 57.0 Q63 59.5 57 63.5 H63"/><path d="M57 68.5 H63 L60 72.5 Q63.5 73.1 63 75.5 Q62 78.0 57 77.0"/></g>
+            </g>
+            <path class="yd-guide" d="M20 90 H74" stroke-width="1.2" stroke-dasharray="4 4"/>
+            <path class="sym-bar sym-bar-1 yd-clean" pathLength="1" d="M26 84 V74" stroke-width="5"/>
+            <path class="sym-bar sym-bar-2 yd-clean" pathLength="1" d="M40 84 V66" stroke-width="5"/>
+            <path class="sym-bar sym-bar-3 yd-raw" pathLength="1" d="M54 84 V57" stroke-width="5"/>
+            <path class="sym-bar sym-bar-4 yd-raw" pathLength="1" d="M68 84 V48" stroke-width="5"/>
+            <g class="sym-badge yd-raw">
+              <circle cx="102" cy="102" r="14"/>
+              <path d="M96.5 95.5 H107.5 M96.5 100.5 H107.5 M97 95.5 H100.5 Q105.5 95.5 105.5 99 Q105.5 104 100.5 104 H97 L105 111" stroke-width="1.8"/>
+            </g>
+          </svg>
           <div class="symptom-card__body">
             <p class="symptom-card__title">Rising kVAh billing</p>
             <div class="symptom-card__detail">
@@ -172,7 +222,18 @@
           </div>
         </div>
         <div class="symptom-card">
-          <img src="images/icons/icon-capacitor.svg" alt="">
+          <svg class="sym-art sym-gauge" viewBox="0 0 120 120" width="104" height="104" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path class="sym-arc sym-arc-1 yd-raw" pathLength="1" d="M16 72 A44 44 0 0 1 38 33.9" stroke-width="2.4"/>
+            <path class="sym-arc sym-arc-2" pathLength="1" d="M38 33.9 A44 44 0 0 1 82 33.9" stroke-width="2.4"/>
+            <path class="sym-arc sym-arc-3 yd-clean" pathLength="1" d="M82 33.9 A44 44 0 0 1 104 72" stroke-width="2.4"/>
+            <path class="yd-guide" d="M26 72 L21 72 M30.6 55 L26.2 52.5 M43 42.6 L40.5 38.2 M60 38 L60 33 M77 42.6 L79.5 38.2 M89.4 55 L93.8 52.5 M94 72 L99 72" stroke-width="1.6" stroke-opacity="0.8"/>
+            <g class="sym-needle">
+              <path class="sym-needle-hi yd-clean" d="M60 72 V42"/>
+              <path class="sym-needle-lo yd-raw" d="M60 72 V42"/>
+            </g>
+            <circle cx="60" cy="72" r="4.5"/>
+            <path class="sym-fall yd-raw" pathLength="1" d="M60 86 V108 M52 100 L60 108 L68 100"/>
+          </svg>
           <div class="symptom-card__body">
             <p class="symptom-card__title">Decreased efficiency of the system</p>
             <div class="symptom-card__detail">
@@ -181,6 +242,7 @@
           </div>
         </div>
       </div>
+      <p class="symptoms__more">Which loads cause these? <a href="know-your-loads.html"><span class="symptoms__more-text">Know Your Loads</span> <span class="pq-arrow" aria-hidden="true">&rarr;</span></a></p>
     </section>
 
     <!-- QUOTE -->
