@@ -155,3 +155,29 @@ b8335ca F, f64a08b G, 2871667 H, 8e99a0f I, af79190 J, 9fa4fac round-1 fixes, a0
 - Heights (desktop / phone): index 4,807 / 5,098; yanq 4,163 / 4,298 (was 4,006: footer + expect row, band removed);
   contact 2,631 / 2,641; services 3,152 / 3,639; solutions 4,960 / 5,844; about 4,086 / 3,797; know-your-loads
   4,644 / 4,997; 404 1,035 / 1,221. All checks pass; 0 console errors.
+
+## S15 Phone pass (2026-11-24)
+Audit `audit-phone.md`, spec `specs/S15-phone-pass.md`, tool `tools/phone-type.mjs` (type sizes, taps < 44,
+overflow, paddings at 390/360). Know Your Loads out of scope (own redesign next); only shared tokens reach it.
+- Scale (<= 599 px, 390/360): display 44/40.7, H1 34/31.7, H2 29/27, statement 24/22.3, H3 22, H4 20, numeral
+  40/37, lead 17, body 16, small 14, label 13; local `--fs-scale` multipliers set to 1. Section padding 64 (48 between
+  same-background bands); buttons 48 high, 16 px, padding 0 24; headings balance-wrapped, paragraphs pretty-wrapped.
+  All rules are additive, inside `max-width: 599px` (or 380px) blocks: 600-768 and desktop unchanged (desktop
+  totals identical on all 10 pages).
+- A shared (cd0f43e, 9b9a11e, 70a2692, 4d6b7c6, 63272d6): tokens, buttons, legal top 136 -> 104 / bottom 64, 404 stack
+  gap 12; footer at <= 380: CTA pair stacked full width, legal row on one line.
+- B Home (d588af1): "Diagnosis." 66 -> 44, quote 28.8 -> 24, hero 48 -> 44, paddings 72/80 -> 64, symptom card
+  min-height dropped, deck dots and "Know Your Loads" link hit areas 44.
+- C About + Contact (cd055cf): About hero 38 -> 34, "We Measure." 42 -> 34 (body 19.8 -> 17), statement 25.9 -> 24,
+  Industries 31.9 -> 29 (copy 18.7/17.6 -> 17/16), FAQ 40.6 -> 29 (q 17, a 16), paddings 72 -> 64; Contact h1 35.7 -> 34.
+- D Solutions/Services/YanQ (785129a, 4ef65b0, 5fd6ba9): YanQ "Study Before the Solution." 44 -> 34, works/delivers
+  34 -> 29, "What is YanQ" eyebrow 29 -> 20, delivers icon 64 -> 48 (title 15 at <= 380), expect 32 -> 64; Solutions
+  statement 24, stats 48 -> 40, family titles 29 -> 22, tabs 44 high, product dots 44x44, paddings 36-44 -> 64/48;
+  Services h1 34, block titles 24 -> 22, paddings -> 64.
+- UI rounds: per area r1 live in Chrome (frame.html at 390 or 360) + SHURI shots, r2 fixes checked live at the other
+  width (footer pair/legal row at 360, YanQ eyebrow, delivers "Recommendation" at 360); VISION independent read: PASS
+  (its footer-pair item fixed by stacking; others measured false or by design).
+- Phone heights at 390 before -> after: index 5,098 -> 4,850; about 3,797 -> 3,515; contact 2,641 -> 2,633;
+  solutions 5,844 -> 5,942; services 3,639 -> 3,668; yanq 4,298 -> 4,273; 404 1,221 -> 1,168; privacy 2,688 ->
+  2,569; terms 3,967 -> 3,815; know-your-loads 4,997 -> 4,958 (shared tokens only). Checks: links, nav-footer,
+  head, site, dead-css all pass.

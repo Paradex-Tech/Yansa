@@ -1,5 +1,14 @@
 # Handoff for the build (fresh FRIDAY)
 
+> **Status 2026-11-24 (S15 phone pass):** phone type and spacing scale set and applied to every page except Know
+> Your Loads (Shrey: KYL gets its own redesign next; do not reuse its current phone CSS as a model). Scale, findings
+> and fixes: `audit-phone.md`, `progress.md` (S15). All phone rules are additive inside `max-width: 599px` /
+> `380px` blocks in `css/m/*.css`; desktop and 600-768 unchanged. KYL picks up the shared changes only (numeral
+> 48 -> 40, tier line-heights, text-wrap, 48 px buttons, footer); its own css/js untouched. Check tool for phone
+> type sizes: `node docs/rework/tools/phone-type.mjs 390 page.html`. Chrome caches CSS: hard-reload (ctrl+shift+r)
+> the frame.html tab before judging. Not changed on purpose: floating bar passing over content while scrolling;
+> Contact map shows Google's own "Open in Maps" plus the site's pill. Nothing pushed.
+
 > **Status 2026-11-24 (S14, after Shrey's audit-2 decisions):** built D1 (Home symptoms 4-across, quote rhythm),
 > D2 (CTA system), D4 (contact Phone + "I'm interested in"), D5 (YanQ "What to expect", sourced facts only),
 > D6 (YanQ own CTA band removed), D7 ("Benchmarking"), D9 (Services ask links), case studies deleted (none will be
