@@ -51,3 +51,142 @@
   max-width: 21em;
   margin: 0;
 }
+
+
+/* ---------- 2. Blocks ----------
+   One column: the photo on top in a 16:10 crop that runs to the screen
+   edges' gutter, the text below. The label, name and copy keep the
+   desktop's order; the Learn More pill gets the full 48px tap height. */
+.svc {
+  padding: 48px var(--gutter, 20px) 56px;
+}
+
+.svc__inner {
+  row-gap: 52px;
+}
+
+.svc-block,
+.svc-block:nth-child(even) {
+  display: block;
+}
+
+.svc-block__media,
+.svc-block:nth-child(even) .svc-block__media {
+  margin-bottom: 22px;
+}
+
+.svc-block__body,
+.svc-block:nth-child(even) .svc-block__body {
+  padding-top: 0;
+}
+
+.svc-block__name {
+  margin-bottom: 10px;
+}
+
+.svc-block__text {
+  max-width: none;
+}
+
+.svc-more {
+  min-height: var(--tap, 48px);
+  margin-top: 20px;
+  touch-action: manipulation;
+}
+
+.svc-more:hover {
+  /* no sticky hover on touch: only the open state keeps the tint */
+  border-color: var(--line);
+  background: var(--ivory-card);
+}
+
+.svc-more[aria-expanded="true"] {
+  border-color: var(--teal-deep);
+  background: color-mix(in srgb, var(--teal-deep) 9%, var(--ivory-card));
+}
+
+.svc-detail__list li:first-child {
+  margin-top: 20px;
+}
+
+
+/* ---------- 3. Engagement ----------
+   A vertical rail: the line runs down the left through the five nodes, and
+   each step reads to its right. The rail draws top to bottom in a second as
+   the list enters view, the nodes lighting as it passes. A five-node row
+   would leave words of ten letters about 60px each at 390, so the list wins. */
+.svc-flow {
+  padding: 44px var(--gutter, 20px) 52px;
+}
+
+.svc-flow h2 {
+  margin-bottom: 26px;
+}
+
+.svc-flow__row {
+  display: block;
+}
+
+.svc-flow__row::before,
+.svc-flow__row::after {
+  top: 22px;
+  bottom: 22px;
+  left: 21px;
+  right: auto;
+  width: 2px;
+  height: auto;
+}
+
+.js-svc .svc-flow__row::after {
+  transform: scaleY(0);
+  transform-origin: center top;
+}
+
+.js-svc .svc-flow__row.is-in::after {
+  transform: none;
+}
+
+.svc-step {
+  min-height: 82px;
+}
+
+.svc-step:last-child {
+  min-height: 44px;
+}
+
+.svc-step a {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  grid-template-areas: "n w" "n l";
+  grid-template-rows: auto 1fr;
+  align-items: start;
+  gap: 0 18px;
+  padding: 0;
+  text-align: left;
+  min-height: 44px;
+}
+
+.svc-step__num {
+  grid-area: n;
+  margin-bottom: 0;
+}
+
+.svc-step__word {
+  grid-area: w;
+  margin-top: 7px;
+}
+
+.svc-step__line {
+  grid-area: l;
+  max-width: none;
+}
+
+.js-svc .svc-step__word,
+.js-svc .svc-step__line {
+  transform: translateX(8px);
+}
+
+.js-svc .svc-flow__row.is-in .svc-step__word,
+.js-svc .svc-flow__row.is-in .svc-step__line {
+  transform: none;
+}
