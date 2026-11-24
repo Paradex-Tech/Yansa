@@ -81,3 +81,18 @@ Commits 73ba692, 93407f2, 40f54fe, faf12ce, 28b5949, 2daff1b, 54bfb60. Deleted c
   (selection-driven reveal), scroll-snap card pattern from the KAREN sweep.
 - Round 1: fine on explorer/swipe; round 2: fan-to-footer empty petrol band and invisible boundary (fixed), and a
   regression check showing solutions/services unchanged by the cleanup (heights identical at af55864).
+
+## S6 Home (done, 3 rounds)
+Commits c4ebcdd, c102bc3, 7672377, c82e0a5, 3000381, 0cf6472, 63b3869, 9b4cb31.
+- Heights: desktop 6,202 -> 5,073 px (6.89 -> 5.64 screens); phone 5,882 -> 5,064 (6.97 -> 6.00).
+  Hero runway 2,521 -> 1,621 px desktop, 1,877 -> 1,286 phone.
+- Hero: video replaced by the still (slow scroll-linked 1.06 -> 1 scale), same choreography, stages re-timed;
+  compared old vs new at 12 scroll stops (1440/1024/390). New card photo images/hero-panel.jpg (frame from the old
+  hero film at 10.5 s) replaces hero-plant.jpg, which repeated the still.
+- Symptoms: four line drawings in the YanQ diagram hand (breaker trips, motor heats, kVAh meter climbs, gauge falls),
+  play once in view and loop on hover; "Which loads cause these? Know Your Loads" link. Why cards are whole-card
+  links with lift/arrow/focus ring. References: 21st "Animated Features Bento with Live Diagrams", Powerside home
+  path cards.
+- Round 2: desktop over target (6.11): dropped 100vh/80vh min-heights; duplicate image swapped. Round 3: Home
+  section padding 120 -> 96 at >= 901 px. Desktop 5.64 stays above the 5.0 target: reaching 5 would need dropping
+  a section or changing the symptom hover; left for Shrey.
