@@ -869,6 +869,7 @@
       var panel = item.querySelector('.nav-menu');
       if (!chev || !panel) return;
       var timer = 0;
+      var quiet = false;   // true while Escape hands focus back, so that focus does not reopen it
 
       function setOpen(open) {
         window.clearTimeout(timer);
@@ -890,7 +891,7 @@
 
       // Keyboard focus opens it; a mouse click on the chevron is the toggle's job
       item.addEventListener('focusin', function (event) {
-        if (!desktop.matches) return;
+        if (!desktop.matches || quiet) return;
         var el = event.target;
         if (el.matches && el.matches(':focus-visible')) setOpen(true);
       });
@@ -914,7 +915,11 @@
         if (event.key !== 'Escape' || !item.classList.contains('is-open')) return;
         var inside = item.contains(document.activeElement);
         setOpen(false);
-        if (inside) chev.focus();
+        if (inside) {
+          quiet = true;
+          chev.focus();
+          quiet = false;
+        }
       });
 
       // A chosen child closes the panel (same-page anchors keep the page)
