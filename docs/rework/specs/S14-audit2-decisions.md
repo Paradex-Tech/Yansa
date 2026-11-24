@@ -1,4 +1,4 @@
-# S14 Audit-2 decisions (Shrey, 2026-11-24)                     status: FROZEN 2026-11-24
+# S14 Audit-2 decisions (Shrey, 2026-11-24)                     status: FROZEN 2026-11-24 (rev 1 before build: section H added, Shrey via JARVIS)
 
 Build Shrey's approved items from `audit-2.md` (D1, D2, D4, D5, D6, D7, D9, D10-removal) plus one phone fix. Ground
 rules: keep the old design language and every signature animation; change only what is listed; font sizes only via
@@ -87,6 +87,28 @@ G1 Delete the hidden `#case-studies` section from index.html, the hidden footer 
 G2 Update AGENTS.md (remove the case-study lines), sitemap.xml if it lists it. Site-wide grep for "case stud"
    (case-insensitive) in html/css/js returns nothing.
 
+## H. Footer hierarchy (Shrey via JARVIS: phone footer "too cramped")
+Today (phone): logo, follow line, LinkedIn, then a 2-col grid of 11 equal links with dividers and chevrons, then
+copyright and Back to top: a wall of rows. Reference pattern (Linear, Stripe, 21st "Minimal Footer"): grouped link
+columns under small muted labels, a quiet legal row beside the copyright, more space between groups than rows.
+H1 Markup (identical on every page; check-nav-footer.mjs must pass; update the script only if its expectations are
+   the old structure, keeping it strict): replace the three unlabeled `.footer__col` with two labelled groups:
+   "Explore": Solutions, Services, YanQ, Know Your Loads; "Company": About, FAQs, Careers, Contact. Labels are
+   small headings (Label tier, uppercase or the site's existing eyebrow style, muted colour on petrol), not links.
+   Drop the Home link (the logo links home: make the footer logo a link to `./` with aria-label "Yansa home" if it
+   is not one already). Privacy Policy and Terms of Use move to a small legal row with the copyright (Small/Label
+   tier, muted). The 404 page footer has no CTA above it; keep that working. Hrefs stay the same as today.
+H2 Phone (<= 768, css/m/base.css): brand block kept (logo, follow line, LinkedIn, old look); the two groups side by
+   side (2 columns) with labels; rows without per-row dividers and chevrons (at most one divider between brand,
+   links and legal zones); each link tap target >= 44 px tall; gap between groups/zones clearly larger than between
+   rows; legal row: "© 2026 Yansa · Privacy · Terms" style (use the real link labels "Privacy Policy", "Terms of Use"
+   if they fit on one or two short lines) plus Back to top, kept. Phone footer height (measure.mjs footer value) <=
+   820 px.
+H3 Tablet and desktop: same grouping with labels in the existing column layout; legal links move to the bottom
+   row with the copyright. Keep the old desktop look otherwise (fonts, colours, brand block, spacing rhythm);
+   desktop footer height within +-60 px of 601.
+H4 Old design language: petrol footer, existing tokens and tiers only; no new icons.
+
 ## Acceptance checks
 1. `node --check js/script.js` and each touched `js/m/*.js` pass.
 2. `node docs/rework/tools/links.mjs --strict-img`, `check-nav-footer.mjs`, `check-head.mjs`, `check-site.mjs`,
@@ -101,3 +123,5 @@ G2 Update AGENTS.md (remove the case-study lines), sitemap.xml if it lists it. S
 7. Shots at 1440, 1024, 820, 390 (settle 6500 for scroll-linked parts) of each changed area show no clipped
    shadows, no overlaps, symptoms 4-across at 1440, What to expect row tidy, ask links visible.
 8. Reduced motion: What to expect and symptoms complete.
+9. Footer: check-nav-footer.mjs passes; phone footer <= 820 px; every footer link >= 44 px tall on phone;
+   shots at 390, 820, 1440 show the two labelled groups and the legal row.
