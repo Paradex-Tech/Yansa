@@ -2327,7 +2327,10 @@
         box: box,
         d: svg ? prepareDiagram(svg) : null,
         arrow: arrow,
-        arrowParts: arrow ? toArray(arrow.querySelectorAll('[data-arrow]')) : [],
+        arrowParts: toArray(box.querySelectorAll('[data-arrow]')).map(function (el) {
+          var span = (el.getAttribute('data-span') || '0,1').split(',');
+          return { el: el, a: +span[0], b: +span[1] };
+        }),
         t0: null,        // when its play starts (ms, performance.now clock)
         done: false,
         doneAt: 0,
@@ -2336,21 +2339,36 @@
     });
 
     function setArrow(p, a) {
-      p.arrowParts.forEach(function (el) {
-        el.style.strokeDasharray = '1';
-        el.style.strokeDashoffset = 1 - a;
-        el.style.opacity = a > 0 ? 1 : 0;
+      p.arrowParts.forEach(function (part) {
+        // A part may own a slice of the draw (the tablet elbow's three pieces)
+        var v = clamp01((a - part.a) / (part.b - part.a));
+        part.el.style.strokeDasharray = '1';
+        part.el.style.strokeDashoffset = 1 - v;
+        part.el.style.opacity = v > 0 ? 1 : 0;
+      });
+    }
+
+    // One frame of a drawing. The drift dots (loose points around the
+    // funnel) ease down to 35% over the last of the play, so the finished
+    // frame is led by the funnel and the clean wave; reduced motion gets the
+    // same finished frame.
+    function drawFrame(p, L) {
+      if (!p.d) return;
+      renderDiagram(p.d, L, 0);
+      p.d.els.forEach(function (o) {
+        if (o.type !== 'drift') return;
+        o.el.style.opacity = clamp01(L / 0.1) * (1 - 0.65 * clamp01((L - 0.6) / 0.4));
       });
     }
 
     function finish(p) {
-      if (p.d) renderDiagram(p.d, 1, 0);
+      drawFrame(p, 1);
       setArrow(p, 1);
       p.box.classList.add('is-in');
     }
 
     if (finishedOnly) {
-      parts.forEach(function (p) { if (p.d) renderDiagram(p.d, 1, 0); });
+      parts.forEach(function (p) { drawFrame(p, 1); });
       return;
     }
 
@@ -2385,7 +2403,7 @@
             return;
           }
           p.box.classList.add('is-in');
-          if (p.d) renderDiagram(p.d, easeOut(clamp01((t - BOX_MS) / DRAW_MS)), 0);
+          drawFrame(p, easeOut(clamp01((t - BOX_MS) / DRAW_MS)));
           setArrow(p, clamp01((t - BOX_MS - DRAW_MS) / ARROW_MS));
         } else if (p.visible && p.d && p.d.osc.length) {
           var phase = (now - p.doneAt) / OSC_MS;
@@ -2447,6 +2465,20 @@
       });
     }, { rootMargin: '0px 0px -15% 0px' });
     boxes.forEach(function (box) { boxObserver.observe(box); });
+
+    // Crossing 768px before the row has played: arm the other mode, starting
+    // whatever is already far enough up the screen
+    phone.addEventListener('change', function () {
+      var vh = window.innerHeight;
+      if (phone.matches) {
+        parts.forEach(function (p) {
+          if (p.box.getBoundingClientRect().top < vh * 0.85) startBox(p);
+        });
+      } else if (row.getBoundingClientRect().top < vh * 0.65) {
+        rowObserver.unobserve(row);
+        startRow();
+      }
+    });
 
     // The loop only runs while a finished box is actually on screen
     var viewObserver = new IntersectionObserver(function (entries) {

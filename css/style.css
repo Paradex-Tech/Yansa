@@ -4472,6 +4472,11 @@ ul {
   white-space: nowrap;
 }
 
+/* The tablet elbow after box 2 exists only in the 2x2 layout */
+.yanq-elbow {
+  display: none;
+}
+
 /* Arrow: a thin line and head, orange, the drawings' stroke weight */
 .yanq-arrow {
   position: absolute;
@@ -4536,17 +4541,50 @@ ul {
    box 2 points down, through the row gap; box 3's points right again. */
 @media (min-width: 769px) and (max-width: 1023px) {
   .yanq-works__row {
-    --works-rgap: 56px;
+    --works-rgap: 56px; /* the elbow's pieces assume 56 */
     grid-template-columns: repeat(2, minmax(0, 1fr));
     row-gap: var(--works-rgap);
   }
 
-  .yanq-step:nth-child(2) .yanq-arrow {
-    top: calc(100% + var(--works-rgap) / 2);
-    left: 50%;
-    width: calc(var(--works-rgap) - 8px);
-    margin: -8px 0 0 calc((var(--works-rgap) - 8px) / -2);
-    transform: rotate(90deg);
+  /* Box 2 hands over to box 3, which sits at the start of the next row:
+     an elbow in the row gap (down, across to box 3's column, down), so no
+     arrow crosses a box. Three SVG pieces share the one draw. */
+  .yanq-step:nth-child(2) > .yanq-arrow {
+    display: none;
+  }
+
+  .yanq-elbow {
+    display: block;
+    position: absolute;
+    inset: 0;
+    color: var(--orange);
+    pointer-events: none;
+  }
+
+  .yanq-elbow svg {
+    position: absolute;
+    overflow: visible;
+  }
+
+  .yanq-elbow__down {
+    top: 100%;
+    left: calc(50% - 2px);
+    width: 4px;
+    height: 28px;
+  }
+
+  .yanq-elbow__across {
+    top: calc(100% + 26px);
+    left: calc(-1 * (var(--works-gap) + 50%));
+    width: calc(100% + var(--works-gap));
+    height: 4px;
+  }
+
+  .yanq-elbow__in {
+    top: calc(100% + 28px);
+    left: calc(-1 * (var(--works-gap) + 50%) - 7px);
+    width: 14px;
+    height: 24px;
   }
 }
 
