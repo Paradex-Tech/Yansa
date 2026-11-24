@@ -2983,7 +2983,7 @@ ul {
 
 /* ---------- PQ Solved: the entry on Solutions, and the page itself ----------
    A glimpse section after The Problems These Loads Create, and the
-   pq-solved.html page it leads to. Both share the wave (initPqScroll writes
+   Solutions page it leads to. Both share the wave (initPqScroll writes
    --pq-p, 0 to 1, from scroll position; the distorted wave straightens as it
    rises) and the cursor spotlight on [data-spot] cards. With no script,
    under reduced motion and on phones the cards simply sit in their final

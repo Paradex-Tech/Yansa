@@ -6,3 +6,9 @@
 /_headers    /404   302
 /_redirects  /404   302
 /docs/*      /404   302
+
+# Retired pages (rework, Nov 2026): one Solutions page now
+/solution        /solutions  301
+/solution.html   /solutions  301
+/pq-solved       /solutions  301
+/pq-solved.html  /solutions  301

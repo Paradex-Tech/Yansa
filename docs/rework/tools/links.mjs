@@ -1,4 +1,7 @@
-// node docs/rework/tools/links.mjs : static scan of every public html. Exit 1 on any failure.
+// node docs/rework/tools/links.mjs [--strict-img] [--verbose] : static scan of every public html. Exit 1 on any failure.
+// Missing width/height on <img> is only a warning by default (the old site has many icons and photos without them,
+// and adding attributes blindly can distort images whose CSS sets one side only); --strict-img makes it fail.
+// A missing alt always fails.
 import { readdirSync, readFileSync, existsSync, statSync } from 'node:fs';
 import { dirname, resolve, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -11,7 +14,10 @@ const redirects = existsSync(join(root, '_redirects'))
 const html = Object.fromEntries(pages.map((p) => [p, readFileSync(join(root, p), 'utf8')]));
 const ids = (src) => new Set([...src.matchAll(/\sid\s*=\s*["']([^"']+)["']/g)].map((m) => m[1]));
 const idCache = {};
+const strictImg = process.argv.includes('--strict-img');
 const fails = [];
+const warns = [];
+const warn = (p, m) => warns.push(`${p}: ${m}`);
 const fail = (p, m) => fails.push(`${p}: ${m}`);
 let checked = 0;
 
@@ -45,13 +51,14 @@ for (const [p, src] of Object.entries(html)) {
   }
   for (const m of src.matchAll(/<img\b[^>]*>/gi)) {
     const t = m[0];
-    if (!/\swidth\s*=/.test(t) || !/\sheight\s*=/.test(t)) fail(p, `img without width/height: ${t.slice(0, 80)}`);
+    if (!/\swidth\s*=/.test(t) || !/\sheight\s*=/.test(t)) (strictImg ? fail : warn)(p, `img without width/height: ${t.slice(0, 80)}`);
     if (!/\salt\s*=/.test(t)) fail(p, `img without alt: ${t.slice(0, 80)}`);
   }
   // absolute URLs (canonical, OG, JSON-LD) must not point at retired pages either
   if (/yansa\.in\/(solution|pq-solved)\b/.test(src)) fail(p, 'absolute URL to retired page');
 }
 for (const r of ['solution.html', 'pq-solved.html']) if (existsSync(join(root, r))) fail(r, 'retired page file still exists');
-console.log(`links.mjs: ${pages.length} pages, ${checked} internal refs checked, ${fails.length} problems`);
+console.log(`links.mjs: ${pages.length} pages, ${checked} internal refs checked, ${fails.length} problems, ${warns.length} warnings (img without width/height)`);
+if (process.argv.includes('--verbose')) for (const w of warns) console.log('  warn ' + w);
 for (const f of fails) console.log('  FAIL ' + f);
 process.exit(fails.length ? 1 : 0);

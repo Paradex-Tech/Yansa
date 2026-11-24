@@ -5,7 +5,7 @@
    by order. Written for phones first: carousels, sheets, thumb reach, not
    desktop layouts stacked into a column.
 
-   Serves solution.html and pq-solved.html. Tokens come from :root (BASE sets
+   Serves solutions.html, services.html and know-your-loads.html. Tokens come from :root (BASE sets
    the phone values); every var() carries a fallback so this file reads
    correctly on its own. Scroll-linked values (--m-d, --m-y, --m-s, --m-dim,
    --m-par, --pq-fan) are written by js/m/solution.js; without it every one of

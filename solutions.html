@@ -3,17 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>PQ Solved | Yansa</title>
-  <meta name="description" content="PQ Solved: the active, passive and hybrid power quality solutions and services behind every Yansa diagnosis.">
-  <meta name="robots" content="noindex">
+  <title>Solutions | Yansa</title>
+  <meta name="description" content="Active, passive and hybrid power quality solutions from Yansa, each chosen after the problem is measured and supported by our own engineers.">
+  <link rel="canonical" href="https://yansa.in/solutions">
   <meta name="theme-color" content="#1a4146">
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Yansa">
   <meta property="og:locale" content="en_IN">
-  <meta property="og:title" content="PQ Solved | Yansa">
-  <meta property="og:description" content="The active, passive and hybrid power quality solutions and services behind every Yansa diagnosis.">
-    <meta property="og:image" content="https://yansa.in/images/og-image.jpg">
+  <meta property="og:title" content="Solutions | Yansa">
+  <meta property="og:description" content="Active, passive and hybrid power quality solutions from Yansa, each chosen after the problem is measured.">
+  <meta property="og:url" content="https://yansa.in/solutions">
+  <meta property="og:image" content="https://yansa.in/images/og-image.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Aerial view of an industrial power plant">
@@ -28,6 +29,15 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/m/base.css" media="(max-width: 768px)">
   <link rel="stylesheet" href="css/m/solution.css" media="(max-width: 768px)">
+
+  <script>
+    // Old pq-solved.html#services links: the Services row now has its own page
+    (function () {
+      function go() { if (location.hash === '#services') location.replace('services.html'); }
+      go();
+      window.addEventListener('hashchange', go);
+    })();
+  </script>
 </head>
 <body>
 
@@ -39,8 +49,25 @@
       <nav class="navbar__links" id="site-nav" aria-label="Main">
         <a href="./">Home</a>
         <a href="about.html">About Us</a>
-        <a href="solution.html" class="is-active">Solution</a>
-        <a href="yanq.html">YanQ</a>
+        <div class="nav-item">
+          <a href="solutions.html" class="nav-item__link is-active" aria-current="page">Solutions</a>
+          <button class="nav-item__chev" type="button" aria-expanded="false" aria-controls="nav-menu-solutions" aria-label="Show Solutions pages"><svg viewBox="0 0 12 12" width="12" height="12" fill="none" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <div class="nav-menu" id="nav-menu-solutions">
+            <a href="solutions.html#active">Active Solutions</a>
+            <a href="solutions.html#passive">Passive Solutions</a>
+            <a href="solutions.html#hybrid">Hybrid Solutions</a>
+          </div>
+        </div>
+        <div class="nav-item">
+          <a href="services.html" class="nav-item__link">Services</a>
+          <button class="nav-item__chev" type="button" aria-expanded="false" aria-controls="nav-menu-services" aria-label="Show Services pages"><svg viewBox="0 0 12 12" width="12" height="12" fill="none" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <div class="nav-menu" id="nav-menu-services">
+            <a href="yanq.html">YanQ Power Quality Study</a>
+            <a href="services.html#commissioning">Commissioning Support</a>
+            <a href="services.html#amc">AMC</a>
+          </div>
+        </div>
+        <a href="know-your-loads.html">Know Your Loads</a>
         <a href="contact.html">Contact</a>
       </nav>
       <a href="contact.html#contact-form" class="btn btn--orange navbar__cta">Book a Diagnosis</a>
@@ -281,19 +308,21 @@
       <div class="footer__links">
         <div class="footer__col">
           <a href="./">Home</a>
-          <a href="solution.html">Solutions</a>
-          <a href="yanq.html">YanQ</a>
           <a href="about.html">About</a>
+          <a href="solutions.html">Solutions</a>
+          <a href="know-your-loads.html">Know Your Loads</a>
         </div>
         <div class="footer__col">
+          <a href="services.html">Services</a>
+          <a href="yanq.html">YanQ</a>
           <a href="contact.html">Contact</a>
-          <a href="contact.html#contact-form">Careers</a>
-          <a href="./#case-studies" hidden>Case Studies</a>
           <a href="about.html#faq">FAQs</a>
         </div>
         <div class="footer__col">
           <a href="privacy-policy.html">Privacy Policy</a>
           <a href="terms.html">Terms of Use</a>
+          <a href="contact.html#contact-form">Careers</a>
+          <a href="./#case-studies" hidden>Case Studies</a>
         </div>
       </div>
     </div>

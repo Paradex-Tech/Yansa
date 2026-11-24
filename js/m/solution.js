@@ -2,7 +2,7 @@
    Runs on every width but does nothing unless the phone media query matches
    (see isPhone), and re-checks on resize/rotation.
 
-   Serves solution.html and pq-solved.html. Everything here is built by
+   Serves solutions.html, services.html and know-your-loads.html. Everything here is built by
    build() and taken apart by teardown(), so leaving the phone width (a
    rotation, a resized window) hands the page back to the desktop scripts
    with no classes, nodes or inline styles left behind. Scroll-linked values

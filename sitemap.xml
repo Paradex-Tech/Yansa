@@ -2,11 +2,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://yansa.in/</loc>
-    <lastmod>2026-09-27</lastmod>
+    <lastmod>2026-11-24</lastmod>
   </url>
   <url>
-    <loc>https://yansa.in/solution</loc>
-    <lastmod>2026-09-27</lastmod>
+    <loc>https://yansa.in/solutions</loc>
+    <lastmod>2026-11-24</lastmod>
+  </url>
+  <url>
+    <loc>https://yansa.in/services</loc>
+    <lastmod>2026-11-24</lastmod>
+  </url>
+  <url>
+    <loc>https://yansa.in/know-your-loads</loc>
+    <lastmod>2026-11-24</lastmod>
   </url>
   <url>
     <loc>https://yansa.in/yanq</loc>
