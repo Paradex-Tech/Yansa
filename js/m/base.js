@@ -209,7 +209,10 @@
     document.body.appendChild(bar);
     var btn = bar.firstChild;
 
-    var footerMark = document.querySelector('.footer__cta') || document.querySelector('.footer');
+    /* The bar also steps aside for a page's own CTA band (marked data-m-bar-end),
+       so two "Book a Diagnosis" buttons never stack. The first marked band wins. */
+    var footerMark = document.querySelector('[data-m-bar-end]') ||
+      document.querySelector('.footer__cta') || document.querySelector('.footer');
     var lastY = window.pageYOffset;
     var lastT = performance.now();
     var tucked = false;
