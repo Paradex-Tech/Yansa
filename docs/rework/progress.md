@@ -69,3 +69,15 @@ Commits d458878, 255be8c, 86b29fa, 724d9f4, fb2c203, + subline width fix.
 - Round 1 (SHURI's shots + my read): fine. Round 2 (Chrome phone frame + shots): engagement sublines wrapped
   2 words to a line; widened.
 - YanQ block uses yanq-hero.jpg (yanq-analysis.jpg has garbled AI text).
+
+## S5 Know Your Loads (done, 2 rounds)
+Commits 73ba692, 93407f2, 40f54fe, faf12ce, 28b5949, 2daff1b, 54bfb60. Deleted css/m/solution.css, js/m/solution.js.
+- Heights: desktop 4,597 px (5.11 screens), phone 4,947 (5.86). New page (replaces the second half of the old
+  Solution page: 6,033 / 7,485 px for the whole old page).
+- Load explorer: 3-column board (ARIA tabs list > Problem with the old load drawing, Seen in, chips > Yansa's
+  solution with chip links to Solutions cards); fixed board height, crossfade, connector pulse; wrapping chips
+  under 1100 px, scroll-snap row on phone. Problems: phone side-swipe deck with dots (1,654 px stack -> 507 px).
+  Fan: four Match-the-fix cards in the old lean-and-settle fan. References: 21st "Radial Orbital Timeline"
+  (selection-driven reveal), scroll-snap card pattern from the KAREN sweep.
+- Round 1: fine on explorer/swipe; round 2: fan-to-footer empty petrol band and invisible boundary (fixed), and a
+  regression check showing solutions/services unchanged by the cleanup (heights identical at af55864).
