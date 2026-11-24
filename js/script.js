@@ -715,22 +715,72 @@
      close delay lets the pointer travel across) and on keyboard focus; the
      chevron button toggles it (aria-expanded); Escape closes it and returns
      focus; a click outside closes it. The fade is CSS, and reduced motion
-     turns it off there. Below 769px the phone menu lists the children. */
+     turns it off there. On open the script measures the panel and sets
+     --menu-x / --caret-x so it stays 16px inside the window with the caret
+     over its trigger. One cream highlight (.nav-menu__glow) slides to the
+     hovered or focused row. Arrow keys walk the rows and the tile. Below
+     769px the phone menu lists the children. */
   function initNavMenus() {
     var items = toArray(document.querySelectorAll('.navbar__links .nav-item'));
     if (!items.length) return;
     var desktop = window.matchMedia('(min-width: 769px)');
     var CLOSE_DELAY = 150;
+    var EDGE = 16;       // minimum gap between a panel and the window edge
+    var placers = [];    // every panel is kept inside the window, even while hidden, so none adds scroll width
 
     items.forEach(function (item) {
       var chev = item.querySelector('.nav-item__chev');
       var panel = item.querySelector('.nav-menu');
       if (!chev || !panel) return;
+      var list = panel.querySelector('.nav-menu__list');
+      var glow = panel.querySelector('.nav-menu__glow');
+      var rows = list ? toArray(list.querySelectorAll('a')) : [];
+      var feature = panel.querySelector('[data-nav-feature]');
+      var stops = feature ? rows.concat([feature]) : rows;   // arrow-key order
       var timer = 0;
       var quiet = false;   // true while Escape hands focus back, so that focus does not reopen it
+      var byFocus = false; // opened by keyboard focus alone, so Enter on the chevron keeps it open
+
+      // Measure on open: keep the panel EDGE px inside the window and the
+      // caret over the middle of the trigger (label + chevron)
+      function place() {
+        var box = item.getBoundingClientRect();
+        var width = panel.offsetWidth;
+        var vw = document.documentElement.clientWidth;
+        var left = Math.min(box.left - 16, vw - EDGE - width);
+        left = Math.max(left, EDGE);
+        var caret = box.left + box.width / 2 - left;
+        caret = Math.max(24, Math.min(width - 24, caret));
+        panel.style.setProperty('--menu-x', Math.round((left - box.left) * 10) / 10 + 'px');
+        panel.style.setProperty('--caret-x', Math.round(caret * 10) / 10 + 'px');
+      }
+
+      // The highlight takes the row's height (no transition) and slides by
+      // translateY; from hidden it appears in place instead of sweeping in
+      function glowTo(row) {
+        if (!glow || !row) return;
+        var fresh = !glow.classList.contains('is-on');
+        if (fresh) glow.classList.add('is-jump');
+        glow.style.setProperty('--glow-h', row.offsetHeight + 'px');
+        glow.style.transform = 'translateY(' + row.offsetTop + 'px)';
+        if (fresh) {
+          void glow.offsetWidth;   // commit the jump before the slide comes back
+          glow.classList.add('is-on');
+          glow.classList.remove('is-jump');
+        }
+      }
+
+      function glowOff() {
+        if (glow) glow.classList.remove('is-on');
+      }
 
       function setOpen(open) {
         window.clearTimeout(timer);
+        if (open && !item.classList.contains('is-open')) place();
+        if (!open) {
+          byFocus = false;
+          glowOff();
+        }
         item.classList.toggle('is-open', open);
         chev.setAttribute('aria-expanded', String(open));
       }
@@ -751,7 +801,10 @@
       item.addEventListener('focusin', function (event) {
         if (!desktop.matches || quiet) return;
         var el = event.target;
-        if (el.matches && el.matches(':focus-visible')) setOpen(true);
+        if (el.matches && el.matches(':focus-visible')) {
+          if (!item.classList.contains('is-open')) byFocus = true;
+          setOpen(true);
+        }
       });
       item.addEventListener('focusout', function (event) {
         if (!item.contains(event.relatedTarget)) closeSoon();
@@ -762,23 +815,69 @@
       var wasOpen = null;
       chev.addEventListener('pointerdown', function () {
         wasOpen = item.classList.contains('is-open');
+        byFocus = false;
       });
       chev.addEventListener('click', function () {
+        // Enter on a chevron that focus just opened keeps it open
+        if (wasOpen === null && byFocus) {
+          byFocus = false;
+          return;
+        }
         var open = wasOpen === null ? item.classList.contains('is-open') : wasOpen;
         wasOpen = null;
         setOpen(!open);
       });
 
       item.addEventListener('keydown', function (event) {
-        if (event.key !== 'Escape' || !item.classList.contains('is-open')) return;
-        var inside = item.contains(document.activeElement);
-        setOpen(false);
-        if (inside) {
-          quiet = true;
-          chev.focus();
-          quiet = false;
+        var key = event.key;
+        var isOpen = item.classList.contains('is-open');
+        if (key === 'Escape') {
+          if (!isOpen) return;
+          var inside = item.contains(document.activeElement);
+          setOpen(false);
+          if (inside) {
+            quiet = true;
+            chev.focus();
+            quiet = false;
+          }
+          return;
+        }
+        if (!stops.length) return;
+        var at = stops.indexOf(document.activeElement);
+        var target = null;
+        if (key === 'ArrowDown') {
+          if (document.activeElement === chev) {
+            if (!isOpen) setOpen(true);
+            target = stops[0];
+          } else if (at > -1) {
+            target = stops[Math.min(at + 1, stops.length - 1)];
+          }
+        } else if (key === 'ArrowUp' && at > -1) {
+          target = at === 0 ? chev : stops[at - 1];
+        } else if (key === 'Home' && at > -1) {
+          target = stops[0];
+        } else if (key === 'End' && at > -1) {
+          target = stops[stops.length - 1];
+        }
+        if (target) {
+          event.preventDefault();
+          target.focus();
         }
       });
+
+      // The highlight follows the pointer and the focus
+      rows.forEach(function (row) {
+        row.addEventListener('mouseenter', function () { glowTo(row); });
+        row.addEventListener('focus', function () { glowTo(row); });
+      });
+      if (list) {
+        list.addEventListener('mouseleave', glowOff);
+        list.addEventListener('focusout', function (event) {
+          if (!list.contains(event.relatedTarget)) glowOff();
+        });
+      }
+      placers.push(place);
+      place();
 
       // A chosen child closes the panel (same-page anchors keep the page)
       toArray(panel.querySelectorAll('a')).forEach(function (a) {
@@ -789,6 +888,12 @@
         if (item.classList.contains('is-open') && !item.contains(event.target)) setOpen(false);
       });
     });
+
+    function placeAll() {
+      placers.forEach(function (fn) { fn(); });
+    }
+    window.addEventListener('resize', placeAll);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(placeAll);
 
     var onChange = function () {
       if (!desktop.matches) {
