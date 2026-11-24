@@ -1041,13 +1041,6 @@ ul {
   min-height: 100vh;
 }
 
-/* Full screen below the sticky navbar: What YanQ Delivers. Kept at every
-   width (it is left out of the tablet reset below), and as a minimum a
-   section taller than the screen still grows. */
-.yanq-delivers {
-  min-height: var(--inner-hero-height);
-}
-
 /* Content sections: card grids, forms, lists */
 .symptoms,
 .why,
@@ -4668,6 +4661,7 @@ ul {
 .yanq-next__line {
   color: var(--ink);
   max-width: 640px;
+  text-wrap: balance;
 }
 
 .yanq-next__buttons {
