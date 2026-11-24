@@ -4984,7 +4984,7 @@ ul {
    also fades in. With no script every answer simply shows. */
 .faq {
   background: var(--ivory);
-  padding: 45px var(--gutter) 96px;
+  padding: 45px var(--gutter) 72px;
 }
 
 .faq__inner {
