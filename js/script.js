@@ -757,7 +757,7 @@
 
 
   /* ---------- Navbar: phone menu ----------
-     Below 900px the links live in a drop-down panel behind the menu
+     Below 769px the links live in a drop-down panel behind the menu
      button. It closes when a link is chosen, on Escape (returning focus to
      the button), on a tap outside the bar, and if the window grows past the
      breakpoint. */
@@ -766,7 +766,7 @@
     var toggle = navbar && navbar.querySelector('.navbar__toggle');
     if (!toggle) return;
 
-    var wide = window.matchMedia('(min-width: 901px)');
+    var wide = window.matchMedia('(min-width: 769px)');
 
     function setOpen(open) {
       navbar.classList.toggle('is-open', open);
@@ -811,7 +811,9 @@
     bar.setAttribute('aria-hidden', 'true');
     links.appendChild(bar);
 
-    var active = links.querySelector('a.is-active');
+    // Only the top-level labels get the underline, not the drop-down children
+    var tops = toArray(links.querySelectorAll(':scope > a, :scope > .nav-item > .nav-item__link'));
+    var active = links.querySelector(':scope > a.is-active, :scope > .nav-item > a.is-active');
 
     function moveTo(link, instant) {
       if (!link) {
@@ -832,7 +834,7 @@
       }
     }
 
-    toArray(links.querySelectorAll('a')).forEach(function (link) {
+    tops.forEach(function (link) {
       link.addEventListener('mouseenter', function () { moveTo(link); });
       link.addEventListener('focus', function () { moveTo(link); });
     });
@@ -847,6 +849,95 @@
       document.fonts.ready.then(function () { moveTo(active, true); });
     }
     window.addEventListener('resize', function () { moveTo(active, true); });
+  }
+
+
+  /* ---------- Navbar: drop-downs ----------
+     Solutions and Services each carry a panel. It opens on hover (a short
+     close delay lets the pointer travel across) and on keyboard focus; the
+     chevron button toggles it (aria-expanded); Escape closes it and returns
+     focus; a click outside closes it. The fade is CSS, and reduced motion
+     turns it off there. Below 769px the phone menu lists the children. */
+  function initNavMenus() {
+    var items = toArray(document.querySelectorAll('.navbar__links .nav-item'));
+    if (!items.length) return;
+    var desktop = window.matchMedia('(min-width: 769px)');
+    var CLOSE_DELAY = 150;
+
+    items.forEach(function (item) {
+      var chev = item.querySelector('.nav-item__chev');
+      var panel = item.querySelector('.nav-menu');
+      if (!chev || !panel) return;
+      var timer = 0;
+
+      function setOpen(open) {
+        window.clearTimeout(timer);
+        item.classList.toggle('is-open', open);
+        chev.setAttribute('aria-expanded', String(open));
+      }
+
+      function closeSoon() {
+        window.clearTimeout(timer);
+        timer = window.setTimeout(function () { setOpen(false); }, CLOSE_DELAY);
+      }
+
+      item.addEventListener('mouseenter', function () {
+        if (desktop.matches) setOpen(true);
+      });
+      item.addEventListener('mouseleave', function () {
+        if (desktop.matches) closeSoon();
+      });
+
+      // Keyboard focus opens it; a mouse click on the chevron is the toggle's job
+      item.addEventListener('focusin', function (event) {
+        if (!desktop.matches) return;
+        var el = event.target;
+        if (el.matches && el.matches(':focus-visible')) setOpen(true);
+      });
+      item.addEventListener('focusout', function (event) {
+        if (!item.contains(event.relatedTarget)) closeSoon();
+      });
+
+      // Toggle from the state at press time: on a touch screen the tap's
+      // hover would already have opened it by the time the click lands
+      var wasOpen = null;
+      chev.addEventListener('pointerdown', function () {
+        wasOpen = item.classList.contains('is-open');
+      });
+      chev.addEventListener('click', function () {
+        var open = wasOpen === null ? item.classList.contains('is-open') : wasOpen;
+        wasOpen = null;
+        setOpen(!open);
+      });
+
+      item.addEventListener('keydown', function (event) {
+        if (event.key !== 'Escape' || !item.classList.contains('is-open')) return;
+        var inside = item.contains(document.activeElement);
+        setOpen(false);
+        if (inside) chev.focus();
+      });
+
+      // A chosen child closes the panel (same-page anchors keep the page)
+      toArray(panel.querySelectorAll('a')).forEach(function (a) {
+        a.addEventListener('click', function () { setOpen(false); });
+      });
+
+      document.addEventListener('click', function (event) {
+        if (item.classList.contains('is-open') && !item.contains(event.target)) setOpen(false);
+      });
+    });
+
+    var onChange = function () {
+      if (!desktop.matches) {
+        items.forEach(function (item) {
+          item.classList.remove('is-open');
+          var chev = item.querySelector('.nav-item__chev');
+          if (chev) chev.setAttribute('aria-expanded', 'false');
+        });
+      }
+    };
+    if (desktop.addEventListener) desktop.addEventListener('change', onChange);
+    else desktop.addListener(onChange);
   }
 
 
@@ -2942,6 +3033,7 @@
   initSolutionScroll();
   initMobileNav();
   initNavIndicator();
+  initNavMenus();
   initSymptomFocus();
   initFaq();
   initIndustryTabs();

@@ -55,7 +55,8 @@
   /* ---------- Menu ---------- */
   function buildMenu() {
     if (!navbar || !toggle) return;
-    var links = toArray(navbar.querySelectorAll('.navbar__links a'));
+    // Top-level items only; a drop-down item brings its children along
+    var links = toArray(navbar.querySelectorAll('.navbar__links > a, .navbar__links > .nav-item'));
     if (!links.length) return;
 
     var menu = document.createElement('nav');
@@ -65,20 +66,33 @@
     menu.tabIndex = -1;
 
     var html = '<p class="m-menu__label" aria-hidden="true" style="--i:0">Menu</p><div class="m-menu__list">';
-    links.forEach(function (link, i) {
+    var step = 0;   // stagger index, shared by rows and sub-links
+    links.forEach(function (item, i) {
+      var isGroup = item.classList.contains('nav-item');
+      var link = isGroup ? item.querySelector('.nav-item__link') : item;
+      var kids = isGroup ? toArray(item.querySelectorAll('.nav-menu a')) : [];
       var current = link.classList.contains('is-active') || link.getAttribute('aria-current') === 'page';
-      html += '<a class="m-menu__link" style="--i:' + (i + 1) + '" href="' + link.getAttribute('href') + '"' +
+      var row = '<a class="m-menu__link" style="--i:' + (++step) + '" href="' + link.getAttribute('href') + '"' +
         (current ? ' aria-current="page"' : '') + '>' +
         '<span class="m-menu__num" aria-hidden="true">0' + (i + 1) + '</span>' +
         '<span class="m-menu__text">' + link.textContent.trim() + '</span>' +
         '<span class="m-menu__go">' + ARROW + '</span></a>';
+      if (!kids.length) { html += row; return; }
+      // Children sit indented under their parent, inside one bordered group
+      html += '<div class="m-menu__group">' + row + '<div class="m-menu__kids">';
+      kids.forEach(function (kid) {
+        html += '<a class="m-menu__kid" style="--i:' + (++step) + '" href="' + kid.getAttribute('href') + '"' +
+          (kid.getAttribute('aria-current') === 'page' ? ' aria-current="page"' : '') + '>' +
+          kid.textContent.trim() + '</a>';
+      });
+      html += '</div></div>';
     });
     html += '</div>';
 
     var cta = navbar.querySelector('.navbar__cta');
     var brochure = document.querySelector('.footer a[data-brochure]') || document.querySelector('a[data-brochure]');
     var note = document.querySelector('.footer__cta p');
-    html += '<div class="m-menu__foot" style="--i:' + (links.length + 1) + '">';
+    html += '<div class="m-menu__foot" style="--i:' + (step + 1) + '">';
     if (cta) {
       html += '<a class="m-menu__cta" href="' + cta.getAttribute('href') + '">' +
         cta.textContent.trim() + ARROW + '</a>';

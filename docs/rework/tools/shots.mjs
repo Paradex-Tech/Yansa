@@ -27,8 +27,10 @@ const ONE_LINE = `(() => {
   const cta = document.querySelector('.navbar__cta').getBoundingClientRect();
   const logo = document.querySelector('.navbar__logo').getBoundingClientRect();
   if (cta.left < rs[rs.length - 1].right - 0.5 || rs[0].left < logo.right - 0.5) overlap = true;
-  const rows = new Set(rs.map((r) => Math.round(r.top))).size;
-  const wrapped = [...document.querySelectorAll('.navbar__links a, .navbar__cta')].some((a) => a.getBoundingClientRect().height > 40);
+  // rows: distinct vertical centres of the label/CTA text; wrapped: any label whose text spans two lines
+  const texts = [...document.querySelectorAll('.navbar__links > a, .nav-item__link, .navbar__cta')];
+  const rows = new Set(texts.map((a) => { const r = a.getBoundingClientRect(); return Math.round((r.top + r.bottom) / 2 / 4); })).size;
+  const wrapped = texts.some((a) => { const rg = document.createRange(); rg.selectNodeContents(a); return new Set([...rg.getClientRects()].map((r) => Math.round(r.top))).size > 1; });
   return { header: Math.round(document.querySelector('.navbar').getBoundingClientRect().height), rows, overlap, wrapped, scrollW: document.documentElement.scrollWidth, cta: Math.round(cta.right) };
 })()`;
 
@@ -61,7 +63,7 @@ try {
       } else {
         await page.screenshot(file('-closed'), { x: 0, y: 0, width: w, height: 100 }); saved.push(file('-closed'));
         await page.eval(`document.querySelector('.navbar__toggle').click()`);
-        await sleep(1000);
+        await sleep(2200);
         await page.screenshot(file('-menu-open')); saved.push(file('-menu-open'));
       }
     }

@@ -79,8 +79,25 @@
       <nav class="navbar__links" id="site-nav" aria-label="Main">
         <a href="./">Home</a>
         <a href="about.html">About Us</a>
-        <a href="solution.html">Solution</a>
-        <a href="yanq.html">YanQ</a>
+        <div class="nav-item">
+          <a href="solutions.html" class="nav-item__link">Solutions</a>
+          <button class="nav-item__chev" type="button" aria-expanded="false" aria-controls="nav-menu-solutions" aria-label="Show Solutions pages"><svg viewBox="0 0 12 12" width="12" height="12" fill="none" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <div class="nav-menu" id="nav-menu-solutions">
+            <a href="solutions.html#active">Active Solutions</a>
+            <a href="solutions.html#passive">Passive Solutions</a>
+            <a href="solutions.html#hybrid">Hybrid Solutions</a>
+          </div>
+        </div>
+        <div class="nav-item">
+          <a href="services.html" class="nav-item__link">Services</a>
+          <button class="nav-item__chev" type="button" aria-expanded="false" aria-controls="nav-menu-services" aria-label="Show Services pages"><svg viewBox="0 0 12 12" width="12" height="12" fill="none" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <div class="nav-menu" id="nav-menu-services">
+            <a href="yanq.html">YanQ Power Quality Study</a>
+            <a href="services.html#commissioning">Commissioning Support</a>
+            <a href="services.html#amc">AMC</a>
+          </div>
+        </div>
+        <a href="know-your-loads.html">Know Your Loads</a>
         <a href="contact.html" class="is-active" aria-current="page">Contact</a>
       </nav>
       <a href="#contact-form" class="btn btn--orange navbar__cta">Book a Diagnosis</a>

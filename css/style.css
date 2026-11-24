@@ -443,6 +443,24 @@ ul {
 }
 
 
+/* Navbar fit: with six items on one line, the bar steps down a tier
+   between laptop and tablet widths (hamburger menu starts at 768px) */
+@media (min-width: 769px) and (max-width: 1100px) {
+  .navbar__links > a,
+  .navbar__links .nav-item__link,
+  .navbar__cta {
+    font-size: calc(var(--fs-small) * var(--fs-scale, 1));
+  }
+}
+
+@media (min-width: 769px) and (max-width: 900px) {
+  .navbar__links > a,
+  .navbar__links .nav-item__link,
+  .navbar__cta {
+    font-size: calc(var(--fs-label) * var(--fs-scale, 1));
+  }
+}
+
 /* =========================================================
    4. BUTTONS
    Raised inset highlight and a tinted shadow; lifts on hover,
@@ -607,11 +625,17 @@ ul {
   width: auto;
 }
 
+/* One line at every width above the phone menu. The links box spans the
+   bar's height, so a drop-down opens flush under the bar and the pointer
+   never leaves the item on its way down. */
 .navbar__links {
   position: relative;
   display: flex;
+  align-items: center;
+  align-self: stretch;
   gap: 40px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  white-space: nowrap;
 }
 
 .navbar__links a {
@@ -623,6 +647,111 @@ ul {
 .navbar__links a:hover,
 .navbar__links a:focus-visible {
   color: var(--teal-deep);
+}
+
+/* Drop-down item: label link, chevron button, panel */
+.nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+}
+
+.nav-item__chev {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 32px;
+  margin-left: 2px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text);
+  cursor: pointer;
+  transition: color 0.25s ease;
+}
+
+.nav-item__chev svg {
+  display: block;
+  transition: transform 0.18s ease;
+}
+
+.nav-item.is-open .nav-item__chev,
+.nav-item__chev:hover,
+.nav-item__chev:focus-visible,
+.nav-item__link.is-active + .nav-item__chev {
+  color: var(--teal-deep);
+}
+
+.nav-item.is-open .nav-item__chev svg {
+  transform: rotate(180deg);
+}
+
+.nav-item__chev:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 0;
+  border-radius: 6px;
+}
+
+/* Panel: ivory card, hairline border, soft shadow. Fades and rises a few
+   pixels; it floats, so it never moves the bar or the page. */
+.nav-menu {
+  position: absolute;
+  top: 100%;
+  left: -16px;
+  z-index: 5;
+  min-width: 100%;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  background: var(--ivory-card);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 16px 32px rgba(26, 65, 70, 0.12);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0s linear 0.18s;
+}
+
+.nav-item.is-open .nav-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0s;
+}
+
+.nav-menu a {
+  display: block;
+  padding: 10px 14px;
+  border-radius: 6px;
+}
+
+.nav-menu a:hover,
+.nav-menu a:focus-visible {
+  background: var(--cream);
+}
+
+.nav-menu a[aria-current="page"] {
+  color: var(--teal-deep);
+}
+
+.nav-menu a:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: -2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-menu,
+  .nav-item.is-open .nav-menu,
+  .nav-item__chev svg {
+    transition: none;
+  }
+
+  .nav-menu {
+    transform: none;
+  }
 }
 
 /* Sliding underline; the script sets its width and position */
@@ -715,7 +844,89 @@ ul {
   border-radius: 6px;
 }
 
+/* Fitting six items, the chevrons and the CTA on one line: gaps, then the
+   bar's side padding, tighten as the window narrows (type steps down a tier
+   in section 3). Below 769px the phone menu takes over. */
+@media (max-width: 1360px) {
+  .navbar__inner {
+    gap: 32px;
+  }
+
+  .navbar__links {
+    gap: 28px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .navbar {
+    padding: 0 32px;
+  }
+
+  .navbar__inner {
+    gap: 20px;
+  }
+
+  .navbar__links {
+    gap: 18px;
+  }
+
+  .navbar__cta {
+    padding: 12px 18px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .navbar {
+    padding: 0 24px;
+  }
+
+  .navbar__inner {
+    gap: 16px;
+  }
+
+  .navbar__links {
+    gap: 14px;
+  }
+
+  .nav-item__chev {
+    width: 20px;
+    margin-left: 0;
+  }
+
+  .navbar__cta {
+    padding: 10px 14px;
+  }
+}
+
 @media (max-width: 900px) {
+  .navbar {
+    padding: 0 20px;
+  }
+
+  .navbar__inner {
+    gap: 12px;
+  }
+
+  .navbar__links {
+    gap: 10px;
+  }
+
+  .navbar__logo img {
+    height: 24px;
+  }
+
+  .nav-item__chev {
+    width: 16px;
+  }
+
+  .navbar__cta {
+    padding: 9px 12px;
+  }
+}
+
+/* Fallback phone menu (js/m/base.js and css/m/base.css replace it): a
+   plain drop-down panel with the children listed under their parent */
+@media (max-width: 768px) {
   .navbar__inner {
     gap: 12px;
   }
@@ -729,13 +940,13 @@ ul {
     display: block;
   }
 
-  /* The links drop down under the bar as a full-width panel */
   .navbar__links {
     display: none;
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
+    align-items: stretch;
     flex-direction: column;
     flex-wrap: nowrap;
     gap: 0;
@@ -754,8 +965,32 @@ ul {
     border-bottom: 1px solid rgba(188, 201, 199, 0.5);
   }
 
-  .navbar__links a:last-of-type {
+  .navbar__links > a:last-of-type {
     border-bottom: 0;
+  }
+
+  .nav-item {
+    display: block;
+  }
+
+  .nav-item__chev {
+    display: none;
+  }
+
+  .nav-menu {
+    position: static;
+    padding: 0 0 0 16px;
+    border: 0;
+    box-shadow: none;
+    background: none;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+
+  .nav-menu a {
+    padding: 12px 0;
+    border-radius: 0;
   }
 
   .navbar__indicator {
