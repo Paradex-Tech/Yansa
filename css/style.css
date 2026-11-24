@@ -380,7 +380,6 @@ ul {
 .pqs-next p,
 .solutions-row__inner > p,
 .svc-block__text,
-.svc-flow__intro,
 .inaction__inner > p,
 .results__inner > p,
 .results__plus,
@@ -3720,14 +3719,14 @@ ul {
    block never moves the heading. Without the script the lists simply show. */
 .svc {
   background: var(--ivory);
-  padding: 72px var(--gutter);
+  padding: 56px var(--gutter);
 }
 
 .svc__inner {
   max-width: 1152px;
   margin: 0 auto;
   display: grid;
-  row-gap: 72px;
+  row-gap: 60px;
 }
 
 .svc-block {
@@ -3972,6 +3971,174 @@ ul {
   .svc-block:nth-child(even) .svc-block__media {
     grid-column: 2;
   }
+}
+
+
+/* ---------- How an engagement runs ----------
+   Five numbered nodes on one thin line. In view, the line draws left to
+   right in a second (scaleX, linear, so it reaches each node on a beat) and
+   each node lights as it arrives. The lit face is a layer fading in over the
+   ring, so only opacity and transform ever move. */
+.svc-flow {
+  background: var(--cream);
+  border-top: 1px solid var(--line);
+  padding: 48px var(--gutter) 60px;
+}
+
+.svc-flow__inner {
+  max-width: 1152px;
+  margin: 0 auto;
+}
+
+.svc-flow h2 {
+  color: var(--ink);
+  margin-bottom: 40px;
+}
+
+.svc-flow h2 .accent { color: var(--highlight); }
+
+.svc-flow__row {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* The track and its fill, between the first and last node centres */
+.svc-flow__row::before,
+.svc-flow__row::after {
+  content: "";
+  position: absolute;
+  top: 21px;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  border-radius: 1px;
+}
+
+.svc-flow__row::before { background: var(--line); }
+
+.svc-flow__row::after {
+  background: var(--highlight);
+  transform-origin: left center;
+}
+
+.svc-step { margin: 0; }
+
+.svc-step a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 0 8px;
+  text-align: center;
+  color: inherit;
+  text-decoration: none;
+}
+
+.svc-step__num {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 50%;
+  background: var(--cream);
+  color: var(--text);
+}
+
+/* The lit face: filled disc with the number reversed out of it */
+.svc-step__num::before,
+.svc-step__num::after {
+  content: "";
+  position: absolute;
+  inset: -1.5px;
+  border-radius: 50%;
+  opacity: 0;
+}
+
+.svc-step__num::before { background: var(--teal-deep); }
+
+.svc-step__num::after {
+  content: attr(data-n);
+  display: grid;
+  place-items: center;
+  color: #ffffff;
+}
+
+.svc-step__word {
+  display: block;
+  color: var(--ink);
+}
+
+.svc-step__line {
+  display: block;
+  max-width: 17ch;
+  color: var(--text);
+}
+
+.svc-step a:hover .svc-step__word,
+.svc-step a:focus-visible .svc-step__word {
+  color: var(--teal-deep);
+}
+
+.svc-step a:focus-visible {
+  outline: 2px solid var(--teal-deep);
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
+/* Without the script: every node already lit and the line complete */
+.svc-step__num::before,
+.svc-step__num::after { opacity: 1; }
+
+.js-svc .svc-flow__row::after {
+  transform: scaleX(0);
+  transition: transform 1s linear;
+}
+
+.js-svc .svc-step__num::before,
+.js-svc .svc-step__num::after {
+  opacity: 0;
+  transition: opacity 0.3s ease calc(var(--i) * 250ms);
+}
+
+.js-svc .svc-step__word,
+.js-svc .svc-step__line {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.5s ease calc(var(--i) * 250ms + 80ms), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--i) * 250ms + 80ms);
+}
+
+.js-svc .svc-flow__row.is-in::after { transform: none; }
+
+.js-svc .svc-flow__row.is-in .svc-step__num::before,
+.js-svc .svc-flow__row.is-in .svc-step__num::after { opacity: 1; }
+
+.js-svc .svc-flow__row.is-in .svc-step__word,
+.js-svc .svc-flow__row.is-in .svc-step__line {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js-svc .svc-flow__row::after,
+  .js-svc .svc-step__num::before,
+  .js-svc .svc-step__num::after,
+  .js-svc .svc-step__word,
+  .js-svc .svc-step__line {
+    transition: none !important;
+  }
+}
+
+/* Tablet: the lines wrap under their words, keep the nodes apart */
+@media (max-width: 900px) {
+  .svc-step a { padding: 0 4px; }
 }
 
 
