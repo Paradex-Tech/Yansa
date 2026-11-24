@@ -2174,10 +2174,12 @@ ul {
   padding: 28px 20px;
 }
 
-.offered-col--active   { color: var(--teal-deep); }
-.offered-col--passive  { color: var(--highlight); }
-.offered-col--hybrid   { color: var(--teal); }
-.offered-col--services { color: var(--petrol); }
+.offered-col--active   { --chip: var(--teal-deep); }
+.offered-col--passive  { --chip: var(--highlight); }
+.offered-col--hybrid   { --chip: var(--teal); }
+.offered-col--services { --chip: var(--petrol); }
+
+.offered-col { color: var(--chip); }
 
 .offered-col__sub {
   display: block;
@@ -2198,7 +2200,6 @@ ul {
 /* The chip: reads as a button before it is touched. The arrow nudges 3px
    right and the family colour tints the pill on hover and focus. */
 .offered-col a {
-  --chip: currentColor;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -3599,7 +3600,8 @@ ul {
 
 .pqs-next p {
   color: var(--text);
-  max-width: 560px;
+  max-width: 640px;
+  text-wrap: balance;
 }
 
 .pqs-next__buttons {
