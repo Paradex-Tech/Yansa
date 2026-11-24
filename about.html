@@ -355,7 +355,7 @@
     </div>
     <div class="footer__bottom">
       <div class="footer__brand">
-        <img src="images/logo-footer.svg" alt="Yansa" width="125" height="32">
+        <a class="footer__logo" href="./" aria-label="Yansa home"><img src="images/logo-footer.svg" alt="Yansa" width="125" height="32"></a>
         <p>Follow us for power quality insights, field observations, and engineering perspectives from the industry.</p>
         <div class="footer__socials">
           <a href="https://www.linkedin.com/company/yansa-energy-solutions-llp/" target="_blank" rel="noopener" aria-label="Yansa on LinkedIn"><img src="images/icons/social-2.svg" alt="" width="18" height="17"></a>
@@ -363,23 +363,27 @@
         </div>
       </div>
       <div class="footer__links">
-        <div class="footer__col">
-          <a href="./">Home</a>
-          <a href="about.html">About</a>
+        <nav class="footer__col" aria-labelledby="footer-explore">
+          <p class="footer__label" id="footer-explore">Explore</p>
           <a href="solutions.html">Solutions</a>
-          <a href="know-your-loads.html">Know Your Loads</a>
-        </div>
-        <div class="footer__col">
           <a href="services.html">Services</a>
           <a href="yanq.html">YanQ</a>
-          <a href="contact.html">Contact</a>
+          <a href="know-your-loads.html">Know Your Loads</a>
+        </nav>
+        <nav class="footer__col" aria-labelledby="footer-company">
+          <p class="footer__label" id="footer-company">Company</p>
+          <a href="about.html">About</a>
           <a href="about.html#faq">FAQs</a>
-        </div>
-        <div class="footer__col">
+          <a href="contact.html#contact-form">Careers</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </div>
+      <div class="footer__legal">
+        <small>&copy; 2026 Yansa</small>
+        <nav class="footer__legal-links" aria-label="Legal">
           <a href="privacy-policy.html">Privacy Policy</a>
           <a href="terms.html">Terms of Use</a>
-          <a href="contact.html#contact-form">Careers</a>
-        </div>
+        </nav>
       </div>
     </div>
   </footer>

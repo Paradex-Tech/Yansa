@@ -8,7 +8,7 @@
              initMobileNav); this only watches that class and adds the scroll
              lock, focus handling and inert page behind it.
      bar     the sticky "Book a Diagnosis" pill at the bottom of the screen
-     footer  a small end row (copyright, back to top)
+     footer  a back-to-top button added to the legal row
      sheet   the brochure dialog (initBrochure) as a draggable bottom sheet
    Everything injected is removed again when the screen grows past 768px. */
 (function () {
@@ -302,9 +302,9 @@
     if (!footer) return;
     var end = document.createElement('div');
     end.className = 'm-footer-end';
-    end.innerHTML = '<small>&copy; ' + new Date().getFullYear() + ' Yansa</small>' +
-      '<button type="button">Back to top<span>' + UP + '</span></button>';
-    footer.appendChild(end);
+    end.innerHTML = '<button type="button">Back to top<span>' + UP + '</span></button>';
+    // The copyright and policy links are in the page's legal row; the button joins them
+    (footer.querySelector('.footer__legal') || footer).appendChild(end);
 
     listen(end.querySelector('button'), 'click', function () {
       window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });

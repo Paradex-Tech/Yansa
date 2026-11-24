@@ -2221,9 +2221,9 @@
       { sel: '.contact-map', step: 0 },
       { sel: '.contact-form-col > *', step: 80 },
 
-      /* footer, every page */
+      /* footer, every page (the legal row sits at the very bottom of the page and shows at once) */
       { sel: '.footer__cta > *', step: 90, mode: 'fade' },
-      { sel: '.footer__bottom > *', step: 110 }
+      { sel: '.footer__bottom > .footer__brand, .footer__bottom > .footer__links', step: 110 }
     ];
 
     // What YanQ Delivers cards: phones animate these themselves (js/m/yanq.js)

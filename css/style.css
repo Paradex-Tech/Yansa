@@ -420,6 +420,8 @@ ul {
 .nav-menu__desc,
 .nav-menu__feature-line,
 .yanq-expect__list p,
+.footer__legal small,
+.footer__legal-links a,
 .svc-ask,
 .solution-card__label {
   font-size: calc(var(--fs-small) * var(--fs-scale, 1));
@@ -444,6 +446,7 @@ ul {
 .results__num,
 .faq__num,
 .yanq-expect__label,
+.footer__label,
 .form-field label {
   font-size: calc(var(--fs-label) * var(--fs-scale, 1));
   line-height: 1.4;
@@ -6212,7 +6215,7 @@ ul {
 .footer__bottom {
   max-width: 1152px;
   margin: 0 auto;
-  padding: 32px 24px 56px;
+  padding: 32px 24px 40px;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -6222,6 +6225,12 @@ ul {
 
 .footer__brand {
   max-width: 384px;
+}
+
+.footer__logo {
+  display: block;
+  width: fit-content;
+  border-radius: 4px;
 }
 
 .footer__brand img {
@@ -6273,8 +6282,53 @@ ul {
   gap: 12px;
 }
 
+/* A small muted label over each group of links */
+.footer__label {
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--mist);
+  opacity: 0.6;
+  margin-bottom: 4px;
+}
+
 .footer__col a {
   color: var(--mist);
+}
+
+/* The quiet legal row under the brand and the links */
+.footer__legal {
+  flex: 0 0 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 32px;
+  margin-top: -20px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(169, 209, 215, 0.18);
+  color: var(--mist);
+}
+
+.footer__legal small {
+  opacity: 0.7;
+}
+
+.footer__legal-links {
+  display: flex;
+  gap: 8px 28px;
+  flex-wrap: wrap;
+}
+
+.footer__legal-links a {
+  color: var(--mist);
+  opacity: 0.85;
+  transition: opacity 0.25s ease, color 0.25s ease;
+}
+
+.footer__legal-links a:hover,
+.footer__legal-links a:focus-visible {
+  opacity: 1;
+  color: var(--text-on-dark);
 }
 
 @media (max-width: 900px) {
