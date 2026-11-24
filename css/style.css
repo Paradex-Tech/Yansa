@@ -1739,7 +1739,7 @@ ul {
 /* The link that leads on to the load explorer */
 .symptoms__more {
   max-width: 1152px;
-  margin: 48px auto 0;
+  margin: 32px auto 0;
   text-align: center;
   color: #818181;
 }
@@ -2206,6 +2206,17 @@ ul {
 @media (max-width: 900px) {
   .why__grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Home on wide screens: three sections a step tighter than the site's 120px
+   rhythm, so the page reads as a short, calm scroll (the quote keeps 120) */
+@media (min-width: 901px) {
+  .diagnosis,
+  .symptoms,
+  .why {
+    padding-top: 96px;
+    padding-bottom: 96px;
   }
 }
 
