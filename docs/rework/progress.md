@@ -25,3 +25,25 @@ look at desktop and phone), fixes between rounds, measure.mjs before/after.
 - Tabs / FAQ: 21st "Animated Tabs" (Build UI), "Slide Tabs"; Kokonut "FAQ", scrollxui FAQ accordion.
 - Footer: 21st "Minimal Footer" (Efferd), "Simple Centered Footer" (footer-16): 2-col link grid on phone.
 - Wave hero: own build (noise term decaying e^(-t/0.9s) into a clean sine; pointer re-excites).
+
+## S1 shell (done)
+Commits d05a4d7 (tools), 95c815d (nav), ec6b180 (footer), fb30214 (pages, redirects, sitemap, 404), 47c5fce (Esc fix).
+- Nav: 6 items + 2 drop-downs, one line 1440 -> 769 (type steps to Small at <=1100, Label at <=900; hamburger at
+  <=768). Phone menu lists sub-links. Reference: 21st Mega Menu Navbar (panel/chevron timing).
+- Footer: new columns; phone footer 1,139 -> 736 px on every page (2-col link grid). Reference: 21st Minimal Footer.
+- solutions/services/know-your-loads files, solution.html + pq-solved.html removed, 301s in `_redirects`.
+- UI round 1: headless nav shots at 1440/1280/1024/900/820/769/390 checked (no wrap, panels aligned).
+  Round 2 rides on the S2 Chrome look (nav is on every page).
+
+## S2 YanQ (done, 2 rounds)
+Commits fda3d47, 4bdcfea, 4e51653, 962f976, cee9938, d98dd7d, 05016ce, 3cf1698 (round-1 fixes), 73afc39 (phone bar).
+- Heights: desktop 12,405 -> 4,006 px (13.8 -> 4.45 screens); phone 7,119 -> 4,044 px (8.4 -> 4.8).
+  How YanQ Works alone 10,004 -> 744 px desktop, 5,031 -> 950 px phone.
+- How YanQ Works: 4 boxes + drawn arrows, old diagrams replayed in sequence on entering view (once); 2x2 with an
+  elbow connector at 769-1023; phone rows (drawing left, text right) each playing as they enter view.
+  Reference: 21st "Process Timeline" / "How It Works" (staggered arrow draw), the site's own Delivers cards.
+- Round 1 (headless shots 1440/1024/820/390 + Chrome look at 1519 px): fixed the 2x2 arrow order (2 pointed at 4),
+  Compilation leftover dots read as debris (now 35% opacity), resize across 768 now arms the right mode.
+- Round 2 (shots s2-r2 + Chrome phone frame at 390): phone bottom bar stacked on the Next-step band's own
+  "Book a Diagnosis"; fixed site-wide with `data-m-bar-end` on a page's CTA band.
+- Note: http.server lets Chrome cache old CSS; hard-refresh when checking.
