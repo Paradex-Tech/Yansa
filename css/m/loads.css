@@ -133,7 +133,7 @@
   }
 
   .loads-x__col--fix {
-    padding-inline: 20px;
+    padding: 36px 20px 22px;
     border-left: 0;
     border-top: 1px solid var(--line, #bcc9c7);
     border-radius: 0 0 15px 15px;
@@ -142,8 +142,8 @@
   /* The node points down, on the line between Problem and Solution */
   .loads-x__link {
     top: -16px;
-    left: 36px;
-    margin-left: 0;
+    left: 50%;
+    margin-left: -16px;
     transform: rotate(90deg);
   }
 
@@ -277,8 +277,8 @@
 
 .problems .problems__stack .problem-card {
   flex: 0 0 min(85%, 340px);
-  gap: 22px;
-  padding: 24px 22px 26px;
+  gap: 16px;
+  padding: 22px 22px 26px;
   box-shadow: 0 12px 24px rgba(26, 65, 70, 0.22);
   transform: none;
   opacity: calc(1 - var(--m-d, 0) * 0.32);
@@ -286,6 +286,10 @@
   transition: none;
   scroll-snap-align: start;
   scroll-snap-stop: always;
+}
+
+.problems .problems__stack .problem-card__icon {
+  --h: 72;
 }
 
 .problems .problems__stack .problem-card__num {

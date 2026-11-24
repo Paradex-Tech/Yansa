@@ -3128,8 +3128,10 @@ ul {
     padding: 28px 24px 30px;
   }
 
+  /* The connector node covers the first 16 px of this pane: keep the
+     eyebrow at least 16 px clear of it */
   .loads-x__col--fix {
-    padding-inline: 24px;
+    padding-inline: 36px 24px;
   }
 
   .loads-x__lead {
@@ -3207,8 +3209,8 @@ ul {
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 28px;
-  padding: 32px;
+  gap: 20px;
+  padding: 26px 32px 32px;
   text-align: left;
   transition: box-shadow 0.35s ease, background-color 0.35s ease;
 }
@@ -3235,7 +3237,7 @@ ul {
 .problem-card__text h3 {
   color: var(--text-on-dark);
   margin-bottom: 8px;
-  padding-top: 18px;
+  padding-top: 16px;
   border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -3243,13 +3245,31 @@ ul {
   color: #9fc2c0;
 }
 
+/* The viewBoxes are cropped to each drawing so it fills its box (about the
+   size of the Home symptom drawings). --vh is the viewBox height, --h the
+   rendered height: strokes are set in rendered px (--sw) so they stay close
+   to the Home line weight whatever the scale. */
 .problem-card__icon {
+  --h: 80;
+  --vh: 80;
   order: -1;
-  width: 96px;
-  height: 64px;
+  width: auto;
+  height: calc(var(--h) * 1px);
   flex-shrink: 0;
   overflow: visible;
 }
+
+.problem-card:nth-child(2) .problem-card__icon { --vh: 150; }
+.problem-card:nth-child(3) .problem-card__icon { --vh: 134; }
+
+.problem-card__icon [stroke-width="14"] { stroke-width: calc(6px * var(--vh) / var(--h)); }
+.problem-card__icon [stroke-width="8"],
+.problem-card__icon [stroke-width="7"],
+.problem-card__icon [stroke-width="6.5"],
+.problem-card__icon [stroke-width="6"] { stroke-width: calc(2.8px * var(--vh) / var(--h)); }
+.problem-card__icon [stroke-width="5"],
+.problem-card__icon [stroke-width="4.5"] { stroke-width: calc(2.2px * var(--vh) / var(--h)); }
+.problem-card__icon [stroke-width="3.5"] { stroke-width: calc(1.5px * var(--vh) / var(--h)); }
 
 /* The drawings were made for orange cards: dark petrol line and a cream
    accent. On petrol they take teal line and a cream accent. */
@@ -3277,8 +3297,8 @@ ul {
 
 @media (max-width: 900px) {
   .problem-card {
-    padding: 24px;
-    gap: 22px;
+    padding: 22px 24px 24px;
+    gap: 16px;
   }
 
   .problem-card__num {
