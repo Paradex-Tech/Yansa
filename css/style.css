@@ -3221,7 +3221,7 @@ ul {
   overflow: clip;
   background: var(--petrol);
   /* The footer is petrol too: a hairline keeps the two bands apart */
-  border-bottom: 1px solid rgba(169, 209, 215, 0.18);
+  border-bottom: 1px solid rgba(241, 241, 230, 0.32);
 }
 
 .pq-entry__stage {
@@ -3229,7 +3229,7 @@ ul {
   display: flex;
   align-items: center;
   overflow: hidden;
-  padding: var(--section-pad-y) var(--gutter) calc(var(--section-pad-y) - 48px);
+  padding: var(--section-pad-y) var(--gutter) calc(var(--section-pad-y) - 64px);
 }
 
 /* Ripples, two centres of four rings: scroll writes each ring's size (--rs)
@@ -3316,7 +3316,7 @@ ul {
 .pq-entry__fan {
   display: grid;
   gap: 16px;
-  padding: 24px 0 32px;
+  padding: 24px 0 0;
 }
 
 .glimpse {
