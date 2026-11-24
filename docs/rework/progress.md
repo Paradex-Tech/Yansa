@@ -58,3 +58,14 @@ Commits a60532b, 4e3b7e2, 51c7bdd, 8828dae, 0e68155, c4215da, f6e083c.
   21st "Tabbed Feature Categories"; wave own build.
 - Round 1 (headless shots + Chrome phone frame): chip tint colour, band line balance. Round 2: statement-to-offered
   gap too large on desktop and phone (padding trimmed).
+
+## S4 Services (done, 2 rounds)
+Commits d458878, 255be8c, 86b29fa, 724d9f4, fb2c203, + subline width fix.
+- Heights: desktop 3,129 px (3.48 screens), phone 3,497 (4.14). New page.
+- Three alternating photo/text blocks on a 12-col grid (Study > YanQ page; Commissioning and AMC expand in place
+  with grid-rows 0fr->1fr, deep links #commissioning/#amc open the block), then a five-node engagement row whose line
+  draws left to right in view (vertical rail on phone). References: Powerside Services (title, 1-2 sentences,
+  Learn More), 21st alternating feature rows.
+- Round 1 (SHURI's shots + my read): fine. Round 2 (Chrome phone frame + shots): engagement sublines wrapped
+  2 words to a line; widened.
+- YanQ block uses yanq-hero.jpg (yanq-analysis.jpg has garbled AI text).
