@@ -96,3 +96,13 @@ Commits c4ebcdd, c102bc3, 7672377, c82e0a5, 3000381, 0cf6472, 63b3869, 9b4cb31.
 - Round 2: desktop over target (6.11): dropped 100vh/80vh min-heights; duplicate image swapped. Round 3: Home
   section padding 120 -> 96 at >= 901 px. Desktop 5.64 stays above the 5.0 target: reaching 5 would need dropping
   a section or changing the symptom hover; left for Shrey.
+
+## S7 About + Contact (done, 2 rounds)
+Commits 335d1f9, d9d9541, a68b589, 4d62607, 5e5812d, e1ea861.
+- About: 4,441 -> 4,040 px desktop (4.93 -> 4.49), phone 3,808 -> 3,759 (4.45). Contact 2,367 / 2,352 (2.63 / 2.79).
+- About order: hero, We Measure (cycling word, moved up), team statement, Industries (4 tabs per sitemap, fixed
+  table height, transform-only sliding indicator), FAQs (6, button + region accordion, grid-rows open, plus rotates,
+  JSON-LD matches visible text). Our Values removed. Contact heading "Your Facility. Our Solution."
+  References: 21st "Animated Tabs" (sliding indicator), Kokonut / scrollxui FAQ accordions.
+- Round 2: the old per-cell tab glide with turning plus markers was replaced in round 1; restored (old motion is
+  part of the identity), keeping the new indicator and fixed height.
