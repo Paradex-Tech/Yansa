@@ -1999,6 +1999,46 @@ ul {
   }
 }
 
+/* Wide screens: all four cards in one row (the Home stays a short scroll).
+   The columns are narrow, so the opened copy wraps to more lines: the detail
+   gets more room and the card enough height that it still never grows. */
+@media (min-width: 1200px) {
+  .symptoms__grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .symptom-card {
+    min-height: 464px;
+    padding: 28px;
+  }
+
+  .symptom-card:hover .symptom-card__detail,
+  .symptom-card:focus-within .symptom-card__detail {
+    max-height: 220px;
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1359px) {
+  .symptom-card {
+    min-height: 520px;
+  }
+}
+
+/* From 1440 the row runs 64px past the text column on each side, so the cards
+   are wide enough for two-line titles and shorter copy: a shorter card. */
+@media (min-width: 1440px) {
+  .symptoms__grid {
+    width: calc(100% + 128px);
+    max-width: none;
+    margin-left: -64px;
+  }
+
+  .symptom-card {
+    min-height: 396px;
+  }
+}
+
 /* Touch screens have no hover, so the detail is simply shown */
 @media (hover: none) {
   .symptom-card__detail {
@@ -2494,11 +2534,12 @@ ul {
   }
 }
 
-/* Home on wide screens: three sections a step tighter than the site's 120px
-   rhythm, so the page reads as a short, calm scroll (the quote keeps 120) */
+/* Home on wide screens: four sections a step tighter than the site's 120px
+   rhythm, so the page reads as a short, calm scroll */
 @media (min-width: 901px) {
   .diagnosis,
   .symptoms,
+  .quote,
   .why {
     padding-top: 96px;
     padding-bottom: 96px;
