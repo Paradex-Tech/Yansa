@@ -81,7 +81,7 @@
 }
 
 .loads-x h2 {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .loads-x__note {
@@ -94,7 +94,7 @@
   }
 
   .loads-x__head {
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
 
   .loads-x__list {
@@ -102,9 +102,11 @@
     gap: 8px;
   }
 
+  /* Every tile is one line with the label centred: the four rows are equal */
   .loads-x__load {
-    min-height: 56px;
-    padding: 10px 10px 10px 14px;
+    align-content: center;
+    min-height: 52px;
+    padding: 8px 10px 8px 14px;
   }
 
   .loads-x__load:active:not(.is-active) {
@@ -167,10 +169,6 @@
 
   .loads-x__chips {
     margin-top: 14px;
-  }
-
-  .loads-x__links {
-    padding-top: 18px;
   }
 
   .loads-x__links a {

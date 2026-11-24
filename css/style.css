@@ -2683,7 +2683,7 @@ ul {
    load. Without the script the first load shows, its row filled in petrol. */
 .loads-x {
   background: var(--ivory);
-  padding: 96px var(--gutter);
+  padding: 80px var(--gutter);
 }
 
 .loads-x__inner {
@@ -2693,16 +2693,18 @@ ul {
 
 .loads-x h2 {
   color: var(--ink);
-  margin-bottom: 48px;
+  margin-bottom: 40px;
   text-align: center;
 }
 
 .loads-x h2 .accent { color: var(--teal); }
 
+/* Column 1 is wide enough for the longest name on one line at 1440 (two lines
+   below about 1300, rows stay equal) */
 .loads-x__board {
   display: grid;
-  grid-template-columns: minmax(0, 3fr) minmax(0, 7fr);
-  gap: 32px;
+  grid-template-columns: clamp(300px, 33%, 380px) minmax(0, 1fr);
+  gap: 28px;
 }
 
 /* The eyebrow: the Services label look, one style for all three columns */
@@ -2770,8 +2772,8 @@ ul {
 .loads-x__load::after {
   content: "";
   position: absolute;
-  left: 16px;
-  right: 16px;
+  left: 0;
+  right: 0;
   bottom: 0;
   height: 1px;
   background: var(--line);
@@ -2955,14 +2957,14 @@ ul {
   color: var(--text);
 }
 
-/* Solution links: the Solutions offered pills, pinned to the foot of the
-   pane. The arrow nudges 3px right and the family colour tints the pill on
-   hover and focus. */
+/* Solution links: the Solutions offered pills, 30px under the body copy. The
+   arrow nudges 3px right and the family colour tints the pill on hover and
+   focus. */
 .loads-x__links {
   display: grid;
   gap: 10px;
-  margin: auto 0 0;
-  padding: 24px 0 0;
+  margin: 30px 0 0;
+  padding: 0;
   list-style: none;
 }
 
@@ -3094,7 +3096,7 @@ ul {
   }
 
   .loads-x__col--loads {
-    padding-top: 0;
+    padding: 0;
   }
 
   .loads-x__list {
