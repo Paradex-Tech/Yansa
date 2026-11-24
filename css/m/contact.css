@@ -181,7 +181,7 @@
 /* ---------- 3. Map ---------- */
 .contact-map {
   flex: none;
-  min-height: 0;
+  min-height: 320px;
   aspect-ratio: 4 / 3;
   border-radius: 18px;
   box-shadow: 0 18px 40px -24px rgba(4, 25, 23, 0.35);
@@ -218,7 +218,6 @@
 .not-found {
   position: relative;
   overflow: hidden;
-  min-height: calc(100svh - var(--nav-height, 64px) - 120px);
   padding: 56px var(--gutter, 20px) 64px;
   isolation: isolate;
 }
