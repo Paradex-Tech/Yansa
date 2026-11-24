@@ -1,0 +1,53 @@
+/* =========================================================
+   Phone styles: services
+   Loaded after css/style.css, only at max-width 768px (the link carries the
+   media query), so everything here wins over the desktop and old narrow rules
+   by order. Written for phones first, not the desktop layout stacked.
+
+   1. Hero         shorter photo, heading and line anchored low-left
+   2. Blocks       image on top (16:10), text below
+   3. Engagement   a vertical rail with the five steps hanging off it
+   Type sizes only through the tiers in style.css.
+   ========================================================= */
+
+
+/* ---------- 1. Hero ---------- */
+.services-hero {
+  min-height: 0;
+  text-align: left;
+}
+
+.services-hero .header-placeholder {
+  height: clamp(400px, 60svh, 560px);
+  min-height: 0;
+}
+
+@supports not (height: 1svh) {
+  .services-hero .header-placeholder {
+    height: clamp(400px, 60vh, 560px);
+  }
+}
+
+.services-hero .header-placeholder__overlay {
+  align-items: flex-start;
+  justify-content: flex-end;
+  text-align: left;
+  padding: 0 var(--gutter, 20px) 44px;
+}
+
+.services-hero .header-placeholder__overlay::before {
+  background: linear-gradient(180deg,
+    rgba(4, 25, 23, 0.18) 0%,
+    rgba(4, 25, 23, 0.3) 40%,
+    rgba(4, 25, 23, 0.78) 100%);
+}
+
+.services-hero .header-placeholder__overlay h1 {
+  --fs-scale: 1.05;
+  margin-bottom: 10px;
+}
+
+.services-hero .header-placeholder__overlay p {
+  max-width: 21em;
+  margin: 0;
+}

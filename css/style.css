@@ -1141,7 +1141,8 @@ ul {
 .contact-hero,
 .yanq-hero-intro,
 .about-hero,
-.solution-hero {
+.solution-hero,
+.services-hero {
   position: relative;
   overflow: hidden;
   min-height: var(--inner-hero-height);
@@ -1228,6 +1229,7 @@ ul {
 @media (min-width: 769px) {
   .about-hero .header-placeholder__overlay,
   .solution-hero .header-placeholder__overlay,
+  .services-hero .header-placeholder__overlay,
   .contact-hero .header-placeholder__overlay,
   .yanq-hero-intro .header-placeholder__overlay {
     --fs-scale: 1.5;
@@ -1250,6 +1252,7 @@ ul {
 @media (min-width: 769px) {
   .about-hero .header-placeholder__overlay,
   .solution-hero .header-placeholder__overlay,
+  .services-hero .header-placeholder__overlay,
   .contact-hero .header-placeholder__overlay {
     display: grid;
     grid-template-rows: 1fr auto 1fr;
@@ -1259,6 +1262,7 @@ ul {
 
   .about-hero .header-placeholder__overlay h1,
   .solution-hero .header-placeholder__overlay h1,
+  .services-hero .header-placeholder__overlay h1,
   .contact-hero .header-placeholder__overlay h1 {
     grid-row: 2;
     margin-bottom: 0;
@@ -1266,6 +1270,7 @@ ul {
 
   .about-hero .header-placeholder__overlay p,
   .solution-hero .header-placeholder__overlay p,
+  .services-hero .header-placeholder__overlay p,
   .contact-hero .header-placeholder__overlay p {
     grid-row: 3;
     align-self: start;
