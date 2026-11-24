@@ -2,10 +2,10 @@
    Phone styles: Know Your Loads
    Loaded after css/style.css, only at max-width 768px (the link carries the
    media query), so everything here wins over the desktop and old narrow rules
-   by order. Written for phones first: a chip row, swipe decks, thumb reach,
+   by order. Written for phones first: a tile grid, swipe decks, thumb reach,
    not the desktop layout stacked into a column. Tokens come from :root (BASE
    sets the phone values); every var() carries a fallback so this file reads
-   correctly on its own. Scroll-linked values (--m-d, --m-par, --pq-fan) are
+   correctly on its own. Scroll-linked values (--m-d, --pq-fan) are
    written by js/m/loads.js; without it each one falls back to the finished,
    resting state.
 
@@ -20,49 +20,47 @@
 
 /* =========================================================
    1. HERO
-   Shorter than a full screen so the next section shows it is there; the
-   heading sits low and left over a darker foot, the photo drifts slowly
-   behind it as the page scrolls (--m-par, 0 to 1).
+   The Services phone hero: a photo about 60% of the screen high, the heading
+   and line low and left over a darker foot. The two sentences run on and
+   balance themselves.
    ========================================================= */
 .solution-hero {
   min-height: 0;
+  text-align: left;
 }
 
 .solution-hero .header-placeholder {
-  height: clamp(440px, 76svh, 680px);
+  height: clamp(400px, 60svh, 560px);
   min-height: 0;
 }
 
-.solution-hero .header-placeholder img {
-  transform-origin: 50% 100%;
-  transform: translate3d(0, calc(var(--m-par, 0) * 72px), 0) scale(1.14);
-  will-change: transform;
+@supports not (height: 1svh) {
+  .solution-hero .header-placeholder {
+    height: clamp(400px, 60vh, 560px);
+  }
 }
 
 .solution-hero .header-placeholder__overlay {
-  justify-content: flex-end;
   align-items: flex-start;
+  justify-content: flex-end;
   text-align: left;
   padding: 0 var(--gutter, 20px) 44px;
 }
 
 .solution-hero .header-placeholder__overlay::before {
-  background: linear-gradient(
-    180deg,
-    rgba(4, 25, 23, 0.2) 0%,
-    rgba(4, 25, 23, 0.32) 42%,
-    rgba(4, 25, 23, 0.82) 100%
-  );
+  background: linear-gradient(180deg,
+    rgba(4, 25, 23, 0.18) 0%,
+    rgba(4, 25, 23, 0.3) 40%,
+    rgba(4, 25, 23, 0.78) 100%);
 }
 
 .solution-hero .header-placeholder__overlay h1 {
-  margin-bottom: 14px;
-  max-width: 13ch;
+  margin-bottom: 10px;
 }
 
 .solution-hero .header-placeholder__overlay p {
+  max-width: 21em;
   margin: 0;
-  max-width: 36ch;
 }
 
 /* The two sentences simply run on */
@@ -70,23 +68,13 @@
   display: none;
 }
 
-/* A short rule over the heading, the page's one ornament */
-.solution-hero .header-placeholder__overlay h1::before {
-  content: "";
-  display: block;
-  width: 36px;
-  height: 3px;
-  margin-bottom: 18px;
-  border-radius: 2px;
-  background: var(--orange, #ff8c40);
-}
-
 
 /* =========================================================
    2. LOAD EXPLORER
-   The loads become a scrolling chip row at the top of the board (the picked
-   chip is kept in view by the desktop script); Problem and Solution stack
-   below it, the connector turned to point down between them.
+   600 to 768 px uses the tablet layout from style.css (a 4 x 2 grid of load
+   tiles above a two-pane sheet). Below 600 px the tiles become a 2 x 4 grid
+   with short names and the two panes stack in one card, the connector
+   turned to point down between them.
    ========================================================= */
 .loads-x {
   padding: var(--section-pad-y, 64px) var(--gutter, 20px);
@@ -94,103 +82,100 @@
 
 .loads-x h2 {
   margin-bottom: 24px;
-  text-align: left;
-}
-
-.loads-x__board {
-  border-radius: 16px;
-  box-shadow: 0 14px 30px rgba(26, 65, 70, 0.08);
-}
-
-.loads-x__col {
-  padding: 22px 20px 26px;
-}
-
-.loads-x__col--loads {
-  padding: 20px 0 16px;
-  border-radius: 16px 16px 0 0;
-}
-
-.loads-x__col--loads .loads-x__head {
-  margin: 0 20px 14px;
-}
-
-.loads-x__list {
-  position: relative;
-  flex-wrap: nowrap;
-  gap: 8px;
-  padding: 2px 20px 4px;
-  overflow-x: auto;
-  scroll-snap-type: x proximity;
-  scroll-padding-inline: 20px;
-  overscroll-behavior-x: contain;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 20px, #000 calc(100% - 32px), transparent);
-  mask-image: linear-gradient(90deg, transparent 0, #000 20px, #000 calc(100% - 32px), transparent);
-}
-
-.loads-x__list::-webkit-scrollbar {
-  display: none;
-}
-
-.loads-x__load {
-  flex: none;
-  min-height: 44px;
-  padding: 10px 20px;
-  white-space: nowrap;
-  scroll-snap-align: start;
-}
-
-.loads-x__load:active {
-  background: color-mix(in srgb, var(--teal, #34b6af) 14%, var(--ivory-card, #fffefa));
-}
-
-.loads-x__col--fix {
-  border-left: 0;
-  border-top: 1px solid var(--line, #bcc9c7);
-}
-
-.loads-x__panel {
-  grid-template-columns: minmax(0, 1fr);
-}
-
-/* The node points down, on the line between Problem and Solution */
-.loads-x__link--b {
-  top: -16px;
-  left: 36px;
-  transform: rotate(90deg);
-}
-
-.loads-x__lead {
-  gap: 14px;
-  margin-bottom: 20px;
-}
-
-.loads-x__art {
-  width: 84px;
-  height: 64px;
-  border-radius: 10px;
-}
-
-.loads-x__icon {
-  height: 32px;
-}
-
-.loads-x__chips {
-  margin-top: 18px;
-}
-
-.loads-x__links {
-  margin-top: 20px;
-}
-
-.loads-x__links a {
-  min-height: 48px;
 }
 
 .loads-x__note {
-  margin-top: 32px;
+  margin-top: 24px;
+}
+
+@media (max-width: 599px) {
+  .loads-x__board {
+    gap: 14px;
+  }
+
+  .loads-x__head {
+    margin-bottom: 12px;
+  }
+
+  .loads-x__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .loads-x__load {
+    min-height: 56px;
+    padding: 10px 10px 10px 14px;
+  }
+
+  .loads-x__load:active:not(.is-active) {
+    background: color-mix(in srgb, var(--teal, #34b6af) 14%, transparent);
+  }
+
+  .loads-x__num,
+  .loads-x__name {
+    display: none;
+  }
+
+  .loads-x__short {
+    display: block;
+  }
+
+  .loads-x__panel {
+    grid-template-columns: minmax(0, 1fr);
+    border-radius: 16px;
+    box-shadow: 0 14px 30px rgba(26, 65, 70, 0.08);
+  }
+
+  .loads-x__col {
+    padding: 20px 20px 22px;
+  }
+
+  .loads-x__col--fix {
+    padding-inline: 20px;
+    border-left: 0;
+    border-top: 1px solid var(--line, #bcc9c7);
+    border-radius: 0 0 15px 15px;
+  }
+
+  /* The node points down, on the line between Problem and Solution */
+  .loads-x__link {
+    top: -16px;
+    left: 36px;
+    margin-left: 0;
+    transform: rotate(90deg);
+  }
+
+  /* Body copy keeps the Body tier's line height (base.css lists every
+     .loads-x__item p at the Small one) */
+  .loads-x__item > p {
+    line-height: 1.6;
+  }
+
+  .loads-x__lead {
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  .loads-x__art {
+    width: 88px;
+    height: 64px;
+  }
+
+  .loads-x__icon {
+    height: 30px;
+  }
+
+  .loads-x__chips {
+    margin-top: 14px;
+  }
+
+  .loads-x__links {
+    padding-top: 18px;
+  }
+
+  .loads-x__links a {
+    min-height: 48px;
+  }
 }
 
 

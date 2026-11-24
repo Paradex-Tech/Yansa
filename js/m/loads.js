@@ -2,9 +2,9 @@
    Runs on every width but does nothing unless the phone media query matches
    (see isPhone), and re-checks on resize/rotation.
 
-   Serves know-your-loads.html only. The load explorer's tabs, crossfade and
-   chip row are the desktop script's (initLoadExplorer); this file adds the
-   hero drift, the two swipe decks (Problems, Inaction) and the fan's
+   Serves know-your-loads.html only. The load explorer's tabs, tiles and
+   crossfade are the desktop script's (initLoadExplorer); this file adds the
+   two swipe decks (Problems, Inaction) and the fan's
    scroll progress. Everything here is built by build() and taken apart by
    teardown(), so leaving the phone width (a rotation, a resized window)
    hands the page back to the desktop scripts with no classes, nodes or
@@ -171,22 +171,6 @@
   }
 
 
-  /* ---------- Hero: slow parallax ----------
-     --m-par runs 0 to 1 as the hero scrolls away; the photo sinks a little
-     behind the type (the CSS turns it into a translate). */
-  function initHero() {
-    var hero = document.querySelector('.solution-hero');
-    if (!hero || reduce) return;
-
-    onScroll(function () {
-      var r = hero.getBoundingClientRect();
-      if (r.bottom < 0) return;
-      hero.style.setProperty('--m-par', clamp01(-r.top / Math.max(r.height, 1)).toFixed(4));
-    });
-    undo.push(function () { hero.style.removeProperty('--m-par'); });
-  }
-
-
   /* ---------- The Problems These Loads Create: swipe deck ----------
      Three cards side by side in a scroll-snap track. The card in view draws
      its icon (data-m-front, keyed in the CSS) once the deck is on screen.
@@ -272,7 +256,6 @@
   function build() {
     if (built) return;
     built = true;
-    initHero();
     initProblems();
     initInaction();
     initEntry();

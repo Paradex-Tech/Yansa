@@ -276,17 +276,21 @@
   /* ---------- Load explorer (Know Your Loads) ----------
      Eight loads as ARIA tabs (roving tabindex; arrows, Home and End pick
      and focus). A pick swaps .is-active on the matching item in the Problem
-     and Solution columns: the crossfade is CSS (they share a grid cell, so
+     and Solution panes: the crossfade is CSS (they share a grid cell, so
      the board never changes height). It also replays the load's drawing
-     (.is-play) and pulses the two connectors. .is-live is set at the first
-     pick so nothing animates on load. Under reduced motion the CSS drops all
-     movement, so there is nothing to restart here. On a narrow screen the
-     loads form a scrolling chip row; the picked chip is kept in view. */
+     (.is-play) and pulses the connector. One petrol highlight sits behind
+     the chosen tab (row, 4 x 2 tile or 2 x 4 tile: it is placed from the
+     tab's own box, so every layout shares it) and glides there by CSS
+     transition; it is re-placed, without gliding, on resize and when the
+     fonts arrive. .is-live is set at the first pick so nothing animates on
+     load. Under reduced motion the CSS drops all movement, so there is
+     nothing to restart here. A pick never scrolls the page. */
   function initLoadExplorer() {
     var board = document.querySelector('.loads-x__board');
     if (!board) return;
 
     var list = board.querySelector('.loads-x__list');
+    var glide = board.querySelector('.loads-x__glide');
     var panel = board.querySelector('.loads-x__panel');
     var tabs = toArray(board.querySelectorAll('.loads-x__load'));
     var items = toArray(board.querySelectorAll('.loads-x__item'));
@@ -300,19 +304,25 @@
       el.classList.add(cls);
     }
 
-    function keepInView(tab) {
-      if (list.scrollWidth <= list.clientWidth + 1) return;
-      var l = list.getBoundingClientRect();
-      var t = tab.getBoundingClientRect();
-      list.scrollBy({
-        left: t.left - l.left - (l.width - t.width) / 2,
-        behavior: reduceMotion ? 'auto' : 'smooth'
-      });
+    // Put the highlight behind tab i; snap = jump there with no glide
+    function place(i, snap) {
+      if (!glide) return;
+      var tab = tabs[i];
+      if (!tab.offsetWidth) return;
+      if (snap) list.classList.add('is-snap');
+      glide.style.width = tab.offsetWidth + 'px';
+      glide.style.height = tab.offsetHeight + 'px';
+      glide.style.transform = 'translate3d(' + tab.offsetLeft + 'px,' + tab.offsetTop + 'px,0)';
+      list.classList.add('is-glide');
+      if (snap) {
+        void glide.offsetWidth;
+        list.classList.remove('is-snap');
+      }
     }
 
     function select(i, focus) {
       if (i < 0 || i >= tabs.length) return;
-      if (focus) tabs[i].focus();
+      if (focus) tabs[i].focus({ preventScroll: true });
       if (i === current) return;
       var id = tabs[i].getAttribute('data-load');
       tabs.forEach(function (tab, k) {
@@ -329,11 +339,11 @@
       arts.forEach(function (art) { art.classList.remove('is-play'); });
       var art = board.querySelector('.loads-x__item.is-active .loads-x__art');
       board.classList.add('is-live');
+      place(i, reduceMotion);
       if (!reduceMotion) {
         replay(board, 'is-pulse');
         if (art) replay(art, 'is-play');
       }
-      keepInView(tabs[i]);
       current = i;
     }
 
@@ -354,11 +364,21 @@
       select(next, true);
     });
 
-    // The loads read as a row when the board narrows (CSS, 1100px)
-    var row = window.matchMedia('(max-width: 1100px)');
-    function orient() { list.setAttribute('aria-orientation', row.matches ? 'horizontal' : 'vertical'); }
+    // A list down the side from 1100 px, a grid of tiles below (CSS)
+    var row = window.matchMedia('(max-width: 1099px)');
+    function orient() {
+      list.setAttribute('aria-orientation', row.matches ? 'horizontal' : 'vertical');
+      place(current, true);
+    }
     orient();
     if (row.addEventListener) row.addEventListener('change', orient);
+
+    // The tabs move when the width or the fonts change: re-place, no glide
+    function replace() { place(current, true); }
+    window.addEventListener('resize', replace);
+    window.addEventListener('load', replace);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(replace);
+    if (typeof ResizeObserver === 'function') new ResizeObserver(replace).observe(list);
   }
 
 

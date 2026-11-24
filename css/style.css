@@ -391,6 +391,7 @@ ul {
 .glimpse p,
 .glimpse__go,
 .loads-x__load,
+.loads-x__item > p,
 .loads-x__links a,
 .loads-x__note,
 .industry-tab,
@@ -411,8 +412,8 @@ ul {
 /* Small — dense copy inside compact cards */
 .offered-col__sub,
 .yanq-step__tag,
-.loads-x__item p,
 .loads-x__chips li,
+.loads-x__seen,
 .problem-card__text p,
 .inaction-card p,
 .svc-step__line,
@@ -2671,16 +2672,18 @@ ul {
 }
 
 /* ---------- Load explorer ----------
-   Loads | Problem | Yansa's Solution on one board. The eight items of the
-   Problem and Solution columns share one grid cell, so each column is as
-   tall as its tallest item and picking a load never moves the page. The
-   outgoing item fades (120 ms); the incoming one fades and rises 8 px
-   (220 ms), the Solution column 60 ms behind the Problem. The script
-   (initLoadExplorer) sets .is-live on the board at the first pick, so
-   nothing animates on load. */
+   Field guide: the eight loads are an index list on the section background
+   (one petrol highlight glides to the chosen row), and the chosen load opens
+   as one ivory "load sheet" in the Solutions card style, split into a Problem
+   pane and a tinted Solution pane. The eight items of each pane share one
+   grid cell, so a pane is as tall as its tallest item and picking a load
+   never moves the page. The outgoing item fades (200 ms); the incoming one
+   fades and rises 8 px (260 ms). The script (initLoadExplorer) places the
+   highlight and sets .is-live at the first pick, so nothing animates on
+   load. Without the script the first load shows, its row filled in petrol. */
 .loads-x {
-  background: var(--cream);
-  padding: 112px var(--gutter);
+  background: var(--ivory);
+  padding: 96px var(--gutter);
 }
 
 .loads-x__inner {
@@ -2698,7 +2701,137 @@ ul {
 
 .loads-x__board {
   display: grid;
-  grid-template-columns: minmax(0, 0.82fr) minmax(0, 2fr);
+  grid-template-columns: minmax(0, 3fr) minmax(0, 7fr);
+  gap: 32px;
+}
+
+/* The eyebrow: the Services label look, one style for all three columns */
+.loads-x__head {
+  margin-bottom: 14px;
+  color: var(--highlight);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* Loads: index list. Its eyebrow sits level with the sheet's eyebrows. */
+.loads-x__col--loads {
+  display: flex;
+  flex-direction: column;
+  padding-top: 28px;
+}
+
+.loads-x__list {
+  position: relative;
+  flex: 1;
+  display: grid;
+  grid-template-rows: repeat(8, minmax(52px, 1fr));
+}
+
+/* The highlight: positioned by the script (transform, width, height) */
+.loads-x__glide {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 0;
+  width: 0;
+  height: 0;
+  border-radius: 10px;
+  background: var(--petrol);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+    width 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.loads-x__list.is-glide .loads-x__glide { opacity: 1; }
+.loads-x__list.is-snap .loads-x__glide { transition: none; }
+
+.loads-x__load {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) 16px;
+  align-items: center;
+  width: 100%;
+  padding: 8px 18px 8px 16px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.2s ease, color 0.25s ease;
+}
+
+/* Hairline between rows; it steps aside around the highlight */
+.loads-x__load::after {
+  content: "";
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 0;
+  height: 1px;
+  background: var(--line);
+  transition: opacity 0.2s ease;
+}
+
+.loads-x__load:last-of-type::after,
+.loads-x__load.is-active::after,
+.loads-x__load:has(+ .loads-x__load.is-active)::after {
+  opacity: 0;
+}
+
+.loads-x__num {
+  color: color-mix(in srgb, var(--text) 62%, transparent);
+  transition: color 0.2s ease;
+}
+
+.loads-x__short { display: none; }
+
+.loads-x__go {
+  justify-self: end;
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.25s ease, transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.loads-x__load:not(.is-active):hover {
+  background: color-mix(in srgb, var(--teal) 8%, transparent);
+  color: var(--petrol);
+}
+
+.loads-x__load:not(.is-active):hover .loads-x__num { color: var(--teal-deep); }
+
+.loads-x__load.is-active {
+  color: var(--text-on-dark);
+}
+
+.loads-x__load.is-active .loads-x__num {
+  color: color-mix(in srgb, var(--text-on-dark) 70%, transparent);
+}
+
+.loads-x__load.is-active .loads-x__go {
+  opacity: 1;
+  transform: none;
+}
+
+/* Before the script has placed the highlight the active row paints itself */
+.loads-x__list:not(.is-glide) .loads-x__load.is-active {
+  background: var(--petrol);
+}
+
+.loads-x__load:focus-visible {
+  outline: 2px solid var(--teal-deep);
+  outline-offset: 2px;
+}
+
+/* The load sheet: Problem | Solution */
+.loads-x__panel {
+  display: grid;
+  grid-template-columns: minmax(0, 55fr) minmax(0, 45fr);
   background: var(--ivory-card);
   border: 1px solid var(--line);
   border-radius: 12px;
@@ -2707,109 +2840,20 @@ ul {
 
 .loads-x__col {
   position: relative;
-  padding: 28px 28px 32px;
-}
-
-.loads-x__head {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
-  color: var(--text);
-  letter-spacing: 1.4px;
-  text-transform: uppercase;
-}
-
-.loads-x__head::before {
-  content: "";
-  flex: none;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--dot, var(--petrol));
-}
-
-.loads-x__col--problem { --dot: var(--orange); }
-.loads-x__col--fix { --dot: var(--teal); }
-
-/* Loads: a vertical list. The chosen row takes the old active style, a bar
-   on the left edge and a teal tint. */
-.loads-x__col--loads {
-  border-right: 1px solid var(--line);
-  border-radius: 12px 0 0 12px;
-  background: color-mix(in srgb, var(--cream) 55%, var(--ivory-card));
-}
-
-.loads-x__list {
-  display: grid;
-  gap: 4px;
-}
-
-.loads-x__load {
-  position: relative;
-  display: grid;
-  grid-template-columns: 30px minmax(0, 1fr);
-  align-items: baseline;
-  width: 100%;
-  padding: 11px 14px 11px 16px;
-  border: 0;
-  border-radius: 8px;
-  background: transparent;
-  color: var(--text);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: background-color 0.25s ease, color 0.25s ease;
-}
-
-.loads-x__load::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 9px;
-  bottom: 9px;
-  width: 3px;
-  border-radius: 2px;
-  background: var(--orange);
-  transform: scaleY(0);
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.loads-x__num {
-  color: var(--line);
-  transition: color 0.25s ease;
-}
-
-.loads-x__load:hover {
-  background: color-mix(in srgb, var(--teal) 6%, transparent);
-  color: var(--ink);
-}
-
-.loads-x__load.is-active {
-  background: color-mix(in srgb, var(--teal) 11%, var(--ivory-card));
-  color: var(--ink);
-}
-
-.loads-x__load.is-active::before { transform: scaleY(1); }
-.loads-x__load.is-active .loads-x__num { color: var(--highlight); }
-
-.loads-x__load:focus-visible {
-  outline: 2px solid var(--teal);
-  outline-offset: 2px;
-}
-
-/* Problem | Solution */
-.loads-x__panel {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  flex-direction: column;
+  padding: 28px 36px 32px;
 }
 
 .loads-x__col--fix {
+  padding-inline: 32px;
   border-left: 1px solid var(--line);
+  border-radius: 0 11px 11px 0;
+  background: color-mix(in srgb, var(--teal) 7%, var(--ivory-card));
 }
 
 .loads-x__stack {
+  flex: 1;
   display: grid;
 }
 
@@ -2818,14 +2862,19 @@ ul {
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.12s ease, visibility 0s linear 0.12s;
+  transition: opacity 0.2s ease, visibility 0s linear 0.2s;
+}
+
+.loads-x__col--fix .loads-x__item {
+  display: flex;
+  flex-direction: column;
 }
 
 .loads-x__item.is-active {
   visibility: visible;
   opacity: 1;
   pointer-events: auto;
-  transition: opacity 0.12s ease;
+  transition: opacity 0.2s ease;
 }
 
 @keyframes lxIn {
@@ -2834,91 +2883,86 @@ ul {
 }
 
 .loads-x__board.is-live .loads-x__item.is-active {
-  animation: lxIn 0.22s cubic-bezier(0.22, 1, 0.36, 1) 0.06s backwards;
+  animation: lxIn 0.26s cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }
 
 .loads-x__board.is-live .loads-x__col--fix .loads-x__item.is-active {
-  animation-delay: 0.12s;
+  animation-delay: 0.05s;
 }
 
 .loads-x__item h3 {
   color: var(--ink);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
-.loads-x__item p {
+.loads-x__item > p {
   color: var(--text);
 }
 
+/* Seen in: the signature plate (Home symptom-card petrol, line drawing in
+   teal) with the label and places beside it */
 .loads-x__lead {
   display: flex;
   align-items: center;
-  gap: 18px;
-  margin-bottom: 26px;
+  gap: 20px;
+  margin-bottom: 22px;
 }
 
-/* The drawing sits on its own tile so five different shapes read as a set.
-   Fills are currentColor; sized by height, as the icons differ in ratio. */
 .loads-x__art {
   flex: none;
   display: grid;
   place-items: center;
-  width: 100px;
-  height: 76px;
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--orange) 10%, transparent);
-  color: var(--orange);
+  width: 132px;
+  height: 92px;
+  border-radius: 9px;
+  background: var(--petrol);
+  color: var(--teal);
 }
 
 .loads-x__icon {
   display: block;
-  height: 38px;
+  height: 40px;
   width: auto;
   overflow: visible;
 }
 
+.loads-x__seen {
+  color: var(--text);
+}
+
 .loads-x__seen span {
   display: block;
-  margin-bottom: 2px;
-  color: var(--teal-deep);
-  letter-spacing: 1.4px;
+  margin-bottom: 4px;
+  color: var(--highlight);
+  letter-spacing: 2px;
   text-transform: uppercase;
 }
 
+/* Quiet hairline tags */
 .loads-x__chips {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin: 22px 0 0;
+  margin: 18px 0 0;
   padding: 0;
   list-style: none;
 }
 
 .loads-x__chips li {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 5px 13px 5px 11px;
+  padding: 4px 13px;
   border: 1px solid var(--line);
   border-radius: 999px;
-  background: var(--ivory);
-  color: var(--ink);
+  color: var(--text);
 }
 
-.loads-x__chips li::before {
-  content: "";
-  flex: none;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--orange);
-}
-
+/* Solution links: the Solutions offered pills, pinned to the foot of the
+   pane. The arrow nudges 3px right and the family colour tints the pill on
+   hover and focus. */
 .loads-x__links {
   display: grid;
   gap: 10px;
-  margin: 24px 0 0;
-  padding: 0;
+  margin: auto 0 0;
+  padding: 24px 0 0;
   list-style: none;
 }
 
@@ -2926,8 +2970,6 @@ ul {
 .loads-x__fam--passive { --chip: var(--highlight); }
 .loads-x__fam--hybrid  { --chip: var(--teal); }
 
-/* The solution links are the Solutions chips: they read as buttons before
-   they are touched, the arrow nudges and the family colour tints on hover */
 .loads-x__links a {
   display: flex;
   align-items: center;
@@ -2938,6 +2980,7 @@ ul {
   border: 1px solid var(--line);
   border-radius: 24px;
   line-height: 1.4;
+  text-wrap: balance;
   background: var(--ivory);
   color: var(--text);
   text-decoration: none;
@@ -2968,9 +3011,8 @@ ul {
   outline-offset: 2px;
 }
 
-/* Connectors: a node sits on each divider, level with the column headings.
-   On every pick a ring leaves it and the arrow nudges, left node first, so
-   the change reads as travelling Loads > Problem > Solution. */
+/* Connector: one petrol node on the divider between the panes. On every
+   pick a ring leaves it and the arrow nudges, once. */
 .loads-x__link {
   position: absolute;
   left: 0;
@@ -2981,24 +3023,23 @@ ul {
   width: 32px;
   height: 32px;
   margin-left: -16px;
-  border: 1px solid var(--line);
   border-radius: 50%;
-  background: var(--ivory-card);
-  color: var(--teal-deep);
+  background: var(--petrol);
+  color: var(--text-on-dark);
   pointer-events: none;
 }
 
 .loads-x__link::after {
   content: "";
   position: absolute;
-  inset: -1px;
+  inset: 0;
   border: 1.5px solid var(--teal);
   border-radius: 50%;
   opacity: 0;
 }
 
 @keyframes lxRing {
-  from { opacity: 0.75; transform: scale(1); }
+  from { opacity: 0.8; transform: scale(1); }
   to   { opacity: 0; transform: scale(2); }
 }
 
@@ -3015,82 +3056,101 @@ ul {
   animation: lxNudge 0.5s ease-in-out both;
 }
 
-.loads-x__board.is-pulse .loads-x__link--b::after,
-.loads-x__board.is-pulse .loads-x__link--b svg {
-  animation-delay: 0.09s;
-}
-
+/* The line under the board: the Home "Which loads cause these?" style */
 .loads-x__note {
-  margin-top: 28px;
-  color: var(--text);
+  max-width: 1152px;
+  margin: 32px auto 0;
+  text-align: center;
+  color: #818181;
 }
 
 .loads-x__note a {
-  color: var(--highlight);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  color: var(--orange-edge);
+  text-decoration: none;
+  border-radius: 2px;
 }
 
-/* Narrower than a wide laptop: the loads become a row of chips over the
-   two columns */
-@media (max-width: 1100px) {
+.loads-x__note-text {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.loads-x__note a:hover .pq-arrow,
+.loads-x__note a:focus-visible .pq-arrow {
+  transform: translateX(5px);
+}
+
+.loads-x__note a:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 4px;
+}
+
+/* Under 1100 px the loads become a 4 x 2 grid of tiles above the sheet, the
+   panes stay side by side */
+@media (max-width: 1099px) {
   .loads-x__board {
     grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
   }
 
   .loads-x__col--loads {
-    border-right: 0;
-    border-bottom: 1px solid var(--line);
-    border-radius: 12px 12px 0 0;
+    padding-top: 0;
   }
 
   .loads-x__list {
-    display: flex;
-    flex-wrap: wrap;
+    flex: none;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: none;
     gap: 10px;
   }
 
   .loads-x__load {
-    display: block;
-    width: auto;
-    padding: 9px 20px;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: 2px;
+    min-height: 76px;
+    padding: 12px 14px;
     border: 1px solid var(--line);
-    border-radius: 999px;
-    background: var(--ivory-card);
   }
 
-  /* The bar turns to run along the chip's lower edge */
-  .loads-x__load::before {
-    left: 18px;
-    right: 18px;
-    top: auto;
-    bottom: -1px;
-    width: auto;
-    height: 3px;
-    border-radius: 3px 3px 0 0;
-    transform: scaleX(0);
+  .loads-x__load::after,
+  .loads-x__go {
+    display: none;
   }
 
   .loads-x__load.is-active {
-    border-color: var(--teal-deep);
+    border-color: var(--petrol);
   }
 
-  .loads-x__load.is-active::before { transform: scaleX(1); }
-
-  .loads-x__num {
-    display: none;
+  .loads-x__col {
+    padding: 28px 24px 30px;
   }
 
-  .loads-x__link--a {
-    display: none;
+  .loads-x__col--fix {
+    padding-inline: 24px;
+  }
+
+  .loads-x__lead {
+    gap: 16px;
+  }
+
+  .loads-x__art {
+    width: 108px;
+    height: 80px;
+  }
+
+  .loads-x__icon {
+    height: 34px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .loads-x__item,
-  .loads-x__item.is-active,
+  .loads-x__glide,
   .loads-x__load,
-  .loads-x__load::before {
+  .loads-x__num,
+  .loads-x__go,
+  .loads-x__item,
+  .loads-x__item.is-active {
     transition: none;
   }
 
