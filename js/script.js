@@ -1884,6 +1884,48 @@
   }
 
 
+  /* ---------- Solutions: team figures ----------
+     When the figures come into view, the three rows fade and rise in turn
+     (CSS, transform and opacity) and 40+ counts up once. Armed here, so
+     without the script, or with reduced motion, the final figures just show.
+     The counting digits are hidden from readers; the final text is read. */
+  function initPqsStats() {
+    var list = document.querySelector('.pqs-stats');
+    if (!list || reduceMotion || !hasObserver) return;
+
+    toArray(list.children).forEach(function (li, i) { li.style.setProperty('--i', i); });
+
+    var num = list.querySelector('[data-count]');
+    var target = num ? parseInt(num.getAttribute('data-count'), 10) : 0;
+    var suffix = num ? (num.getAttribute('data-suffix') || '') : '';
+    if (num) {
+      var sr = document.createElement('span');
+      sr.className = 'sr-only';
+      sr.textContent = num.textContent;
+      num.setAttribute('aria-hidden', 'true');
+      num.parentNode.insertBefore(sr, num);
+      num.textContent = '0' + suffix;
+    }
+
+    list.classList.add('is-armed');
+
+    onFirstView(list, 0.4, function () {
+      list.classList.add('is-in');
+      if (!num) return;
+      var DURATION = 1100;
+      var start = null;
+      function step(now) {
+        if (start === null) start = now;
+        var t = Math.min(1, (now - start) / DURATION);
+        var eased = 1 - Math.pow(1 - t, 3);
+        num.textContent = Math.round(target * eased) + suffix;
+        if (t < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  }
+
+
   /* ---------- Home hero: film ----------
      The hero video autoplays muted and loops. With reduced motion it is
      held on its poster (its first frame) instead. */
@@ -3086,6 +3128,7 @@
   initPqWave();
   initPqPills();
   initTypewriter();
+  initPqsStats();
   initHeroVideo();
   initHero();
   initScrollReveal();

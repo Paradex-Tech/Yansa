@@ -470,16 +470,56 @@
   background: var(--orange, #ff8c40);
 }
 
+/* The team band is petrol on phones too: statement first, then the three
+   figures as a hairline-divided list (figure left, label right) */
 .pqs-intro {
-  padding-bottom: 28px;
+  padding: 44px var(--gutter, 20px);
+}
+
+.pqs-intro__inner {
+  gap: 32px;
+}
+
+.pqs-intro .about-statement__inner::before {
+  display: none;
+}
+
+.pqs-intro__copy::before {
+  content: "";
+  display: block;
+  width: 36px;
+  height: 3px;
+  margin-bottom: 22px;
+  border-radius: 2px;
+  background: var(--orange, #ff8c40);
 }
 
 .pqs-intro h2 {
   margin-bottom: 20px;
 }
 
+.pqs-stats {
+  display: block;
+  border-top: 1px solid color-mix(in srgb, var(--text-on-dark) 18%, transparent);
+}
+
+.pqs-stats li {
+  display: grid;
+  grid-template-columns: minmax(96px, 30%) minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+  margin: 0;
+  padding: 12px 0;
+  border-top: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--text-on-dark) 18%, transparent);
+}
+
+.pqs-stat__label {
+  margin: 0;
+}
+
 .offered {
-  padding: 16px var(--gutter, 20px) var(--section-pad-y, 64px);
+  padding: 36px var(--gutter, 20px) var(--section-pad-y, 64px);
 }
 
 .offered__inner > p {

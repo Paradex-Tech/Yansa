@@ -266,7 +266,8 @@ ul {
 }
 
 /* Numeral — the outsized figure on a problem card */
-.problem-card__num {
+.problem-card__num,
+.pqs-stat__num {
   font-size: calc(var(--fs-numeral) * var(--fs-scale, 1));
   line-height: 1;
   letter-spacing: -2px;
@@ -428,6 +429,7 @@ ul {
 .problem-card__text p,
 .inaction-card p,
 .svc-step__line,
+.pqs-stat__label,
 .nav-menu__desc,
 .nav-menu__feature-line,
 .solution-card__label {
@@ -2749,7 +2751,7 @@ ul {
    rows; it tints the chip on hover. */
 .offered {
   background: var(--ivory);
-  padding: 24px var(--gutter) 88px;
+  padding: 56px var(--gutter) 88px;
 }
 
 .offered__inner {
@@ -2767,20 +2769,17 @@ ul {
 .offered__inner > p {
   color: var(--text);
   max-width: 720px;
-  margin-bottom: 56px;
+  margin-bottom: 40px;
 }
 
-/* Four groups of the same card: Active, Passive, Hybrid, then Services */
+/* Four groups of the same card, two across: Active and Passive, then Hybrid
+   and Services. Two columns are wide enough for the longest chip label
+   ("Commissioning Support (Online & Offline)") on one line from 1280 px up;
+   below that a label wraps, balanced, inside its own pill. */
 .offered__grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 24px;
-}
-
-@media (max-width: 1100px) {
-  .offered__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 }
 
 .offered-col {
@@ -2826,6 +2825,7 @@ ul {
   border: 1px solid var(--line);
   border-radius: 24px;
   line-height: 1.4;
+  text-wrap: balance;
   background: var(--ivory);
   color: var(--text);
   text-decoration: none;
@@ -4866,16 +4866,112 @@ ul {
   color: var(--teal-mid);
 }
 
-/* Solutions: the heading sits over the team line, which keeps its
-   statement size; the offered range follows on the same ivory */
+/* Solutions: a petrol band, the heading and team line on the left, three
+   figures on the right. It contrasts with the cream "Solutions We Offer"
+   below, so the move from who we are to what we offer reads at a glance. */
 .pqs-intro {
-  padding-bottom: 24px;
+  background: var(--petrol);
+  padding: 72px var(--gutter);
+}
+
+.pqs-intro__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  align-items: center;
+  gap: 48px 72px;
 }
 
 .pqs-intro h2 {
   --fs-scale: 1;
-  color: var(--ink);
+  color: var(--text-on-dark);
   margin-bottom: 28px;
+}
+
+.about-statement.pqs-intro p {
+  color: var(--text-on-dark);
+}
+
+/* On dark, the highlighted words use the light cyan and the caret follows */
+.pqs-intro .accent,
+.pqs-intro .teal-text {
+  color: var(--cyan);
+}
+
+.pqs-intro .tw-caret {
+  background: var(--cyan);
+}
+
+/* The figures: hairline-divided rows, figure left, label right */
+.pqs-stats {
+  --fs-scale: 1;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid color-mix(in srgb, var(--text-on-dark) 18%, transparent);
+}
+
+.pqs-stats li {
+  display: grid;
+  grid-template-columns: clamp(112px, 12vw, 170px) minmax(0, 1fr);
+  align-items: center;
+  gap: 24px;
+  padding: 18px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--text-on-dark) 18%, transparent);
+}
+
+.pqs-stat__num {
+  color: var(--cyan);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.pqs-stat__label {
+  color: var(--text-on-dark);
+  text-wrap: balance;
+}
+
+/* In-view reveal: armed by the script, so nothing is hidden without it */
+.pqs-stats.is-armed li {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: calc(var(--i, 0) * 120ms);
+}
+
+.pqs-stats.is-armed.is-in li {
+  opacity: 1;
+  transform: none;
+}
+
+/* Between phone and laptop the figures run in a row under the paragraph */
+@media (max-width: 1023px) {
+  .pqs-intro__inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pqs-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 0;
+  }
+
+  .pqs-stats li {
+    display: block;
+    padding: 20px 20px 0 0;
+    border-bottom: 0;
+    border-top: 1px solid color-mix(in srgb, var(--text-on-dark) 18%, transparent);
+    margin-right: 20px;
+  }
+
+  .pqs-stats li:last-child {
+    margin-right: 0;
+  }
+
+  .pqs-stat__label {
+    display: block;
+    margin-top: 8px;
+  }
 }
 
 .tw-char {
