@@ -3577,6 +3577,27 @@ ul {
   scroll-margin-top: calc(var(--nav-height) + 72px);
 }
 
+/* A chip lands on its card: the card clears the navbar and the jump bar with
+   the row's heading still in sight above it, and a ring marks it for a moment. */
+.pqs .solution-card {
+  scroll-margin-top: calc(var(--nav-height) + 72px + 140px);
+}
+
+.pqs .solution-card:target::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 3px var(--teal);
+  pointer-events: none;
+  animation: pqs-landed 2.2s ease-out both;
+}
+
+@keyframes pqs-landed {
+  0%, 40% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
 @media (max-width: 1000px) {
   .pqs-fit__grid {
     grid-template-columns: 1fr 1fr;
@@ -3616,6 +3637,10 @@ ul {
   .pqs-hero__rings span,
   .pqs-word,
   .pqs-marquee__track {
+    animation: none;
+  }
+
+  .pqs .solution-card:target::after {
     animation: none;
   }
 

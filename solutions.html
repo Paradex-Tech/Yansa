@@ -191,24 +191,24 @@
         <h2><span class="solutions-row__label solutions-row__label--active">Active</span> Solutions</h2>
         <p>Intelligent power electronics that measure, correct, and adapt in real time. Built for facilities where harmonic levels are high and loads are dynamic.</p>
         <div class="solutions-row__grid">
-          <button class="solution-card solution-card--photo" type="button">
-            <img src="images/products/svg.jpg" alt="Static VAR Generator control screen" loading="lazy" decoding="async">
+          <button class="solution-card solution-card--photo" type="button" id="svg">
+            <img src="images/products/svg.jpg" alt="Static VAR Generator control screen" width="900" height="514" loading="lazy" decoding="async">
             <div class="solution-card__label"><span class="solution-card__name">Static VAR Generator (SVG)</span><span class="plus">+</span></div>
             <div class="solution-card__detail" hidden>
               <p>An IGBT-based inverter that injects or absorbs reactive current continuously, correcting leading or lagging power factor within a cycle. There are no capacitor steps to switch, so there is no inrush and no resonance risk, and the output holds even when grid voltage sags. Suited to fast, fluctuating loads such as welding lines, cranes and compressors.</p>
               <p><strong>Problem addressed:</strong> Leading &amp; lagging power factor, load imbalance</p>
             </div>
           </button>
-          <button class="solution-card solution-card--photo" type="button">
-            <img src="images/products/ahf.jpg" alt="Active harmonic filter oscilloscope screen" loading="lazy" decoding="async">
+          <button class="solution-card solution-card--photo" type="button" id="ahf">
+            <img src="images/products/ahf.jpg" alt="Active harmonic filter oscilloscope screen" width="900" height="521" loading="lazy" decoding="async">
             <div class="solution-card__label"><span class="solution-card__name">Active Harmonic Filter (AHF)</span><span class="plus">+</span></div>
             <div class="solution-card__detail" hidden>
               <p>Measures the load current in real time and injects an equal and opposite current to cancel harmonics across a wide spectrum. It adapts automatically as the load changes, bringing current distortion at the point of common coupling within IEEE 519-2022 limits. Spare capacity can also correct power factor and balance phases.</p>
               <p><strong>Problem addressed:</strong> Harmonics</p>
             </div>
           </button>
-          <button class="solution-card solution-card--photo solution-card--product" type="button">
-            <img src="images/products/tsm.jpg" alt="Thyristor switching module" loading="lazy" decoding="async">
+          <button class="solution-card solution-card--photo solution-card--product" type="button" id="tsm">
+            <img src="images/products/tsm.jpg" alt="Thyristor switching module" width="408" height="576" loading="lazy" decoding="async">
             <div class="solution-card__label"><span class="solution-card__name">Thyristor Switching Modules (TSM)</span><span class="plus">+</span></div>
             <div class="solution-card__detail" hidden>
               <p>Solid-state switching that connects capacitor steps at the zero-voltage crossing in a fraction of a cycle, with no inrush current and no contact wear. Driven by a fast controller, a thyristor-switched bank follows rapidly changing loads that contactor-switched panels cannot keep up with.</p>
@@ -225,24 +225,24 @@
         <h2><span class="solutions-row__label solutions-row__label--passive">Passive</span> Solutions</h2>
         <p>Fixed components that reduce harmonics and improve power factor. Best suited for facilities where load variation is low and correction requirements are consistent.</p>
         <div class="solutions-row__grid">
-          <button class="solution-card solution-card--photo solution-card--product" type="button">
-            <img src="images/products/power-capacitors.jpg" alt="Low voltage power capacitors" loading="lazy" decoding="async">
+          <button class="solution-card solution-card--photo solution-card--product" type="button" id="capacitors">
+            <img src="images/products/power-capacitors.jpg" alt="Low voltage power capacitors" width="743" height="900" loading="lazy" decoding="async">
             <div class="solution-card__label"><span class="solution-card__name">Power Capacitors</span><span class="plus">+</span></div>
             <div class="solution-card__detail" hidden>
               <p>Self-healing metallised film capacitors that supply reactive power at the load, so it no longer has to be drawn from the utility. They lift power factor, cut kVA demand and line losses, and free up transformer and cable capacity. The building block of every fixed and automatic correction panel.</p>
               <p><strong>Problem addressed:</strong> Lagging power factor</p>
             </div>
           </button>
-          <button class="solution-card solution-card--photo solution-card--product" type="button">
-            <img src="images/products/series-reactors.jpg" alt="Three-phase series reactor" loading="lazy" decoding="async">
+          <button class="solution-card solution-card--photo solution-card--product" type="button" id="reactors">
+            <img src="images/products/series-reactors.jpg" alt="Three-phase series reactor" width="456" height="516" loading="lazy" decoding="async">
             <div class="solution-card__label"><span class="solution-card__name">Series Reactors</span><span class="plus">+</span></div>
             <div class="solution-card__detail" hidden>
               <p>A reactor in series with each capacitor step tunes the branch below the lowest dominant harmonic, typically 7% detuning (189 Hz on a 50 Hz supply). The capacitors can no longer resonate with the network or soak up harmonic currents, so they last longer while still correcting power factor. Tuned filter versions go further and trap specific harmonic orders.</p>
               <p><strong>Problem addressed:</strong> Power factor &amp; harmonics</p>
             </div>
           </button>
-          <button class="solution-card solution-card--photo solution-card--product" type="button">
-            <img src="images/products/line-chokes.jpg" alt="Three-phase line choke" loading="lazy" decoding="async">
+          <button class="solution-card solution-card--photo solution-card--product" type="button" id="chokes">
+            <img src="images/products/line-chokes.jpg" alt="Three-phase line choke" width="408" height="394" loading="lazy" decoding="async">
             <div class="solution-card__label"><span class="solution-card__name">Line Chokes</span><span class="plus">+</span></div>
             <div class="solution-card__detail" hidden>
               <p>A series reactor fitted on the supply side of drives, rectifiers and UPS systems. It smooths the current the equipment draws, lowering harmonic distortion and improving true power factor, while shielding sensitive electronics from voltage spikes and line notching.</p>
@@ -253,51 +253,28 @@
       </div>
     </section>
 
-    <!-- SERVICES -->
-    <!-- HYBRID SOLUTIONS: active and passive in one panel. Text-only cards
-         until Yansa sends photos of its own panels. -->
+    <!-- HYBRID SOLUTIONS: active and passive in one panel. The two photos are stand-ins
+         (the APFC controller and an AHF software screen) until Yansa sends photos of its
+         own panels. -->
     <section class="solutions-row" id="hybrid">
       <div class="solutions-row__inner">
         <h2><span class="solutions-row__label solutions-row__label--hybrid">Hybrid</span> Solutions</h2>
         <p>Active and passive correction engineered into one panel. The passive stage carries the steady load economically, while the active stage handles what changes fast.</p>
         <div class="solutions-row__grid">
-          <button class="solution-card" type="button">
+          <button class="solution-card solution-card--photo solution-card--product" type="button" id="apfc-panel">
+            <img src="images/products/apfc-relay.jpg" alt="Automatic power factor controller on the front of an APFC panel" width="893" height="900" loading="lazy" decoding="async">
             <div class="solution-card__label"><span class="solution-card__name">APFC Panel</span><span class="plus">+</span></div>
             <div class="solution-card__detail" hidden>
               <p>An automatic power factor correction panel: capacitor steps with series reactors, switched by an APFC controller through contactors or thyristor modules. It holds power factor at the target as the load changes, without letting harmonics resonate with the capacitors.</p>
               <p><strong>Problem addressed:</strong> Lagging power factor</p>
             </div>
           </button>
-          <button class="solution-card" type="button">
+          <button class="solution-card solution-card--photo" type="button" id="ahf-panel">
+            <img src="images/products/svg-plus.jpg" alt="Active harmonic filter monitoring screen showing current distortion at the point of common coupling" width="900" height="514" loading="lazy" decoding="async">
             <div class="solution-card__label"><span class="solution-card__name">AHF Panel</span><span class="plus">+</span></div>
             <div class="solution-card__detail" hidden>
               <p>A complete panel built around an active harmonic filter, with its protection and switchgear, and a detuned capacitor stage where the site also needs power factor correction. The filter cancels harmonics in real time while the passive stage carries the steady reactive load.</p>
               <p><strong>Problem addressed:</strong> High harmonics &amp; power factor</p>
-            </div>
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <section class="solutions-row" id="services">
-      <div class="solutions-row__inner">
-        <h2><span class="solutions-row__label solutions-row__label--services">Services</span></h2>
-        <p>Engineering that starts before the equipment and stays long after it is installed.</p>
-        <div class="solutions-row__grid">
-          <button class="solution-card solution-card--photo" type="button">
-            <img src="images/products/service-amc.jpg" alt="Technician servicing a power factor correction panel on a maintenance visit" loading="lazy" decoding="async">
-            <div class="solution-card__label"><span class="solution-card__name">Annual Maintenance Contract (AMC)</span><span class="plus">+</span></div>
-            <div class="solution-card__detail" hidden>
-              <p>Scheduled inspection, testing and servicing of installed correction equipment, so it keeps performing as designed and faults are caught before they cost production time.</p>
-              <p><strong>Problem addressed:</strong> Long-term reliability</p>
-            </div>
-          </button>
-          <button class="solution-card solution-card--photo" type="button">
-            <img src="images/products/service-commissioning.jpg" alt="Engineer commissioning a new correction panel with a laptop, a remote engineer on a video call" loading="lazy" decoding="async">
-            <div class="solution-card__label"><span class="solution-card__name">Commissioning Support (Online &amp; Offline)</span><span class="plus">+</span></div>
-            <div class="solution-card__detail" hidden>
-              <p>Our engineers commission new installations on site, and support your team remotely through start-up, settings and troubleshooting, so the equipment is proven to work as designed before it is handed over.</p>
-              <p><strong>Problem addressed:</strong> A verified, trouble-free start-up</p>
             </div>
           </button>
         </div>
@@ -310,7 +287,7 @@
   <footer class="footer">
     <div class="footer__cta">
       <div class="footer__icon" aria-hidden="true">
-        <img src="images/icons/footer-icon.svg" alt="">
+        <img src="images/icons/footer-icon.svg" alt="" width="56" height="56">
       </div>
       <h2>Solve before problems become expensive.</h2>
       <p>Tell us what your facility is experiencing. We will handle the rest.</p>
@@ -324,7 +301,7 @@
         <img src="images/logo-footer.svg" alt="Yansa" width="125" height="32">
         <p>Follow us for power quality insights, field observations, and engineering perspectives from the industry.</p>
         <div class="footer__socials">
-          <a href="https://www.linkedin.com/company/yansa-energy-solutions-llp/" target="_blank" rel="noopener" aria-label="Yansa on LinkedIn"><img src="images/icons/social-2.svg" alt=""></a>
+          <a href="https://www.linkedin.com/company/yansa-energy-solutions-llp/" target="_blank" rel="noopener" aria-label="Yansa on LinkedIn"><img src="images/icons/social-2.svg" alt="" width="18" height="17"></a>
           <!-- Phone and WhatsApp return once Yansa confirms the number to use -->
         </div>
       </div>
