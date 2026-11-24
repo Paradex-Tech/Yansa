@@ -2908,7 +2908,7 @@
           status.textContent = 'Thank you! We’ll be in touch shortly.';
         })
         .catch(function () {
-          status.textContent = 'Something went wrong. Please try again, or email us directly.';
+          status.textContent = 'Something went wrong. Please try again in a moment.';
           status.classList.add('form-status--error');
         })
         .then(function () {

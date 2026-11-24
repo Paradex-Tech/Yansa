@@ -46,6 +46,7 @@
 }
 
 .about-hero .header-placeholder__overlay h1 {
+  text-transform: uppercase;
   --fs-scale: 1.12;
   letter-spacing: 0.5px;
   margin-bottom: 12px;

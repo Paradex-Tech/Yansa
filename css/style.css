@@ -1495,6 +1495,7 @@ ul {
 .header-placeholder__overlay p {
   color: #ffffff;
   margin: 0 auto;
+  text-wrap: balance;
   font-weight: 500;
   text-shadow: 0 1px 3px rgba(4, 25, 23, 0.75), 0 1px 18px rgba(4, 25, 23, 0.7);
 }
@@ -1506,6 +1507,12 @@ ul {
 /* Every hero title in regular weight, as on Home */
 .header-placeholder__overlay h1 {
   font-weight: 400;
+}
+
+/* About title is written "Refining Power" in the markup (screen readers do
+   not spell it out) and shown in capitals here */
+.about-hero .header-placeholder__overlay h1 {
+  text-transform: uppercase;
 }
 
 /* Same size on every hero: Home's script shows its title and subline at
@@ -5377,6 +5384,13 @@ ul {
   padding: 0 0 20px 46px;
   color: #475569;
   max-width: 604px;
+}
+
+/* Inline links in the answers: the same teal as the legal pages */
+.faq__answer a {
+  color: var(--teal-deep);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .faq.is-ready .faq__panel {
