@@ -4980,6 +4980,7 @@ ul {
 .pqs-intro h2 {
   --fs-scale: 1;
   color: var(--text-on-dark);
+  text-wrap: balance;
   margin-bottom: 28px;
 }
 
