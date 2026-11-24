@@ -2208,6 +2208,8 @@
 
       /* YanQ */
       { sel: '.yanq-hero__content > *', step: 90 },
+      { sel: '.yanq-expect__inner > *', step: 0 },
+      { sel: '.yanq-expect__list > *', step: 90 },
       { sel: '.yanq-delivers > h2', step: 0 },
       /* PQ Solved */
       { sel: '.pq-entry__copy > *', step: 90 },

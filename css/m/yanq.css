@@ -10,7 +10,7 @@
    3. How YanQ Works     four compact boxes in one column, a down arrow
                          between them, each drawing played when it enters view
    4. What YanQ Delivers a 2x2 grid of compact cards that settle in by scroll
-   5. Next step          a line and two full-width buttons
+   5. What to expect     four short items in a stacked list
 
    Sizes come from the type tokens (css/m/base.css sets the phone scale);
    the scroll touches here are custom properties the script writes as a pure
@@ -291,27 +291,27 @@
 
 
 /* =========================================================
-   5. NEXT STEP
-   One line and two thumb-wide buttons.
+   5. WHAT TO EXPECT
+   Four short items in a stacked list, kept tight (the section stays under
+   about 520px).
    ========================================================= */
-.yanq-next {
-  padding: 40px max(var(--gutter, 20px), calc((100% - 560px) / 2));
+.yanq-expect {
+  padding: 32px max(var(--gutter, 20px), calc((100% - 560px) / 2));
 }
 
-.yanq-next__inner {
-  flex-direction: column;
-  align-items: stretch;
-  gap: 24px;
+.yanq-expect__label {
+  margin-bottom: 14px;
 }
 
-.yanq-next__buttons {
-  flex-direction: column;
-  gap: 12px;
+.yanq-expect__list {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
 }
 
-.yanq-next__buttons .btn {
-  display: flex;
-  width: 100%;
-  max-width: 420px;
-  min-height: var(--tap, 48px);
+.yanq-expect__list li {
+  padding: 10px 0 12px;
+}
+
+.yanq-expect__title {
+  margin-bottom: 2px;
 }

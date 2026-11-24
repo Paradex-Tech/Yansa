@@ -319,7 +319,6 @@ ul {
 }
 
 /* H3 — sub-section headings and figure labels */
-.yanq-next__line,
 .svc-block__name,
 .pqs-next h2,
 .deliver-stat h3,
@@ -357,6 +356,7 @@ ul {
 }
 
 /* Lead — the paragraph that introduces a section */
+.yanq-expect__title,
 .offered__inner > p,
 .pq-entry__lead,
 .pqs-lead,
@@ -433,6 +433,7 @@ ul {
 .pqs-stat__label,
 .nav-menu__desc,
 .nav-menu__feature-line,
+.yanq-expect__list p,
 .solution-card__label {
   font-size: calc(var(--fs-small) * var(--fs-scale, 1));
   line-height: 1.55;
@@ -455,6 +456,7 @@ ul {
 .inaction-card__tag,
 .results__num,
 .faq__num,
+.yanq-expect__label,
 .form-field label {
   font-size: calc(var(--fs-label) * var(--fs-scale, 1));
   line-height: 1.4;
@@ -6073,34 +6075,53 @@ ul {
   color: var(--text);
 }
 
-/* ---------- Next step ----------
-   A short cream band after the stats: one line, two buttons. */
-.yanq-next {
-  background: var(--cream);
-  border-top: 1px solid rgba(188, 201, 199, 0.55);
-  padding: 56px var(--gutter);
+/* ---------- What to expect ----------
+   A compact row between How YanQ Works and What YanQ Delivers: a small label
+   and four short items, each under a hairline. */
+.yanq-expect {
+  background: var(--ivory);
+  padding: 64px var(--gutter);
 }
 
-.yanq-next__inner {
+.yanq-expect__inner {
   max-width: 1152px;
   margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px 48px;
-  flex-wrap: wrap;
 }
 
-.yanq-next__line {
-  color: var(--ink);
-  max-width: 640px;
-  text-wrap: balance;
+.yanq-expect__label {
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--teal-deep);
+  margin-bottom: 28px;
 }
 
-.yanq-next__buttons {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
+.yanq-expect__list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 32px;
+}
+
+.yanq-expect__list li {
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+}
+
+.yanq-expect__title {
+  color: var(--petrol);
+  margin-bottom: 6px;
+}
+
+.yanq-expect__list p {
+  color: var(--text);
+}
+
+/* Tablet: two by two */
+@media (max-width: 1023px) {
+  .yanq-expect__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 40px;
+  }
 }
 
 @media (max-width: 900px) {
