@@ -22,6 +22,7 @@
   var toggle = navbar && navbar.querySelector('.navbar__toggle');
 
   var ARROW = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11.5M11 5.5 15.5 10 11 14.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var CHEV = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7.5 10 12.5 15 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   var UP = '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 13V3.5M3.8 7.5 8 3.3l4.2 4.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
   var teardowns = [];   // undo functions for the current phone session
@@ -79,14 +80,22 @@
         '<span class="m-menu__text">' + link.textContent.trim() + '</span>' +
         '<span class="m-menu__go">' + ARROW + '</span></a>';
       if (!kids.length) { html += row; return; }
-      // Children sit indented under their parent, inside one bordered group
-      html += '<div class="m-menu__group">' + row + '<div class="m-menu__kids">';
+      // Solutions and Services are accordions: the label is still a link, a chevron
+      // button opens the sub-links. The group of the current page starts open.
+      var name = link.textContent.trim();
+      var kidsId = 'm-kids-' + i;
+      var open = current || kids.some(function (kid) { return kid.getAttribute('aria-current') === 'page'; });
+      row = row.replace('<span class="m-menu__go">' + ARROW + '</span>', '');
+      html += '<div class="m-menu__group' + (open ? ' is-open' : '') + '"><div class="m-menu__row">' + row +
+        '<button class="m-menu__toggle" type="button" aria-expanded="' + open + '" aria-controls="' + kidsId +
+        '" aria-label="Show ' + name + ' links">' + CHEV + '</button></div>' +
+        '<div class="m-menu__kids" id="' + kidsId + '"' + (open ? '' : ' inert') + '><div class="m-menu__kids-in">';
       kids.forEach(function (kid) {
         html += '<a class="m-menu__kid" style="--i:' + (++step) + '" href="' + kid.getAttribute('href') + '"' +
           (kid.getAttribute('aria-current') === 'page' ? ' aria-current="page"' : '') + '>' +
           (kid.querySelector('.nav-menu__title') || kid).textContent.trim() + '</a>';
       });
-      html += '</div></div>';
+      html += '</div></div></div>';
     });
     html += '</div>';
 
@@ -116,6 +125,17 @@
     function close() {
       if (menuOpen()) toggle.click();
     }
+
+    toArray(menu.querySelectorAll('.m-menu__toggle')).forEach(function (btn) {
+      listen(btn, 'click', function () {
+        var group = btn.closest('.m-menu__group');
+        var open = !group.classList.contains('is-open');
+        group.classList.toggle('is-open', open);
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        // Closed sub-links are out of the tab order and the accessibility tree
+        group.querySelector('.m-menu__kids').inert = !open;
+      });
+    });
 
     toArray(menu.querySelectorAll('a')).forEach(function (a) {
       listen(a, 'click', function (event) {
