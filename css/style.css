@@ -394,6 +394,7 @@ ul {
 .svc-more,
 .svc-detail__list li,
 .btn,
+.diagnosis__team,
 .navbar__links a,
 .why-card p,
 .symptom-card__detail p,
@@ -1575,6 +1576,14 @@ ul {
 
 .diagnosis__body {
   color: rgba(241, 241, 230, 0.8);
+  max-width: 672px;
+  margin-bottom: 16px;
+}
+
+/* One quiet line of proof between the paragraph and the button; the cool
+   mist tint keeps it a step back from the cream copy above it */
+.diagnosis__team {
+  color: var(--mist);
   max-width: 672px;
   margin-bottom: 40px;
 }
