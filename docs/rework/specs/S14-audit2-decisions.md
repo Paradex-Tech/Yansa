@@ -1,4 +1,4 @@
-# S14 Audit-2 decisions (Shrey, 2026-11-24)                     status: FROZEN 2026-11-24 (rev 1 before build: section H; rev 2 during build: section I, both Shrey via JARVIS)
+# S14 Audit-2 decisions (Shrey, 2026-11-24)                     status: FROZEN 2026-11-24 (rev 1 before build: section H; rev 2 during build: section I; rev 3 during build: section J; all Shrey via JARVIS)
 
 Build Shrey's approved items from `audit-2.md` (D1, D2, D4, D5, D6, D7, D9, D10-removal) plus one phone fix. Ground
 rules: keep the old design language and every signature animation; change only what is listed; font sizes only via
@@ -124,6 +124,26 @@ I3 Evidence: a CDP script that, for each width (1440, 820, 390) and each of the 
    solutions.html#<id> (and clicks the chip), waits for the scroll to settle, and reports: chip-bar bottom y,
    heading top y (gap), and whether any element of the previous section intersects the area below the bar.
 
+## J. Phone menu overlay sizes and accordions (Shrey via JARVIS, rev 3)
+Today (js/m/base.js + css/m/base.css): main items ~32 px, sub-items ~15 px always expanded, 01-06 numbers
+top-aligned, a teal line stub under the active item's number. Reference pattern: Linear / Vercel mobile nav,
+21st mobile menus (calm display size, disclosure rows with chevrons, height-animated sub-lists).
+J1 Sizes: main items to the H4 tier (24 px; add the selector to the tier in style.css section 3, or the phone
+   tier equivalent in css/m/base.css if the menu's sizes live there) ; sub-items to the Body tier (17 px) with a
+   touch more contrast than now (existing tokens, e.g. --text-on-dark at higher opacity). Weight/fonts as today.
+J2 Solutions and Services become accordions: the row label stays a link that navigates; a separate chevron button
+   (replaces the arrow) toggles the sub-list with a smooth height animation (grid-rows 0fr->1fr or measured height,
+   ~250 ms, the site's easing; reduced motion: instant). Collapsed by default; the group of the current page
+   (solutions.html for Solutions; services.html or yanq.html for Services) starts open. Toggle: `<button
+   aria-expanded aria-controls aria-label="Show Solutions links">`, >= 44x44 px; every row and sub-link >= 44 px
+   tall. Collapsed sub-links are not focusable (hidden/inert when closed).
+J3 Numbers 01-06 align with the item text (baseline or centred on the first line). Remove the teal stub under the
+   active number; active cue = teal item text (and optionally a small teal dot), nothing else.
+J4 Keep: dark petrol gradient, "MENU" label, orange Book a Diagnosis button, Download Brochure link, the
+   open/close animation, Esc/close behaviour, focus trap if present.
+J5 Collapsed, the whole overlay fits without scrolling at 390x667 and 390x844 (check scrollHeight <= clientHeight
+   of the scroll container, both accordions closed, on a page where none starts open, e.g. about.html).
+
 ## Acceptance checks
 1. `node --check js/script.js` and each touched `js/m/*.js` pass.
 2. `node docs/rework/tools/links.mjs --strict-img`, `check-nav-footer.mjs`, `check-head.mjs`, `check-site.mjs`,
@@ -140,4 +160,6 @@ I3 Evidence: a CDP script that, for each width (1440, 820, 390) and each of the 
 8. Reduced motion: What to expect and symptoms complete.
 9. Footer: check-nav-footer.mjs passes; phone footer <= 820 px; every footer link >= 44 px tall on phone;
    shots at 390, 820, 1440 show the two labelled groups and the legal row.
+11. Section J: shots of the open menu at 390x667 and 390x844 (closed, Solutions open, on solutions.html);
+    no-scroll check at 667; toggles keyboard-operable with aria-expanded updating.
 10. Section I script: 9 landings, gap 16-32 px, no previous-section element visible under the bar.
