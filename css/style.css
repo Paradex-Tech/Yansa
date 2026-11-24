@@ -304,6 +304,7 @@ ul {
 .problems h2,
 .inaction h2,
 .results h2,
+.svc-flow h2,
 .footer__cta h2 {
   font-size: calc(var(--fs-h2) * var(--fs-scale, 1));
   line-height: 1.2;
@@ -320,6 +321,7 @@ ul {
 
 /* H3 — sub-section headings and figure labels */
 .yanq-next__line,
+.svc-block__name,
 .pqs-next h2,
 .deliver-stat h3,
 .case-card__num,
@@ -343,6 +345,7 @@ ul {
 .problem-card__text h3,
 .generates__card h3,
 .faq__question,
+.svc-step__word,
 .yanq-step h3 {
   font-size: calc(var(--fs-h4) * var(--fs-scale, 1));
   line-height: 1.3;
@@ -376,6 +379,8 @@ ul {
 .generates > p,
 .pqs-next p,
 .solutions-row__inner > p,
+.svc-block__text,
+.svc-flow__intro,
 .inaction__inner > p,
 .results__inner > p,
 .results__plus,
@@ -391,6 +396,8 @@ ul {
 .legal li,
 .contact-map__open,
 .offered-col a,
+.svc-more,
+.svc-detail__list li,
 .btn,
 .navbar__links a,
 .why-card p,
@@ -420,6 +427,7 @@ ul {
 .generates__card p,
 .problem-card__text p,
 .inaction-card p,
+.svc-step__line,
 .solution-card__label {
   font-size: calc(var(--fs-small) * var(--fs-scale, 1));
   line-height: 1.55;
@@ -433,6 +441,8 @@ ul {
 .pqs-pills a,
 .pqs-marquee li,
 .yanq-step__num,
+.svc-block__label,
+.svc-step__num,
 .deliver-stat__num,
 .inaction-card__tag,
 .results__num,
@@ -3697,6 +3707,273 @@ ul {
     transition: none;
   }
 }
+
+/* =========================================================
+   7b. SERVICES
+   ========================================================= */
+
+/* ---------- Service blocks ----------
+   Three wide blocks on one 12-column grid: the photo takes six columns, the
+   text five, and the pair swaps sides down the page. Commissioning and AMC
+   open their detail list in place (0fr to 1fr rows; the script only toggles
+   .is-open). The text column hangs from the photo's top edge so opening a
+   block never moves the heading. Without the script the lists simply show. */
+.svc {
+  background: var(--ivory);
+  padding: 72px var(--gutter);
+}
+
+.svc__inner {
+  max-width: 1152px;
+  margin: 0 auto;
+  display: grid;
+  row-gap: 72px;
+}
+
+.svc-block {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: 24px;
+  align-items: start;
+  scroll-margin-top: calc(var(--nav-height) + 24px);
+}
+
+.svc-block__media {
+  grid-column: 1 / span 6;
+  grid-row: 1;
+  aspect-ratio: 16 / 10;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #e3e3d8;
+}
+
+.svc-block__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#yanq-study .svc-block__media img { object-position: 24% 50%; }
+#commissioning .svc-block__media img { object-position: 50% 42%; }
+#amc .svc-block__media img { object-position: 50% 38%; }
+
+.svc-block__body {
+  grid-column: 8 / span 5;
+  grid-row: 1;
+  padding-top: 6px;
+}
+
+.svc-block:nth-child(even) .svc-block__media { grid-column: 7 / span 6; }
+.svc-block:nth-child(even) .svc-block__body { grid-column: 1 / span 5; }
+
+/* "01 ── STUDY": the number in orange, a hairline, the stage in green */
+.svc-block__label {
+  display: flex;
+  align-items: center;
+  color: var(--highlight);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 14px;
+}
+
+.svc-block__label span {
+  color: var(--orange);
+  letter-spacing: 1px;
+}
+
+.svc-block__label span::after {
+  content: "";
+  display: inline-block;
+  width: 28px;
+  height: 1px;
+  margin: 0 12px 0 10px;
+  vertical-align: middle;
+  background: var(--line);
+}
+
+.svc-block__name {
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+
+.svc-block__text {
+  color: var(--text);
+  max-width: 440px;
+}
+
+/* Learn More: the same pill as the Solutions chips. The arrow nudges right;
+   the chevron on an expander turns over when it opens. */
+.svc-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 46px;
+  margin-top: 24px;
+  padding: 8px 18px 8px 22px;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--ivory-card);
+  color: var(--ink);
+  font-family: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.svc-more svg {
+  flex: none;
+  color: var(--teal-deep);
+}
+
+.svc-more__arrow {
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.svc-more__chev {
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.svc-more:hover,
+.svc-more:focus-visible,
+.svc-more[aria-expanded="true"] {
+  border-color: var(--teal-deep);
+  background: color-mix(in srgb, var(--teal-deep) 9%, var(--ivory-card));
+}
+
+.svc-more:hover .svc-more__arrow,
+.svc-more:focus-visible .svc-more__arrow {
+  transform: translateX(3px);
+}
+
+.svc-more[aria-expanded="true"] .svc-more__chev {
+  transform: rotate(180deg);
+}
+
+.svc-more:focus-visible {
+  outline: 2px solid var(--teal-deep);
+  outline-offset: 2px;
+}
+
+/* The detail panel: one grid row that grows from 0fr to 1fr, so the script
+   never measures or animates a height. Closed, it is also out of the
+   accessibility tree (visibility waits for the close to finish). */
+.svc-detail {
+  display: grid;
+  grid-template-rows: 1fr;
+}
+
+.svc-detail__list {
+  min-height: 0;
+  overflow: hidden;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.svc-detail__list li {
+  position: relative;
+  margin: 0;
+  padding: 12px 0 12px 22px;
+  border-top: 1px solid var(--line);
+  color: var(--text);
+}
+
+.svc-detail__list li:first-child { margin-top: 24px; }
+.svc-detail__list li:last-child { border-bottom: 1px solid var(--line); }
+
+.svc-detail__list li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 1.15em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--teal-deep);
+}
+
+.svc-detail__list li:nth-child(2) { --i: 1; }
+.svc-detail__list li:nth-child(3) { --i: 2; }
+.svc-detail__list li:nth-child(4) { --i: 3; }
+.svc-detail__list li:nth-child(5) { --i: 4; }
+
+/* Script-driven states: closed until opened; photo and text arrive once */
+.js-svc .svc-detail {
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition: grid-template-rows 0.5s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 0.5s;
+}
+
+.js-svc .svc-block.is-open .svc-detail {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition-delay: 0s, 0s;
+}
+
+.js-svc .svc-detail__list li {
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+
+.js-svc .svc-block.is-open .svc-detail__list li {
+  opacity: 1;
+  transition: opacity 0.4s ease calc(0.14s + var(--i, 0) * 60ms);
+}
+
+.js-svc .svc-block__media img {
+  transform: scale(1.04);
+  transition: transform 1.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.js-svc .svc-block__body {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s ease 0.12s, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.12s;
+}
+
+.js-svc .svc-block.is-in .svc-block__media img {
+  transform: none;
+}
+
+.js-svc .svc-block.is-in .svc-block__body {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js-svc .svc-detail,
+  .js-svc .svc-detail__list li,
+  .js-svc .svc-block__media img,
+  .js-svc .svc-block__body,
+  .svc-more,
+  .svc-more svg {
+    transition: none !important;
+  }
+
+  .js-svc .svc-block__media img { transform: none; }
+  .js-svc .svc-block__body { opacity: 1; transform: none; }
+}
+
+/* Narrower than the 12-column grid can carry: two plain halves */
+@media (max-width: 1100px) {
+  .svc-block {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 48px;
+  }
+
+  .svc-block__media,
+  .svc-block__body,
+  .svc-block:nth-child(even) .svc-block__body {
+    grid-column: 1;
+  }
+
+  .svc-block__body,
+  .svc-block:nth-child(even) .svc-block__media {
+    grid-column: 2;
+  }
+}
+
 
 /* =========================================================
    8. ABOUT

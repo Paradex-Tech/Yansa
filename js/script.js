@@ -3024,6 +3024,60 @@
   }
 
 
+  /* ---------- Services: blocks and engagement row ----------
+     Each service block arrives once as it enters view (photo settles from
+     1.04, text rises 16px; CSS transitions, transform/opacity only). The
+     Learn More buttons toggle .is-open on their block; the panel itself is a
+     grid row that CSS takes from 0fr to 1fr. #commissioning and #amc open
+     their block on load and when the hash changes (nav menu, step links).
+     Reduced motion: everything in its final state, nothing animates. */
+  function initServices() {
+    var blocks = toArray(document.querySelectorAll('.svc-block'));
+    if (!blocks.length) return;
+
+    document.documentElement.classList.add('js-svc');
+
+    function setOpen(block, open) {
+      var btn = block.querySelector('button.svc-more');
+      if (!btn) return;
+      block.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.querySelector('.svc-more__text').textContent = open ? 'Show less' : 'Learn More';
+    }
+
+    blocks.forEach(function (block) {
+      var btn = block.querySelector('button.svc-more');
+      if (btn) btn.addEventListener('click', function () {
+        setOpen(block, !block.classList.contains('is-open'));
+      });
+    });
+
+    function openFromHash() {
+      var id = decodeURIComponent(window.location.hash.slice(1));
+      var block = id && document.getElementById(id);
+      if (!block || !block.classList.contains('svc-block') || !block.querySelector('button.svc-more')) return;
+      setOpen(block, true);
+    }
+    openFromHash();
+    window.addEventListener('hashchange', openFromHash);
+
+    var flow = document.querySelector('.svc-flow__row');
+    var seen = blocks.concat(flow ? [flow] : []);
+    if (reduceMotion || !hasObserver) {
+      seen.forEach(function (el) { el.classList.add('is-in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-in');
+        io.unobserve(entry.target);
+      });
+    }, { threshold: 0.22 });
+    seen.forEach(function (el) { io.observe(el); });
+  }
+
+
   /* ---------- Start ---------- */
   initCardMotion();
   initMeasureRotator();
@@ -3054,5 +3108,6 @@
   initAboutDecor();
   initContactForm();
   initBrochure();
+  initServices();
 
 })();

@@ -101,9 +101,51 @@
       </div>
     </section>
 
-    <!-- Anchor targets for the nav drop-down; the service blocks that carry them arrive in slice S4 -->
-    <div id="commissioning"></div>
-    <div id="amc"></div>
+    <!-- SERVICE BLOCKS: one per service, in the order of an engagement. Commissioning and AMC
+         expand in place (js/script.js initServices); #commissioning and #amc deep-link and open. -->
+    <section class="svc" aria-label="Our services">
+      <div class="svc__inner">
+        <article class="svc-block" id="yanq-study">
+          <div class="svc-block__media">
+            <img src="images/yanq-hero.jpg" alt="Power quality analyser on a panel, showing a measured current waveform, with clamp sensors on the busbars" width="1672" height="941" loading="lazy" decoding="async">
+          </div>
+          <div class="svc-block__body">
+            <p class="svc-block__label"><span>01</span>Study</p>
+            <h2 class="svc-block__name">YanQ Power Quality Study</h2>
+            <p class="svc-block__text">We start by measuring what your electrical system is really carrying, then benchmark it against IEEE 519-2022. From that data we offer the right solution, sized to your site.</p>
+            <a class="svc-more" href="yanq.html"><span class="svc-more__text">Learn More</span><svg class="svc-more__arrow" viewBox="0 0 14 12" width="14" height="12" fill="none" aria-hidden="true"><path d="M1 6h11M8 2l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </div>
+        </article>
+        <article class="svc-block" id="commissioning">
+          <div class="svc-block__media">
+            <img src="images/products/service-commissioning.jpg" alt="Engineer commissioning a correction panel with a laptop, a remote engineer on a video call" width="900" height="900" loading="lazy" decoding="async">
+          </div>
+          <div class="svc-block__body">
+            <p class="svc-block__label"><span>02</span>Commission</p>
+            <h2 class="svc-block__name">Commissioning Support</h2>
+            <p class="svc-block__text">Onsite and online, we commission your power quality equipment so every panel is proven to work as designed before it is handed over.</p>
+            <button class="svc-more" type="button" aria-expanded="false" aria-controls="commissioning-detail"><span class="svc-more__text">Learn More</span><svg class="svc-more__chev" viewBox="0 0 12 12" width="12" height="12" fill="none" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <div class="svc-detail" id="commissioning-detail">
+              <ul class="svc-detail__list"><li>Pre-commissioning checks of wiring, protection and settings</li><li>Controller and filter set-up to the targets from your measured data</li><li>Measurement after start-up to confirm the result</li><li>Online support for start-up, settings and troubleshooting</li></ul>
+            </div>
+          </div>
+        </article>
+        <article class="svc-block" id="amc">
+          <div class="svc-block__media">
+            <img src="images/products/service-amc.jpg" alt="Technician servicing a power factor correction panel on a maintenance visit" width="900" height="900" loading="lazy" decoding="async">
+          </div>
+          <div class="svc-block__body">
+            <p class="svc-block__label"><span>03</span>Maintain</p>
+            <h2 class="svc-block__name">Annual Maintenance Contract</h2>
+            <p class="svc-block__text">An Annual Maintenance Contract (AMC) offers scheduled care for your installed correction equipment, so it keeps performing as designed, year after year.</p>
+            <button class="svc-more" type="button" aria-expanded="false" aria-controls="amc-detail"><span class="svc-more__text">Learn More</span><svg class="svc-more__chev" viewBox="0 0 12 12" width="12" height="12" fill="none" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <div class="svc-detail" id="amc-detail">
+              <ul class="svc-detail__list"><li>Planned inspection, testing and servicing visits</li><li>Capacitor health and controller checks</li><li>Performance tracked against the original targets</li><li>Quick response if anything changes on site</li></ul>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
 
   </main>
 
@@ -111,7 +153,7 @@
   <footer class="footer">
     <div class="footer__cta">
       <div class="footer__icon" aria-hidden="true">
-        <img src="images/icons/footer-icon.svg" alt="">
+        <img src="images/icons/footer-icon.svg" alt="" width="56" height="56">
       </div>
       <h2>Solve before problems become expensive.</h2>
       <p>Tell us what your facility is experiencing. We will handle the rest.</p>
@@ -125,7 +167,7 @@
         <img src="images/logo-footer.svg" alt="Yansa" width="125" height="32">
         <p>Follow us for power quality insights, field observations, and engineering perspectives from the industry.</p>
         <div class="footer__socials">
-          <a href="https://www.linkedin.com/company/yansa-energy-solutions-llp/" target="_blank" rel="noopener" aria-label="Yansa on LinkedIn"><img src="images/icons/social-2.svg" alt=""></a>
+          <a href="https://www.linkedin.com/company/yansa-energy-solutions-llp/" target="_blank" rel="noopener" aria-label="Yansa on LinkedIn"><img src="images/icons/social-2.svg" alt="" width="18" height="17"></a>
           <!-- Phone and WhatsApp return once Yansa confirms the number to use -->
         </div>
       </div>
