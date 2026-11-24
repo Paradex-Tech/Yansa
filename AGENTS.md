@@ -38,9 +38,9 @@ and a small script on `solutions.html` forwards `#services` to `services.html`.
   URLs), `robots.txt`, `site.webmanifest`, favicons, `images/og-image.jpg`.
   Every page has a unique title/description, canonical + og:url, og:image and
   valid JSON-LD (`check-head.mjs`).
-- `videos/hero-1920.mp4`, `hero-1280.mp4` (35 MB) are no longer referenced (the
-  Home hero is a still now); `worker/index.js` still routes `/videos/*`. Safe to
-  delete with the worker route if the client never brings video back.
+- `videos/hero-1920.mp4`, `hero-1280.mp4` (35 MB) are the Home hero film again
+  (`<video>` in `index.html`, poster `images/hero-poster.jpg`, 1920 cut from 1400 px;
+  paused on the poster under reduced motion by `initHeroVideo`); `worker/index.js` routes `/videos/*`.
 
 ### Run locally
 ```
@@ -50,8 +50,8 @@ Then open http://127.0.0.1:8765/index.html and hard-refresh (Ctrl+Shift+R)
 after CSS/JS changes (http.server lets Chrome cache old CSS).
 
 ## Page notes (what is where)
-- **Home**: pinned hero with the shrink-to-card move over a still photo
-  (`images/hero-poster.jpg`, slow scroll-linked scale; no video), "We Measure
+- **Home**: pinned hero with the shrink-to-card move over the hero film
+  (poster `images/hero-poster.jpg`), "We Measure
   What Others Miss." card, Diagnosis, Symptoms (four line drawings that play in
   view and loop on hover, link to Know Your Loads), quote, Why Yansa (three
   whole-card links: YanQ, Solutions, Services). Case Studies and its footer
@@ -194,4 +194,4 @@ Planning docs for the rework: `docs/rework/{sitemap,audit,handoff,progress}.md`.
 3. Real hybrid panel photos from Yansa (stand-ins in use).
 4. New copy for the Why Yansa cards if the client wants it changed.
 5. Connect Cloudflare Pages and add the yansa.in domain.
-6. Decide on the unused 35 MB `videos/` folder and the unused images listed by `check-dead-css.mjs -v`.
+6. Decide on the unused images listed by `check-dead-css.mjs -v`.
