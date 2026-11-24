@@ -315,3 +315,48 @@
 .yanq-expect__title {
   margin-bottom: 2px;
 }
+
+
+/* =========================================================
+   S15 phone scale (<= 599px only)
+   Hero title H1, section headings H2, no leftover multipliers, 64/64
+   rhythm (the ivory "expect" band sits between petrol and cream, so 64),
+   Delivers cards with a 48px tile and 16px padding in two columns.
+   ========================================================= */
+@media (max-width: 599px) {
+  .yanq-hero h2 {
+    font-size: var(--fs-h1);
+    line-height: 1.12;
+  }
+
+  .yanq-works h2,
+  .yanq-delivers h2 {
+    font-size: var(--fs-h2);
+    line-height: 1.15;
+  }
+
+  /* Step titles were 0.8 x H4 on the narrowest phones: Body tier instead */
+  .yanq-step h3 {
+    --fs-scale: 1;
+  }
+
+  .deliver-stat {
+    padding: 16px;
+  }
+
+  .deliver-stat__icon {
+    width: 48px;
+    padding: 6px;
+  }
+
+  /* Longest title ("Recommendation") still holds one line in the half card */
+  .deliver-stat h3 {
+    --fs-scale: 1;
+    font-size: var(--fs-body);
+  }
+
+  .yanq-expect {
+    padding-top: var(--section-pad-y, 64px);
+    padding-bottom: var(--section-pad-y, 64px);
+  }
+}

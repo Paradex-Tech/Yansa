@@ -596,3 +596,67 @@
   max-width: 420px;
   min-height: var(--tap, 48px);
 }
+
+
+/* =========================================================
+   S15 phone scale (<= 599px only)
+   Statement on its tier, 64/64 rhythm (48 where two bands share a colour),
+   family titles on H3, 44px hit areas with the drawn dots unchanged.
+   ========================================================= */
+@media (max-width: 599px) {
+  .about-statement p {
+    --fs-scale: 1;
+  }
+
+  /* Petrol band: copy, then the figures 40px under the last line */
+  .pqs-intro {
+    padding-top: var(--section-pad-y, 64px);
+    padding-bottom: var(--section-pad-y, 64px);
+  }
+
+  .pqs-intro__inner {
+    gap: 40px;
+  }
+
+  .offered {
+    padding-top: var(--section-pad-y, 64px);
+    padding-bottom: var(--section-pad-y, 64px);
+  }
+
+  /* The three family rows share the cream background: 48 between them, 64 on
+     the side that meets another colour (ivory above Active) */
+  .solutions-row {
+    padding-top: 48px;
+    padding-bottom: 48px;
+  }
+
+  #active.solutions-row {
+    padding-top: var(--section-pad-y, 64px);
+  }
+
+  /* "Active Solutions" and its siblings are block titles: H3 */
+  .solutions-row h2 {
+    font-size: var(--fs-h3);
+    line-height: 1.2;
+  }
+
+  /* Cream like the rows above it: 48 on top; petrol footer below: 64 */
+  .pqs-next {
+    padding-top: 48px;
+    padding-bottom: var(--section-pad-y, 64px);
+  }
+
+  .pqs-pills a {
+    min-height: 44px;
+  }
+
+  /* Product dots: 44x44 hit area (the drawn dot sits at the same spot) */
+  .m-dots {
+    margin-top: 0;
+  }
+
+  .m-dots button {
+    width: 44px;
+    height: 44px;
+  }
+}

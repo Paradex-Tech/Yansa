@@ -233,3 +233,22 @@
     height: calc(var(--to, 0) * (100% - 44px) / 4);
   }
 }
+
+
+/* S15 phone scale (<= 599px only): hero title on H1, blocks on 64/64
+   (ivory blocks, cream flow, so each meets another colour) */
+@media (max-width: 599px) {
+  .services-hero .header-placeholder__overlay h1 {
+    --fs-scale: 1;
+  }
+
+  .svc {
+    padding-top: var(--section-pad-y, 64px);
+    padding-bottom: var(--section-pad-y, 64px);
+  }
+
+  .svc-flow {
+    padding-top: var(--section-pad-y, 64px);
+    padding-bottom: var(--section-pad-y, 64px);
+  }
+}
