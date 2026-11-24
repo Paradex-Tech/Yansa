@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="robots" content="noindex">
+<title>frame</title>
+<style>html,body{margin:0;background:#888}iframe{display:block;border:0;background:#fff}</style></head>
+<body><script>
+// frame.html?src=/x.html&w=390&h=844 : one unscaled iframe of that size (phone looks)
+var q = new URLSearchParams(location.search), f = document.createElement('iframe');
+f.src = q.get('src') || '/index.html'; f.width = q.get('w') || 390; f.height = q.get('h') || 844;
+document.body.appendChild(f);
+</script></body></html>

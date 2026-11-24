@@ -5,3 +5,4 @@
 /backend/*   /404   302
 /_headers    /404   302
 /_redirects  /404   302
+/docs/*      /404   302

@@ -7,5 +7,6 @@ AGENTS.md
 backend
 worker
 wrangler.jsonc
+docs
 node_modules
 .wrangler

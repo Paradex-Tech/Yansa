@@ -15,3 +15,6 @@ node_modules/
 
 # Claude Code worktrees
 .claude/
+
+# Dev tool output
+docs/rework/tools/out/
