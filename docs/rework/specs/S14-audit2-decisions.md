@@ -1,4 +1,4 @@
-# S14 Audit-2 decisions (Shrey, 2026-11-24)                     status: FROZEN 2026-11-24 (rev 1 before build: section H added, Shrey via JARVIS)
+# S14 Audit-2 decisions (Shrey, 2026-11-24)                     status: FROZEN 2026-11-24 (rev 1 before build: section H; rev 2 during build: section I, both Shrey via JARVIS)
 
 Build Shrey's approved items from `audit-2.md` (D1, D2, D4, D5, D6, D7, D9, D10-removal) plus one phone fix. Ground
 rules: keep the old design language and every signature animation; change only what is listed; font sizes only via
@@ -109,6 +109,21 @@ H3 Tablet and desktop: same grouping with labels in the existing column layout; 
    desktop footer height within +-60 px of 601.
 H4 Old design language: petrol footer, existing tokens and tiers only; no new icons.
 
+## I. Solutions jump landing (Shrey via JARVIS, rev 2)
+On phone, tapping "Passive" in the sticky Active/Passive/Hybrid chip bar stops too early: the previous section's
+carousel pagination dots show just under the bar, then a big cream gap, then "Passive Solutions".
+I1 Tune the landing (scroll-margin-top on #active/#passive/#hybrid, and/or the section top padding involved, and/or
+   the JS offset if a script scrolls) so each jump lands with the section starting cleanly under the sticky
+   nav + chip bar: nothing from the previous section visible below the bar, and a small comfortable gap (about
+   16-32 px) between the bar's bottom edge and the section heading. Same for Active and Hybrid.
+I2 Same rule at desktop (1440) and tablet (820/1024), and for nav drop-down panel links and any other links that
+   jump to #active/#passive/#hybrid (from other pages too, e.g. know-your-loads.html chip links to cards keep
+   their S10 V5 card offsets working). Don't change the section layout or spacing in normal scrolling beyond what
+   the landing needs.
+I3 Evidence: a CDP script that, for each width (1440, 820, 390) and each of the three anchors, loads
+   solutions.html#<id> (and clicks the chip), waits for the scroll to settle, and reports: chip-bar bottom y,
+   heading top y (gap), and whether any element of the previous section intersects the area below the bar.
+
 ## Acceptance checks
 1. `node --check js/script.js` and each touched `js/m/*.js` pass.
 2. `node docs/rework/tools/links.mjs --strict-img`, `check-nav-footer.mjs`, `check-head.mjs`, `check-site.mjs`,
@@ -125,3 +140,4 @@ H4 Old design language: petrol footer, existing tokens and tiers only; no new ic
 8. Reduced motion: What to expect and symptoms complete.
 9. Footer: check-nav-footer.mjs passes; phone footer <= 820 px; every footer link >= 44 px tall on phone;
    shots at 390, 820, 1440 show the two labelled groups and the legal row.
+10. Section I script: 9 landings, gap 16-32 px, no previous-section element visible under the bar.
