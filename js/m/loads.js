@@ -68,6 +68,16 @@
   }
 
 
+  // Strips the reveal from cards that start off to the side of a deck: they
+  // are clipped by the track, so the observer would only fire mid-swipe.
+  function unreveal(items) {
+    items.forEach(function (el, i) {
+      if (i >= 2 && el.hasAttribute('data-reveal')) el.removeAttribute('data-reveal');
+      else if (i < 2 && el.hasAttribute('data-reveal')) el.style.setProperty('--reveal-delay', i * 90 + 'ms');
+    });
+  }
+
+
   /* ---------- Snap carousel ----------
      The track is styled in css/m/loads.css; this adds the dots, marks the
      card in view, and writes each card's distance from the snapped position
@@ -90,6 +100,7 @@
       return b;
     });
     inject(dots, track.parentNode, track.nextSibling);
+    unreveal(items);
 
     var snaps = [];
     var active = -1;

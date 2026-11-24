@@ -421,89 +421,6 @@
   }
 
 
-  /* ---------- The Problems These Loads Create (solutions) ----------
-     Wider than a phone, the three cards sit still in one row (.is-row) with
-     their icons drawn and still (client request, 12 Oct). On phones, scroll
-     position picks the front card as the section's middle travels from 70%
-     to 30% of the viewport. Cards already passed lift away and the rest
-     cascade behind the front one; each card keeps its slot as a class so
-     every move is one CSS transition. */
-  function initProblems() {
-    var problems = document.querySelector('.problems');
-    if (!problems) return;
-
-    var stack = problems.querySelector('.problems__stack');
-    var cards = toArray(problems.querySelectorAll('.problem-card'));
-    var dots = toArray(problems.querySelectorAll('.dot'));
-    var live = problems.querySelector('.problems__live');
-
-    var SLOTS = ['is-front', 'is-next', 'is-later'];
-    var index = -1;
-    var wide = window.matchMedia('(min-width: 769px)');
-
-    function deal(front) {
-      if (front === index) return;
-      index = front;
-
-      cards.forEach(function (card, i) {
-        var slot = i < front ? 'is-past' : SLOTS[i - front] || 'is-later';
-        card.className = 'problem-card ' + slot;
-      });
-
-      dots.forEach(function (dot, i) {
-        dot.classList.toggle('is-active', i === front);
-      });
-
-      if (live) {
-        var heading = cards[front].querySelector('h3');
-        live.textContent = heading ? heading.textContent : '';
-      }
-    }
-
-    function fromScroll() {
-      var r = problems.getBoundingClientRect();
-      var vh = window.innerHeight;
-      var p = clamp01((vh * 0.7 - (r.top + r.height / 2)) / (vh * 0.4));
-      return Math.min(cards.length - 1, Math.floor(p * cards.length));
-    }
-
-    function redeal() {
-      index = -1;
-      problems.classList.toggle('is-row', wide.matches);
-      if (wide.matches) {
-        cards.forEach(function (card) { card.className = 'problem-card'; });
-        return;
-      }
-      deal(fromScroll());
-    }
-
-    onScrollFrame(function () {
-      if (!wide.matches) deal(fromScroll());
-    });
-    wide.addEventListener('change', redeal);
-
-    // First deal without transitions
-    stack.classList.add('is-static');
-    redeal();
-    void stack.offsetWidth;
-    stack.classList.remove('is-static');
-
-    window.addEventListener('load', redeal);
-    onResizeEnd(redeal, 200);
-
-    /* The icons draw in as their card reaches the front. Holding .is-inview
-       back until the section is mid-viewport keeps the first icon from
-       playing unseen; dropping it on exit lets it replay. */
-    if (hasObserver) {
-      new IntersectionObserver(function (entries) {
-        problems.classList.toggle('is-inview', entries[0].isIntersecting);
-      }, { rootMargin: '-30% 0px -30% 0px' }).observe(problems);
-    } else {
-      problems.classList.add('is-inview');
-    }
-  }
-
-
   /* ---------- Load explorer (Know Your Loads) ----------
      Eight loads as ARIA tabs (roving tabindex; arrows, Home and End pick
      and focus). A pick swaps .is-active on the matching item in the Problem
@@ -2254,8 +2171,8 @@
       { sel: '.faq__list > *', step: 70 },
 
       /* solutions */
-      { sel: '.generates > h2, .generates > p', step: 90 },
-      { sel: '.generates__grid > *', step: 70 },
+      { sel: '.loads-x h2', step: 0 },
+      { sel: '.loads-x__board', step: 0 },
       { sel: '.problems__sticky > h2', step: 0 },
       { sel: '.solutions-row__inner > h2, .solutions-row__inner > p', step: 90 },
       { sel: '.solutions-row__grid > *', step: 90 },
@@ -2269,8 +2186,6 @@
       { sel: '.yanq-delivers > h2', step: 0 },
       /* PQ Solved */
       { sel: '.pq-entry__copy > *', step: 90 },
-      { sel: '.pqs-fit__header > *', step: 90 },
-      { sel: '.pqs-fit__grid > *', step: 80, mode: 'fade' },
 
       /* Solutions */
       { sel: '.pqs-intro h2', step: 0 },
@@ -3171,7 +3086,6 @@
   initCardMotion();
   initMeasureRotator();
   initValues();
-  initProblems();
   initLoadExplorer();
   initFooterMark();
   initSolutionDialog();

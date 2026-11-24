@@ -322,7 +322,7 @@
    initSolutionDialog writes the panel's top/left/width/height inline to grow
    it from the card; on a phone those are overruled and the panel rises from
    the bottom edge instead. It closes on the button, the backdrop, Escape, or
-   a swipe down from the top of its content (js/m/solution.js). The close
+   a swipe down from the top of its content (js/m/solutions.js). The close
    transition stays under the 520ms the script waits before hiding it. */
 .sol-dialog__backdrop {
   background: rgba(10, 26, 28, 0.55);

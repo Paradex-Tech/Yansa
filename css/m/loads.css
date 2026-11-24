@@ -62,7 +62,12 @@
 
 .solution-hero .header-placeholder__overlay p {
   margin: 0;
-  max-width: 34ch;
+  max-width: 36ch;
+}
+
+/* The two sentences simply run on */
+.solution-hero .header-placeholder__overlay p br {
+  display: none;
 }
 
 /* A short rule over the heading, the page's one ornament */
@@ -132,7 +137,7 @@
 .loads-x__load {
   flex: none;
   min-height: 44px;
-  padding: 10px 18px 10px 30px;
+  padding: 10px 20px;
   white-space: nowrap;
   scroll-snap-align: start;
 }
@@ -279,7 +284,12 @@
    data attributes and custom properties, which that script does not touch.
    ========================================================= */
 .problems {
+  background: var(--petrol, #1a4146);
   text-align: left;
+}
+
+.problems h2 {
+  color: var(--text-on-dark, #f1f1e6);
 }
 
 .problems .problems__sticky {
@@ -320,6 +330,7 @@
 }
 
 .problems .problems__stack .problem-card__num {
+  display: block;
   margin-bottom: 26px;
 }
 
@@ -336,25 +347,8 @@
   max-width: none;
 }
 
-/* Icons: the desktop draw-ins are replaced by the same ones keyed to this
-   scene (data-m-front marks the card that has just arrived). Without it
-   every icon rests fully drawn. */
-.problems.m-swipe .problem-card .anim-draw-wave,
-.problems.m-swipe .problem-card .anim-dial,
-.problems.m-swipe .problem-card .anim-band,
-.problems.m-swipe .problem-card .anim-tick,
-.problems.m-swipe .problem-card .anim-hub,
-.problems.m-swipe .problem-card .anim-needle,
-.problems.m-swipe .problem-card .anim-origin,
-.problems.m-swipe .problem-card .anim-h,
-.problems.m-swipe .problem-card .anim-h-head,
-.problems.m-swipe .problem-card .anim-swing,
-.problems.m-swipe .problem-card .anim-d-head,
-.problems.m-swipe .problem-card .anim-pf-arc,
-.problems.m-swipe .problem-card .anim-phi {
-  animation: none;
-}
-
+/* Icons: the card in view draws its icon (data-m-front, set by the script).
+   Without it every icon rests fully drawn. */
 @media (prefers-reduced-motion: no-preference) {
   .problems.m-swipe .problem-card[data-m-front] .anim-draw-wave { animation: pqDraw 1.6s cubic-bezier(0.35, 0, 0.5, 1) both; }
 
@@ -477,7 +471,7 @@
    ========================================================= */
 .pq-entry__stage {
   display: block;
-  padding: var(--section-pad-y, 64px) var(--gutter, 20px);
+  padding: var(--section-pad-y, 64px) var(--gutter, 20px) calc(var(--section-pad-y, 64px) - 16px);
 }
 
 .pq-entry__inner {
