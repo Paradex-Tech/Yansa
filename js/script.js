@@ -1188,7 +1188,7 @@
     function pinned() {
       var edge = navbar.offsetHeight;
       return toArray(document.querySelectorAll(
-        '.hero.is-scrolly .hero__stage, .yanq-flow.is-scrolly .yanq-flow__stage, .cases.is-scrolly .cases__stage'
+        '.hero.is-scrolly .hero__stage, .cases.is-scrolly .cases__stage'
       )).some(function (el) {
         return Math.abs(el.getBoundingClientRect().top - edge) <= 1.5;
       });
@@ -2032,6 +2032,7 @@
 
       /* YanQ */
       { sel: '.yanq-hero__content > *', step: 90 },
+      { sel: '.yanq-delivers > h2', step: 0 },
       /* PQ Solved */
       { sel: '.pq-entry__copy > *', step: 90 },
       { sel: '.pqs-fit__header > *', step: 90 },
@@ -2045,6 +2046,11 @@
       { sel: '.footer__cta > *', step: 90, mode: 'fade' },
       { sel: '.footer__bottom > *', step: 110 }
     ];
+
+    // What YanQ Delivers cards: phones animate these themselves (js/m/yanq.js)
+    if (window.matchMedia('(min-width: 769px)').matches) {
+      SETS.push({ sel: '.yanq-delivers__grid > *', step: 90, mode: 'fade' });
+    }
 
     var DURATION = 700; // matches --reveal-dur in the stylesheet
     var seen = [];
@@ -2099,8 +2105,7 @@
      rail fills and the words light one at a time (never part-way). The
      section gets .is-scrolly; the paragraph gets --quote-rail.
      A pinned section can pass `opts` to supply its own progress (0 to 1),
-     its own on/off test and a damping of 1 for a pure scroll mapping; the
-     YanQ sequence does (initYanqFlow). */
+     its own on/off test and a damping of 1 for a pure scroll mapping. */
   function initQuote() {
     readAlong(document.querySelector('.quote'), '.quote__stage p');
   }
@@ -2218,7 +2223,7 @@
      Adapted from the supplied process-diagrams.js (YANSA process diagrams
      package): its per-element playback, without its own track and scroll
      maths. Each <svg> is played from a local progress L (0 to 1) that the
-     caller works out; initYanqFlow passes each step's own progress.
+     caller works out; initYanqWorks plays each box on its own clock.
        [data-a="type,a,b,x,y"]  animates while L runs from a to b:
          draw   stroke traces from its start (needs pathLength="1")
          fade   opacity 0 to 1
@@ -2280,370 +2285,179 @@
   }
 
 
-  /* ---------- How YanQ Works: pinned sequence (YanQ) ----------
-     One sticky stage over a runway, as on the Home hero. Every visual state
-     is a pure function of how far the stage has been pinned, measured in
-     stage heights:
-       0   to 0.6   the statement reads along under the pinned heading
-       0.6 to 1.4   cream turns to petrol and the heading to grey and
-                    orange; the statement rises and fades over the first
-                    half, the steps fade in over the second
-       1.0 on       the steps, STEP stages each: a step rises to the focus
-                    line (the stage's centre, beside the visual box), parks
-                    there, still, for HOLD of its share while its diagram
-                    builds, then moves up as the next arrives
-       last OUT     outro: the steps scroll out, What YanQ Delivers scrolls
-                    in beneath the pinned heading, whose side words swap
-                    round a fixed "YanQ"; the pin releases on its end state
-     Opacity falls off smoothly with a step's distance from the focus line,
-     the rail marker rides the wave (see apply), and the visual box stays put while
-     its slots crossfade. Nothing moves unless the page scrolls. The hook for
-     the supplied SVGs (--flow-progress, --flow-step, --step-progress,
-     .is-active) is described above the slots in yanq.html. Off, leaving the
-     stacked layout, under reduced motion, at 768px and below, and on
-     screens too short to pin. */
-  function initYanqFlow() {
-    var flow = document.querySelector('.yanq-flow');
-    if (!flow) return;
+  /* ---------- How YanQ Works: four boxes, played once (YanQ) ----------
+     Four boxes joined by arrows, each holding one of the supplied process
+     drawings. A plain section: nothing is pinned or scroll-linked. Once the
+     row is about 35% into the viewport the boxes play in order:
+       box fades in and rises 16px, its drawing plays 0 to 1 through
+       renderDiagram (about 1.1s, ease-out), then its arrow draws (0.3s),
+       and the next box starts a little before that arrow ends (~5s in all).
+     On phones the boxes are stacked and each plays on its own as it enters
+     view. After a drawing has finished, its [data-osc] wave keeps a slow,
+     subtle loop, but only while the box is on screen.
+     Every drawing ends on its own finished frame (renderDiagram at 1), the
+     same under reduced motion, which just shows it with no play and no loop.
+     Without JS the stylesheet already shows the boxes finished, as the SVGs
+     are written. Only opacity, transform and stroke-dashoffset change, and
+     the boxes reserve their size, so nothing shifts the layout. */
+  function initYanqWorks() {
+    var works = document.querySelector('.yanq-works');
+    if (!works) return;
 
-    var stage = flow.querySelector('.yanq-flow__stage');
-    var body = flow.querySelector('.yanq-flow__body');
-    var intro = flow.querySelector('.yanq-flow__intro');
-    var win = flow.querySelector('.yanq-flow__window');
-    var list = flow.querySelector('.yanq-flow__list');
-    var dotBox = flow.querySelector('.yanq-flow__dots');
-    var visual = flow.querySelector('.yanq-flow__visual');
-    var spine = flow.querySelector('.yanq-flow__spine');
-    var steps = toArray(flow.querySelectorAll('.yanq-flow__step'));
-    if (!stage || !body || !intro || !win || !list || !steps.length) return;
+    var boxes = toArray(works.querySelectorAll('.yanq-step'));
+    if (!boxes.length) return;
 
-    // A step's slot is the .yanq-anim with the same data-step
-    var slots = steps.map(function (step) {
-      return flow.querySelector('.yanq-anim[data-step="' + step.getAttribute('data-step') + '"]');
+    // Reduced motion (or no observer): settle every drawing on its finished
+    // frame and stop. Nothing is armed, so nothing is ever hidden.
+    var finishedOnly = reduceMotion || !hasObserver;
+
+    var BOX_MS = 100;      // the drawing starts just after the box begins to rise
+    var DRAW_MS = 1100;    // drawing 0 to 1
+    var ARROW_MS = 300;    // arrow draws after its drawing
+    var STEP_MS = 1200;    // next box starts this long after the previous one
+    var END_MS = BOX_MS + DRAW_MS + ARROW_MS;
+    var OSC_MS = 9000;     // one period of the slow wave loop
+
+    var phone = window.matchMedia('(max-width: 768px)');
+
+    var parts = boxes.map(function (box) {
+      var svg = box.querySelector('svg.yanq-diagram');
+      var arrow = box.querySelector('.yanq-arrow');
+      return {
+        box: box,
+        d: svg ? prepareDiagram(svg) : null,
+        arrow: arrow,
+        arrowParts: arrow ? toArray(arrow.querySelectorAll('[data-arrow]')) : [],
+        t0: null,        // when its play starts (ms, performance.now clock)
+        done: false,
+        doneAt: 0,
+        visible: false
+      };
     });
 
-    // The process diagram in each slot, prepared only while pinned
-    var diagrams = slots.map(function (slot) {
-      return slot ? slot.querySelector('svg.yanq-diagram') : null;
+    function setArrow(p, a) {
+      p.arrowParts.forEach(function (el) {
+        el.style.strokeDasharray = '1';
+        el.style.strokeDashoffset = 1 - a;
+        el.style.opacity = a > 0 ? 1 : 0;
+      });
+    }
+
+    function finish(p) {
+      if (p.d) renderDiagram(p.d, 1, 0);
+      setArrow(p, 1);
+      p.box.classList.add('is-in');
+    }
+
+    if (finishedOnly) {
+      parts.forEach(function (p) { if (p.d) renderDiagram(p.d, 1, 0); });
+      return;
+    }
+
+    // Armed: hide what will play (the drawings at 0, arrows undrawn)
+    works.classList.add('is-armed');
+    parts.forEach(function (p) {
+      if (p.d) renderDiagram(p.d, 0, 0);
+      setArrow(p, 0);
     });
-    var played = [];
-    var WAVE_CYCLES = 6;   // Measurement's screen wave, after it is built
 
-    var READ = 0.6;    // stage heights: the read-along is complete
-    var TURN = 1.4;    // the colour change is complete
-    var LIST = 1.0;    // the list starts to move
-    var ENTER = -0.6;  // list position when it starts (below the focus)
-    var LEAVE = 0.2;   // how far past the last step it travels by the end
-    var STEP = 2.4;    // stage heights of scroll per step (hold + move)
-    var HOLD = 0.45;   // share of a step's scroll spent parked at the focus
-    var BUILD_AT = 0.75;  // share of the hold by which its diagram is built
-    var OUT = 1;       // stage heights of outro into What YanQ Delivers
-    var CLEAR = 24;    // px the box and the focused step keep from the heading
-    var DIM = 0.62;    // opacity lost by the step one place below focus
-    var INSET = 6;     // px the marker keeps from the stage's top and bottom
-    // One period of the wave in yanq-wave-tile.svg, repeated down the spine
-    // (40 x 246px, see .yanq-flow__spine): centred on x 20, swinging 17.7
-    // either side, starting on the centre line and bulging right first
-    var WAVE = { cx: 20, amp: 17.7, period: 246 };
-    var CREAM = [250, 250, 239];    // --cream
-    var PETROL = [26, 65, 70];      // --petrol
-    var INK = [23, 23, 23];         // the heading on cream
-    var GREY = [152, 152, 152];     // the heading on petrol
-    var CYAN = [76, 200, 192];      // --cyan, for "YanQ"
+    var raf = null;
 
-    var n = steps.length;
-    var dots = [];
-    var tops = [];     // each step's top within the list, px
-    // Focus line: the stage's vertical centre (where the rail marker parks),
-    // px below the list window's top, which is the heading's bottom edge.
-    // The step in focus and the visual box are both centred on it.
-    var focusY = 0;
-    var stageH = 1;
-    var runway = 1;
-    var paraTop = 0;   // the statement's viewport top while pinned
-    var gap = 0;       // space between steps in the list, px
-    var reach = 0;     // how far the spine reaches above the stage, px
-    var heights = [];  // each step's height, px
-    var boxH = 0;
-    var titleH = 0;
-    var on = false;
-
-    // The list's timeline, in step shares (STEP stage heights each): the
-    // first step's rise, then for each step a HOLD parked at the focus line
-    // and a move on to the next, then the last step's leave
-    var segs = [];
-    var holdAt = [];   // where each step's hold starts, in shares
-    var shares = 0;
-    function addSeg(len, from, to) {
-      segs.push({ x: shares, len: len, from: from, to: to });
-      shares += len;
+    function easeOut(v) {
+      return 1 - Math.pow(1 - v, 3);
     }
-    addSeg(-ENTER * (1 - HOLD), ENTER, 0);
-    for (var h = 0; h < n; h++) {
-      holdAt.push(shares);
-      addSeg(HOLD, h, h);
-      if (h < n - 1) addSeg(1 - HOLD, h, h + 1);
-    }
-    addSeg(LEAVE * (1 - HOLD), n - 1, n - 1 + LEAVE);
 
-    function posAt(x) {
-      if (x <= 0) return ENTER;
-      for (var s = 0; s < segs.length; s++) {
-        var g = segs[s];
-        if (x <= g.x + g.len) {
-          return g.from === g.to ? g.from : lerp(g.from, g.to, smooth(clamp01((x - g.x) / g.len)));
+    function frame(now) {
+      raf = null;
+      var again = false;
+
+      parts.forEach(function (p) {
+        if (p.t0 === null) return;
+
+        if (!p.done) {
+          var t = now - p.t0;
+          again = true;
+          if (t < 0) return;
+          if (t >= END_MS) {
+            finish(p);
+            p.done = true;
+            p.doneAt = now;
+            return;
+          }
+          p.box.classList.add('is-in');
+          if (p.d) renderDiagram(p.d, easeOut(clamp01((t - BOX_MS) / DRAW_MS)), 0);
+          setArrow(p, clamp01((t - BOX_MS - DRAW_MS) / ARROW_MS));
+        } else if (p.visible && p.d && p.d.osc.length) {
+          var phase = (now - p.doneAt) / OSC_MS;
+          p.d.osc.forEach(function (el) {
+            var period = +el.getAttribute('data-osc');
+            el.style.transform = 'translateX(' + (-(phase * period % period)) + 'px)';
+          });
+          again = true;
         }
-      }
-      return n - 1 + LEAVE;
-    }
-
-    for (var d = 0; d < n; d++) {
-      var dot = document.createElement('span');
-      dot.className = 'yanq-flow__dot';
-      if (dotBox) dotBox.appendChild(dot);
-      dots.push(dot);
-    }
-
-    function smooth(t) {
-      return t * t * (3 - 2 * t);
-    }
-
-    function mix(a, b, t, alpha) {
-      return 'rgba(' + Math.round(lerp(a[0], b[0], t)) + ', ' +
-        Math.round(lerp(a[1], b[1], t)) + ', ' +
-        Math.round(lerp(a[2], b[2], t)) + ', ' +
-        (alpha === undefined ? 1 : alpha.toFixed(4)) + ')';
-    }
-
-    function enabled() {
-      return !reduceMotion && window.innerWidth > 768 && window.innerHeight >= 560;
-    }
-
-    // Pixels scrolled since the stage stuck (negative on the way in)
-    function travelled() {
-      var stuckAt = parseFloat(getComputedStyle(stage).top) || 0;
-      return stuckAt - flow.getBoundingClientRect().top;
-    }
-
-    function measure() {
-      stageH = stage.getBoundingClientRect().height || 1;
-      runway = Math.max(flow.offsetHeight - stageH, 1);
-      tops = steps.map(function (step) {
-        return step.offsetTop;
-      });
-      heights = steps.map(function (step) {
-        return step.offsetHeight;
-      });
-      boxH = visual ? visual.offsetHeight : 0;
-      titleH = body.offsetTop;   // the body starts at the heading's bottom
-      // On a short stage the centre would put the box against the heading;
-      // then the pair drops just enough to clear it by CLEAR px
-      focusY = Math.max(stageH / 2 - titleH, boxH / 2 + CLEAR, Math.max.apply(null, heights) / 2 + CLEAR);
-      paraTop = (parseFloat(getComputedStyle(stage).top) || 0) + body.offsetTop + intro.offsetTop;
-      gap = parseFloat(getComputedStyle(list).rowGap) || 0;
-      reach = spine ? -spine.offsetTop : 0;
-    }
-
-    // Where in the list a (fractional) position falls, px. Past either end
-    // it carries on at the end step's spacing, so the first step can rise in
-    // and the last one leave.
-    function topAt(pos) {
-      if (pos <= 0) {
-        var first = n > 1 ? tops[1] - tops[0] : steps[0].offsetHeight + gap;
-        return tops[0] + pos * first;
-      }
-      if (pos >= n - 1) {
-        var last = n > 1 ? tops[n - 1] - tops[n - 2] : steps[0].offsetHeight + gap;
-        return tops[n - 1] + (pos - (n - 1)) * last;
-      }
-      var a = Math.floor(pos);
-      return lerp(tops[a], tops[a + 1], pos - a);
-    }
-
-    // Read-along: from the statement reaching 75% of the viewport on the
-    // way in, to READ stage heights into the pin
-    function readProgress() {
-      var t = travelled();
-      var start = paraTop - window.innerHeight * 0.75;
-      var end = READ * stageH;
-      if (end <= start) return 1;
-      return clamp01((t - start) / (end - start));
-    }
-
-    function apply(t) {
-      var u = t / stageH;
-      var half = (TURN - READ) / 2;
-      var turn = smooth(clamp01((u - READ) / (TURN - READ)));
-
-      // Outro: the last stage of the runway, while What YanQ Delivers rises
-      // into place. The steps scroll out with it (--yanq-flow-out), petrol
-      // turns back to cream, and the heading's side words swap round the
-      // fixed "YanQ", whose orange hands over to the Delivers gradient.
-      var runU = runway / stageH;
-      var out = clamp01((u - (runU - OUT)) / OUT);
-      var swap = smooth(clamp01((out - 0.15) / 0.55));
-
-      flow.style.setProperty('--yanq-flow-bg', out > 0 ?
-        mix(PETROL, CREAM, smooth(clamp01(out / 0.7))) : mix(CREAM, PETROL, turn));
-      // Back on cream, the heading darkens again so What YanQ Delivers
-      // reads in ink, not the grey it wore on petrol (client request, 12 Oct)
-      flow.style.setProperty('--yanq-flow-title', out > 0 ?
-        mix(GREY, INK, smooth(clamp01(out / 0.7))) : mix(INK, GREY, turn));
-      flow.style.setProperty('--yanq-flow-brand', mix(INK, CYAN, turn));
-      flow.style.setProperty('--yanq-flow-intro', (1 - smooth(clamp01((u - READ) / half))).toFixed(4));
-      flow.style.setProperty('--yanq-flow-reveal', smooth(clamp01((u - READ - half) / half)).toFixed(4));
-      flow.style.setProperty('--yanq-flow-out', out.toFixed(4));
-      flow.style.setProperty('--yanq-flow-swap', swap.toFixed(4));
-
-      // The list's timeline runs over the runway between the colour change
-      // and the outro, so it ends as the outro begins
-      var span = Math.max(runU - LIST - OUT, 0.001);
-      var travel = clamp01((u - LIST) / span);
-      var x = travel * shares;
-      var pos = posAt(x);
-      var held = Math.min(Math.max(pos, 0), n - 1);
-      var active = Math.round(held);
-      var a = Math.floor(held);
-      var b = Math.min(n - 1, a + 1);
-      var hNow = lerp(heights[a], heights[b], held - a);
-
-      // The step at `pos` is centred on the focus line
-      var offset = focusY - hNow / 2 - topAt(pos);
-      list.style.transform = 'translate3d(0, ' + offset.toFixed(2) + 'px, 0)';
-      // The mask is fully opaque from just above the focused step's top
-      flow.style.setProperty('--yanq-flow-focus', (focusY - hNow / 2).toFixed(1) + 'px');
-
-      // Below the focus a step dims to 1 - DIM. Above it, it fades out as
-      // it rises, reaching 0 as its top meets the heading's bottom edge.
-      // A parked step stays perfectly still beside its diagram.
-      steps.forEach(function (step, i) {
-        var d = i - pos;
-        var parked = Math.max(focusY - heights[i] / 2, 1);
-        var op = d >= 0 ? 1 - DIM * Math.min(d, 1) : clamp01((tops[i] + offset) / parked);
-        step.style.opacity = op.toFixed(3);
-        step.classList.toggle('is-active', i === active);
       });
 
-      // The box is centred on the same line
-      flow.style.setProperty('--yanq-flow-box-y', (focusY - boxH / 2).toFixed(2) + 'px');
-
-      if (visual) {
-        visual.style.setProperty('--flow-progress', travel.toFixed(4));
-        visual.style.setProperty('--flow-step', (held + 1).toFixed(4));
-      }
-
-      // --step-progress: 0 to 0.25 rising into focus, 0.25 to 0.75 over the
-      // hold (0.5 is mid-hold), 0.75 to 1 leaving. The diagram builds over
-      // the first BUILD_AT of the hold. Oscillators run from the first
-      // diagram's completion to the end of the list.
-      var oscFrom = holdAt[0] + BUILD_AT * HOLD;
-      var oscPhase = clamp01((x - oscFrom) / Math.max(shares - oscFrom, 0.001)) * WAVE_CYCLES;
-
-      slots.forEach(function (slot, i) {
-        if (!slot) return;
-        var hp = clamp01((x - holdAt[i]) / HOLD);
-        var stepP = hp <= 0 ? 0.25 * clamp01((pos - i + 0.5) / 0.5) :
-          hp < 1 ? 0.25 + 0.5 * hp :
-          0.75 + 0.25 * clamp01((pos - i) / 0.5);
-        slot.style.opacity = clamp01(1 - Math.abs(held - i)).toFixed(3);
-        slot.style.setProperty('--step-progress', stepP.toFixed(4));
-        slot.classList.toggle('is-active', i === active);
-        if (played[i]) renderDiagram(played[i], clamp01(hp / BUILD_AT), oscPhase);
-      });
-
-      dots.forEach(function (dot, i) {
-        dot.classList.toggle('is-active', i === active);
-      });
-
-      // Rail, in three parts:
-      //   entry  the marker runs from the top of the wave to the middle
-      //          while the first step rises to the focus line
-      //   steps  it stays in the middle and the wave slides up past it
-      //          steadily, holds included
-      //   exit   the wave stops and the marker runs on to the bottom
-      var mid = stageH / 2;
-      var holdEnd = holdAt[n - 1] + HOLD;
-      var markerY;
-      if (x < holdAt[0]) {
-        markerY = lerp(INSET, mid, clamp01(x / holdAt[0]));
-      } else if (x > holdEnd) {
-        markerY = lerp(mid, stageH - INSET, clamp01((x - holdEnd) / (shares - holdEnd)));
-      } else {
-        markerY = mid;
-      }
-      var slide = Math.max(topAt(n - 1) - topAt(0), topAt(1) - topAt(0));
-      var shift = clamp01((x - holdAt[0]) / Math.max(holdEnd - holdAt[0], 0.001)) * slide;
-      // The wave tiles from the spine's top, which sits `reach` above the stage
-      var phase = ((markerY + reach + shift) % WAVE.period) / WAVE.period;
-      var markerX = WAVE.cx + WAVE.amp * Math.sin(2 * Math.PI * phase);
-      flow.style.setProperty('--yanq-flow-marker-y', markerY.toFixed(2) + 'px');
-      flow.style.setProperty('--yanq-flow-marker-x', markerX.toFixed(2) + 'px');
-      flow.style.setProperty('--yanq-flow-wave-y', (-(shift % WAVE.period)).toFixed(2) + 'px');
+      if (again) raf = requestAnimationFrame(frame);
     }
 
-    function reset() {
-      ['--yanq-flow-runway', '--yanq-flow-bg', '--yanq-flow-title', '--yanq-flow-brand',
-        '--yanq-flow-intro', '--yanq-flow-reveal', '--yanq-flow-marker-y',
-        '--yanq-flow-marker-x', '--yanq-flow-wave-y', '--yanq-flow-focus',
-        '--yanq-flow-out', '--yanq-flow-swap', '--yanq-flow-box-y'].forEach(function (name) {
-        flow.style.removeProperty(name);
-      });
-      list.style.transform = '';
-      if (visual) {
-        visual.style.removeProperty('--flow-progress');
-        visual.style.removeProperty('--flow-step');
-      }
-      steps.forEach(function (step) {
-        step.style.opacity = '';
-        step.style.transform = '';
-        step.classList.remove('is-active');
-      });
-      slots.forEach(function (slot) {
-        if (!slot) return;
-        slot.style.opacity = '';
-        slot.style.removeProperty('--step-progress');
-        slot.classList.remove('is-active');
-      });
-      dots.forEach(function (dot) { dot.classList.remove('is-active'); });
-      played.forEach(function (d) { if (d) resetDiagram(d); });
-      played = [];
+    function kick() {
+      if (raf === null) raf = requestAnimationFrame(frame);
     }
 
-    function sync() {
-      if (!enabled()) {
-        if (on || flow.classList.contains('is-scrolly')) {
-          flow.classList.remove('is-scrolly');
-          reset();
-        }
-        on = false;
-        return;
-      }
-
-      // Runway in stage heights: the statement and colour change, the
-      // list's timeline at STEP per share, then the outro
-      flow.style.setProperty('--yanq-flow-runway', LIST + shares * STEP + OUT);
-      flow.classList.add('is-scrolly');
-      on = true;
-      if (!played.length) {
-        played = diagrams.map(function (svg) { return svg ? prepareDiagram(svg) : null; });
-      }
-      measure();
-      apply(travelled());
+    // Desktop: the row starts the whole sequence, box after box
+    function startRow() {
+      var base = performance.now();
+      var k = 0;
+      parts.forEach(function (p) {
+        if (p.t0 !== null) return;
+        p.t0 = base + k * STEP_MS;
+        k += 1;
+      });
+      kick();
     }
 
-    sync();
-    onScrollFrame(function () {
-      if (on) apply(travelled());
+    // Phone: each box starts as it enters view
+    function startBox(p) {
+      if (p.t0 !== null) return;
+      p.t0 = performance.now();
+      kick();
+    }
+
+    // "Reached" also covers a box already scrolled past (a reload or an
+    // anchor jump), which an intersection test would never report
+    function reached(entry) {
+      return entry.isIntersecting || entry.boundingClientRect.top < 0;
+    }
+
+    var row = works.querySelector('.yanq-works__row');
+    var rowObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (phone.matches || !reached(entry)) return;
+        rowObserver.unobserve(entry.target);
+        startRow();
+      });
+    }, { rootMargin: '0px 0px -35% 0px' });
+    rowObserver.observe(row);
+
+    var boxObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        var p = parts[boxes.indexOf(entry.target)];
+        if (!p || phone.matches === false) return;
+        if (reached(entry)) startBox(p);
+      });
+    }, { rootMargin: '0px 0px -15% 0px' });
+    boxes.forEach(function (box) { boxObserver.observe(box); });
+
+    // The loop only runs while a finished box is actually on screen
+    var viewObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        var p = parts[boxes.indexOf(entry.target)];
+        if (!p) return;
+        p.visible = entry.isIntersecting;
+        if (p.visible && p.done) kick();
+      });
     });
-    onResizeEnd(sync, 120);
-    window.addEventListener('load', sync);
-
-    // The statement's read-along, mapped straight from the pin
-    readAlong(intro, '.yanq-flow__quote', {
-      damp: 1,
-      enabled: enabled,
-      progress: readProgress
-    });
+    boxes.forEach(function (box) { viewObserver.observe(box); });
   }
 
 
@@ -3052,7 +2866,7 @@
   initHero();
   initScrollReveal();
   initQuote();
-  initYanqFlow();
+  initYanqWorks();
   initCaseStudies();
   initAboutDecor();
   initContactForm();
