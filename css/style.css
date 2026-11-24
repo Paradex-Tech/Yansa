@@ -4078,7 +4078,7 @@ ul {
 
 .svc-step__line {
   display: block;
-  max-width: 17ch;
+  max-width: 22ch;
   color: var(--text);
 }
 
