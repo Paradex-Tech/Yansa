@@ -120,6 +120,12 @@
   background: #ffffff;
 }
 
+/* Long options end in an ellipsis before the chevron */
+.form-field select {
+  padding-right: 44px;
+  text-overflow: ellipsis;
+}
+
 .form-field input::placeholder,
 .form-field textarea::placeholder {
   color: #8a9a98;
