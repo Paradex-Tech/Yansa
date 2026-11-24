@@ -4337,6 +4337,7 @@ ul {
   top: 50%;
   transform: translateY(-50%);
   width: 300px;
+  height: auto;
   opacity: 0.5;
   pointer-events: none;
 }
