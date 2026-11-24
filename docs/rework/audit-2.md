@@ -48,6 +48,13 @@ anchors (`links.mjs --strict-img`), nav/footer identical across pages, reduced m
 (no empty bands, the Know Your Loads fan stacks cleanly), heading order H1 > H2 > H3 on every page, one H1 per page.
 YanQ naming is consistent ("YanQ Power Quality Study" in nav, services, solutions; "YanQ study" in running text).
 
+## Added during the round (Shrey's asks via JARVIS)
+
+- S11 Solutions: team statement is now a petrol band with three figures (40+ IEEE publications, PhD, 519); the
+  offered block is a 2x2 grid so no chip label wraps or clips at >= 1280 (it was 4 columns). Desktop 5.46 screens.
+- S12 Services: engagement row lights up to the hovered/focused step; on phones it fills once in view.
+- S13 Home: the old hero video is back on the same choreography and the 1.8-screen runway.
+
 ## Decisions for Shrey (with recommendation)
 
 D1. Home length (5.64 screens, target 5). **Recommend:** symptom cards as one row of four at >= 1200 px (the

@@ -1,5 +1,10 @@
 # Handoff for the build (fresh FRIDAY)
 
+> **Status 2026-11-24 (after Shrey's review, round 2):** S9 nav drop-down panels, S10 audit-2 fixes, S11 Solutions
+> statement band + 2x2 offered grid, S12 Services engagement hover, S13 Home hero video restored (Shrey overrides
+> the sitemap; `videos/` is used again). Findings and the decisions list for Shrey: `audit-2.md`. Rule from Shrey
+> (2026-11-24): no image generators; existing or Yansa-supplied images only. Nothing is pushed.
+>
 > **Status 2026-11-24 (end of build):** S1-S8 built and committed on `restructure-v2` (see `progress.md` for every
 > slice, round and height). Waiting for Shrey's review on localhost. Open choices for Shrey: Home desktop is 5.64
 > screens (target 5; reaching it needs dropping a section or changing the symptom hover); hybrid panel photos are
