@@ -365,3 +365,14 @@
     padding-bottom: var(--section-pad-y, 64px);
   }
 }
+
+/* Narrowest phones: "Recommendation" needs the room inside a 146 px delivers card */
+@media (max-width: 380px) {
+  .deliver-stat {
+    padding: 16px 12px;
+  }
+
+  .deliver-stat h3 {
+    font-size: calc(var(--fs-body) - 1px);
+  }
+}
