@@ -2132,7 +2132,7 @@ ul {
    rows; it tints the chip on hover. */
 .offered {
   background: var(--ivory);
-  padding: 40px var(--gutter) 88px;
+  padding: 24px var(--gutter) 88px;
 }
 
 .offered__inner {
@@ -3796,7 +3796,7 @@ ul {
 /* Solutions: the heading sits over the team line, which keeps its
    statement size; the offered range follows on the same ivory */
 .pqs-intro {
-  padding-bottom: 72px;
+  padding-bottom: 24px;
 }
 
 .pqs-intro h2 {

@@ -466,7 +466,7 @@
 }
 
 .pqs-intro {
-  padding-bottom: 40px;
+  padding-bottom: 28px;
 }
 
 .pqs-intro h2 {
@@ -474,7 +474,7 @@
 }
 
 .offered {
-  padding: 24px var(--gutter, 20px) var(--section-pad-y, 64px);
+  padding: 16px var(--gutter, 20px) var(--section-pad-y, 64px);
 }
 
 .offered__inner > p {
