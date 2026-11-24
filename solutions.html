@@ -79,17 +79,28 @@
 
   <main class="pqs">
 
-    <!-- HERO: the grid lights up under the cursor and pings rings as it moves (initPqHover) -->
+    <!-- HERO: the grid lights up under the cursor and pings rings as it moves (initPqHover).
+         The line along the foot starts distorted and settles to a clean sine; the pointer
+         re-distorts it locally and it corrects itself again (initPqWave). The path below is the
+         clean sine for no-JS and first paint. -->
     <section class="pqs-hero">
       <div class="pqs-hero__grid" aria-hidden="true"></div>
       <div class="pqs-hero__glow" aria-hidden="true"></div>
       <div class="pqs-hero__rings" aria-hidden="true"><span></span><span></span><span></span></div>
+      <svg class="pqs-wave" viewBox="0 0 1440 150" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="pqs-wave-fill" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1440" y2="0"><stop offset="0" style="stop-color: var(--cyan)"/><stop offset="1" style="stop-color: var(--cyan)"/></linearGradient>
+        </defs>
+        <path class="pqs-wave__ref" d="M0 75 L1440 75"/>
+        <path class="pqs-wave__glow" d="M0 75 L1440 75"/>
+        <path class="pqs-wave__line" d="M0 75 L1440 75"/>
+      </svg>
       <div class="pqs-hero__inner">
         <p class="pqs-eyebrow">Yansa &middot; Solutions</p>
-        <h1><span class="pqs-word">PQ</span> <span class="pqs-word pqs-word--b">Solved.</span></h1>
-        <p class="pqs-lead">Distortion in, clean power out. The fixes behind every diagnosis, sized to your measured data.</p>
+        <h1><span class="pqs-word">Solutions<span class="pqs-word__dot">.</span></span></h1>
+        <p class="pqs-lead">Active, passive and hybrid power quality solutions, sized to what your site&rsquo;s data shows.</p>
         <div class="pqs-hero__ctas">
-          <a href="#families" class="btn btn--orange">Explore the solutions</a>
+          <a href="#offered" class="btn btn--orange">Explore the solutions</a>
           <a href="contact.html#contact-form" class="btn btn--outline-orange">Book a Diagnosis</a>
         </div>
       </div>

@@ -3193,7 +3193,8 @@ ul {
   justify-content: center;
   min-height: var(--inner-hero-height);
   background: var(--petrol);
-  padding: 80px var(--gutter);
+  /* the foot of the hero is left to the wave */
+  padding: 80px var(--gutter) clamp(180px, 26vh, 240px);
   text-align: center;
 }
 
@@ -3280,6 +3281,49 @@ ul {
 .pqs-word--b {
   color: var(--cyan);
   animation-delay: 0.15s;
+}
+
+.pqs-word__dot {
+  color: var(--cyan);
+}
+
+/* The distorted line that settles into a clean sine (initPqWave). Faded out
+   toward both edges like the grid; the dotted copy is the clean sine it is
+   settling toward. */
+.pqs-wave {
+  position: absolute;
+  left: 0;
+  bottom: clamp(24px, 5vh, 56px);
+  width: 100%;
+  height: 150px;
+  overflow: visible;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
+}
+
+.pqs-wave path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pqs-wave__ref {
+  stroke: var(--mist);
+  stroke-opacity: 0.22;
+  stroke-width: 1.5;
+  stroke-dasharray: 1 9;
+}
+
+.pqs-wave__glow {
+  stroke: url(#pqs-wave-fill);
+  stroke-width: 10;
+  opacity: 0.14;
+}
+
+.pqs-wave__line {
+  stroke: url(#pqs-wave-fill);
+  stroke-width: 2.5;
 }
 
 @keyframes pqs-rise {

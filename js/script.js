@@ -1133,6 +1133,151 @@
     });
   }
 
+  /* ---------- Solutions hero: the wave that gets corrected ----------
+     One SVG line along the foot of the hero. It opens as a distorted wave (a
+     fundamental plus 5th and 7th harmonics, irregular in height) and settles
+     into a clean sine over SETTLE ms, easing out, its colour going from the
+     site's orange to cyan as it cleans up. After that, a mouse moving over the
+     hero re-distorts the line round the pointer (a gaussian bump) and the line
+     corrects it again over DECAY ms, as the filter would.
+     Nothing runs on a timer: the frame loop starts when there is something to
+     change (the first settle, a pointer move) and stops the moment the line is
+     clean again, so an idle hero costs no frames. The path is plain JS; the
+     markup carries a clean sine for no-JS and first paint. Under reduced
+     motion the line is clean and static. Touch input is ignored, so phones
+     get the settle only. */
+  function initPqWave() {
+    var hero = document.querySelector('.pqs-hero');
+    var svg = hero && hero.querySelector('.pqs-wave');
+    if (!svg) return;
+
+    var line = svg.querySelector('.pqs-wave__line');
+    var glow = svg.querySelector('.pqs-wave__glow');
+    var ref = svg.querySelector('.pqs-wave__ref');
+    var grad = svg.querySelector('linearGradient');
+
+    var SETTLE = 1600;   // ms from distorted to clean
+    var DECAY = 600;     // ms for a pointer bump to correct itself
+    var STEP = 5;        // px between path points
+    var STOPS = 28;      // colour stops along the gradient
+    var MAX_BUMPS = 24;
+
+    var NS = 'http://www.w3.org/2000/svg';
+    var stops = [];
+    for (var i = 0; i <= STOPS; i++) {
+      var stop = document.createElementNS(NS, 'stop');
+      stop.setAttribute('offset', (i / STOPS * 100).toFixed(2) + '%');
+      stops.push(stop);
+    }
+    while (grad.firstChild) grad.removeChild(grad.firstChild);
+    stops.forEach(function (stop) { grad.appendChild(stop); });
+
+    var w = 0;
+    var h = 0;
+    var mid = 0;
+    var amp = 0;
+    var k = 0;
+    var sigma = 80;
+    var t0 = performance.now();
+    var bumps = [];
+    var raf = null;
+
+    function size() {
+      w = svg.clientWidth || 1440;
+      h = svg.clientHeight || 150;
+      mid = h / 2;
+      amp = h * 0.2;
+      k = Math.PI * 2 * (w < 600 ? 2.2 : w / 380) / w;
+      sigma = Math.max(60, Math.min(110, w * 0.07));
+      svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+      grad.setAttribute('x2', w);
+      var d = 'M0 ' + mid.toFixed(1);
+      for (var x = 0; x <= w + STEP; x += STEP) {
+        d += 'L' + x + ' ' + (mid - amp * Math.sin(k * x)).toFixed(1);
+      }
+      ref.setAttribute('d', d);
+    }
+
+    // How far off clean the line is at x (0 clean, 1 fully distorted)
+    function weight(x, settle, now) {
+      var d = settle;
+      for (var b = 0; b < bumps.length; b++) {
+        var life = 1 - (now - bumps[b].t) / DECAY;
+        if (life <= 0) continue;
+        var dx = (x - bumps[b].x) / sigma;
+        d += bumps[b].s * life * life * Math.exp(-dx * dx / 2);
+      }
+      return d > 1.15 ? 1.15 : d;
+    }
+
+    function draw(now) {
+      var u = Math.max(0, Math.min(1, (now - t0) / SETTLE));
+      var settle = reduceMotion ? 0 : Math.pow(1 - u, 3);   // ease-out: distortion leaves fast, then tails off
+      var tt = (now - t0) / 1000;
+      bumps = bumps.filter(function (b) { return now - b.t < DECAY; });
+
+      var path = '';
+      for (var x = 0; x <= w + STEP; x += STEP) {
+        var d = weight(x, settle, now);
+        // the fundamental swells and sags irregularly, with the 5th and 7th riding on it
+        var swell = 1 + d * (0.3 * Math.sin(k * x * 0.43 + 1.2) + 0.15 * Math.sin(k * x * 1.1 + 0.4));
+        var h5 = 0.28 * Math.sin(5 * k * x + 0.9 + tt * 5) * (0.6 + 0.4 * Math.sin(k * x * 0.7 + 2));
+        var h7 = 0.2 * Math.sin(7 * k * x + 2.1 - tt * 6) * (0.6 + 0.4 * Math.sin(k * x * 0.9));
+        var y = mid - amp * (Math.sin(k * x) * swell + d * (h5 + h7));
+        path += (x ? 'L' : 'M') + x + ' ' + y.toFixed(1);
+      }
+      line.setAttribute('d', path);
+      glow.setAttribute('d', path);
+
+      for (var i = 0; i < stops.length; i++) {
+        var pct = Math.round(Math.min(1, weight(i / STOPS * w, settle, now)) * 100);
+        stops[i].style.stopColor = 'color-mix(in srgb, var(--orange) ' + pct + '%, var(--cyan))';
+      }
+      return settle > 0.001 || bumps.length > 0;
+    }
+
+    function tick(now) {
+      raf = draw(now) ? requestAnimationFrame(tick) : null;
+    }
+
+    function wake() {
+      if (!raf) raf = requestAnimationFrame(tick);
+    }
+
+    size();
+    draw(t0);   // first paint is already the distorted line (clean under reduced motion)
+
+    if (!reduceMotion) {
+      wake();
+
+      hero.addEventListener('pointermove', function (e) {
+        if (e.pointerType && e.pointerType !== 'mouse') return;
+        var r = svg.getBoundingClientRect();
+        var hr = hero.getBoundingClientRect();
+        var x = e.clientX - r.left;
+        if (x < -sigma || x > w + sigma) return;
+        // a pointer nearer the line disturbs it a little more
+        var s = 0.55 + 0.45 * Math.max(0, Math.min(1, (e.clientY - hr.top) / hr.height));
+        var now = performance.now();
+        var last = bumps[bumps.length - 1];
+        if (last && Math.abs(last.x - x) < 18) {
+          last.t = now;
+          last.x = x;
+          last.s = s;
+        } else {
+          bumps.push({ x: x, t: now, s: s });
+          if (bumps.length > MAX_BUMPS) bumps.shift();
+        }
+        wake();
+      });
+    }
+
+    onResizeEnd(function () {
+      size();
+      draw(performance.now());
+    }, 120);
+  }
+
   // The glow on [data-spot] cards follows the pointer
   function initSpotlight() {
     toArray(document.querySelectorAll('[data-spot]')).forEach(function (el) {
@@ -2892,6 +3037,7 @@
   initPqScroll();
   initSpotlight();
   initPqHover();
+  initPqWave();
   initPqPills();
   initTypewriter();
   initHeroVideo();
