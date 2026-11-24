@@ -187,6 +187,12 @@
       var need = cardH + TEXT_GAP + descH;
       var groupTop = TOP_PAD + (avail - need) * 0.42;
 
+      // On tall screens the end state leaves more cream under the buttons
+      // than a section's own padding; the next section is pulled up over the
+      // surplus (the stage is empty there) so the gap matches the rhythm.
+      var below = VH - (groupTop + need);
+      var trim = Math.max(0, Math.round(below - tokenPx('--section-pad-y', W, 64)));
+
       return {
         W: W,
         H: H,
@@ -197,6 +203,7 @@
         cardH: cardH,
         cy0: VH / 2 - stick,
         cyEnd: groupTop + cardH / 2 - stick,
+        trim: trim,
         descH: descH
       };
     }
@@ -310,6 +317,7 @@
       });
       hero.style.removeProperty('--m-hero-top');
       hero.style.removeProperty('--m-hero-runway');
+      hero.style.marginBottom = '';
       if (navbar) {
         navbar.style.opacity = '';
         navbar.style.visibility = '';
@@ -346,6 +354,7 @@
         off();
         return;
       }
+      hero.style.marginBottom = geo.trim ? (-geo.trim) + 'px' : '';
       on = true;
       follow.jump(progress());
     }

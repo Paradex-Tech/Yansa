@@ -49,6 +49,13 @@
   max-width: 300px;
 }
 
+/* A wider phone: the subtitle keeps a readable measure under the wide title */
+@media (min-width: 481px) {
+  .hero__heading p {
+    max-width: 34ch;
+  }
+}
+
 .hero__desc {
   padding: 40px var(--gutter, 20px) var(--section-pad-y, 64px);
 }

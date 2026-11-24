@@ -56,6 +56,12 @@
   max-width: 300px;
 }
 
+@media (min-width: 481px) {
+  .about-hero .header-placeholder__overlay p {
+    max-width: 34ch;
+  }
+}
+
 /* The photo cards: back on phones as small prints in the four corners. The
    script (js/m/about.js) writes transform every frame (slow drift, scroll
    lift); the entrance uses the separate opacity/scale properties so the
