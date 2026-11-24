@@ -359,7 +359,7 @@
 
     function each(fn) {
       items.forEach(function (item) {
-        var s = item.querySelector('summary');
+        var s = item.querySelector('.faq__trigger');
         if (s) fn(s);
       });
     }

@@ -4979,9 +4979,9 @@ ul {
 }
 
 /* ---------- FAQ ----------
-   The script animates each <details> open and shut (height, gap and
-   opacity) and keeps one open at a time. With no JS it is a plain
-   <details> list. */
+   The script (initFaq) keeps one question open at a time. Each answer sits in
+   a one-row grid that eases from 0fr to 1fr while the plus turns; the answer
+   also fades in. With no script every answer simply shows. */
 .faq {
   background: var(--ivory);
   padding: 45px var(--gutter) 96px;
@@ -5016,20 +5016,31 @@ ul {
 
 .faq__item {
   border-bottom: 1px solid #ffffff;
-  padding: 20px 0;
 }
 
-.faq__item summary {
+.faq__q {
+  margin: 0;
+}
+
+.faq__trigger {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  width: 100%;
+  padding: 20px 0;
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  text-align: left;
   cursor: pointer;
-  list-style: none;
 }
 
-.faq__item summary::-webkit-details-marker {
-  display: none;
+.faq__trigger:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 .faq__num {
@@ -5042,35 +5053,86 @@ ul {
   flex: 1;
 }
 
-.faq__chevron {
+/* A plus drawn from two bars; a quarter turn on open lines it up as a cross */
+.faq__plus {
+  position: relative;
+  flex: none;
   width: 20px;
   height: 20px;
-  transition: transform 0.2s ease;
-  flex-shrink: 0;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.faq__item[open] .faq__chevron {
-  transform: rotate(180deg);
+.faq__plus::before,
+.faq__plus::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 14px;
+  height: 2px;
+  margin: -1px 0 0 -7px;
+  border-radius: 1px;
+  background: var(--teal-deep);
+}
+
+.faq__plus::after {
+  transform: rotate(90deg);
+}
+
+.faq__item.is-open .faq__plus {
+  transform: rotate(135deg);
+}
+
+.faq__panel-inner {
+  min-width: 0;
 }
 
 .faq__answer {
-  margin-top: 16px;
-  padding-left: 46px;
+  padding: 0 0 20px 46px;
   color: #475569;
-  max-width: 558px;
+  max-width: 604px;
+}
+
+.faq.is-ready .faq__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition: grid-template-rows 0.42s cubic-bezier(0.22, 0.61, 0.36, 1),
+    visibility 0s linear 0.42s;
+}
+
+.faq.is-ready .faq__panel-inner {
   overflow: hidden;
 }
 
-/* Only an item the script is driving gets the transition */
-.faq__item.is-animated .faq__answer {
-  transition: height 0.42s cubic-bezier(0.22, 0.61, 0.36, 1),
-    margin-top 0.42s cubic-bezier(0.22, 0.61, 0.36, 1),
-    opacity 0.32s ease;
+.faq.is-ready .faq__answer {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.faq.is-ready .faq__item.is-open .faq__panel {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition: grid-template-rows 0.42s cubic-bezier(0.22, 0.61, 0.36, 1),
+    visibility 0s;
+}
+
+.faq.is-ready .faq__item.is-open .faq__answer {
+  opacity: 1;
+  transform: none;
+  transition-delay: 0.1s;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .faq__item.is-animated .faq__answer {
-    transition: none;
+  .faq__plus,
+  .faq.is-ready .faq__panel,
+  .faq.is-ready .faq__answer {
+    transition: none !important;
+  }
+
+  .faq.is-ready .faq__answer {
+    transform: none;
   }
 }
 

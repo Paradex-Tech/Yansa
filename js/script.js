@@ -1558,119 +1558,53 @@
   }
 
   /* ---------- FAQ (about) ----------
-     A <details> has no in-between state, so the script takes ownership of
-     `open`: it is set before the opening animation and cleared only after
-     the closing one, with the answer's height, gap and opacity animated in
-     between. One answer is open at a time. The first opens when the list
-     scrolls into view; with no JS the markup's `open` item simply shows. */
+     An accordion of buttons, each controlling a region. The answers are
+     always in the markup (so crawlers and the FAQPage data match what is
+     visible); CSS opens and closes them with grid-template-rows 0fr -> 1fr
+     while the plus turns. One answer is open at a time, the first from the
+     start so the section never shifts on arrival. Enter and Space are the
+     button's own; Up, Down, Home and End move between questions. With no
+     script every answer simply shows. */
   function initFaq() {
     var items = toArray(document.querySelectorAll('.faq__item'));
-    if (!items.length) return;
+    var faq = document.querySelector('.faq');
+    if (!items.length || !faq) return;
 
-    var DURATION = 420; // matches the transition in style.css
+    var triggers = items.map(function (item) { return item.querySelector('.faq__trigger'); });
+    if (triggers.some(function (t) { return !t; })) return;
 
-    // Read the resting gap before anything is written inline
-    var firstAnswer = items[0].querySelector('.faq__answer');
-    var GAP = firstAnswer ? parseFloat(getComputedStyle(firstAnswer).marginTop) || 0 : 0;
-
-    items.forEach(function (item) {
-      item.faqTimer = null;
-    });
-
-    function settle(item) {
-      window.clearTimeout(item.faqTimer);
-      item.faqTimer = null;
+    function setOpen(item, open) {
+      var trigger = item.querySelector('.faq__trigger');
+      item.classList.toggle('is-open', open);
+      trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
     }
 
-    function openItem(item) {
-      var a = item.querySelector('.faq__answer');
-      if (!a) { item.open = true; return; }
-      settle(item);
+    // Start from the markup's open item, or the first
+    var first = items.filter(function (i) { return i.classList.contains('is-open'); })[0] || items[0];
+    items.forEach(function (item) { setOpen(item, item === first); });
+    faq.classList.add('is-ready');
 
-      item.open = true; // the content has to exist to be measured
-      item.classList.add('is-animated');
-
-      a.style.height = '0px';
-      a.style.marginTop = '0px';
-      a.style.opacity = '0';
-      void a.offsetHeight;
-
-      a.style.height = a.scrollHeight + 'px';
-      a.style.marginTop = GAP + 'px';
-      a.style.opacity = '1';
-
-      // Back to auto once arrived, so a resize can still reflow it
-      item.faqTimer = window.setTimeout(function () {
-        a.style.height = 'auto';
-        item.faqTimer = null;
-      }, DURATION);
-    }
-
-    function closeItem(item) {
-      var a = item.querySelector('.faq__answer');
-      if (!a) { item.open = false; return; }
-      settle(item);
-
-      item.classList.add('is-animated');
-
-      // From a measured height, since `auto` cannot animate
-      a.style.height = a.getBoundingClientRect().height + 'px';
-      void a.offsetHeight;
-
-      a.style.height = '0px';
-      a.style.marginTop = '0px';
-      a.style.opacity = '0';
-
-      item.faqTimer = window.setTimeout(function () {
-        item.open = false;
-        item.faqTimer = null;
-      }, DURATION);
-    }
-
-    items.forEach(function (item) {
-      var summary = item.querySelector('summary');
-      if (!summary) return;
-
-      summary.addEventListener('click', function (event) {
-        event.preventDefault(); // the script decides when `open` changes
-
-        if (item.open && item.faqTimer === null) {
-          closeItem(item);
+    triggers.forEach(function (trigger, k) {
+      var item = items[k];
+      trigger.addEventListener('click', function () {
+        if (item.classList.contains('is-open')) {
+          setOpen(item, false);
           return;
         }
-
-        items.forEach(function (other) {
-          if (other !== item && other.open) closeItem(other);
-        });
-        openItem(item);
+        items.forEach(function (other) { if (other !== item) setOpen(other, false); });
+        setOpen(item, true);
+      });
+      trigger.addEventListener('keydown', function (e) {
+        var next = -1;
+        if (e.key === 'ArrowDown') next = (k + 1) % triggers.length;
+        else if (e.key === 'ArrowUp') next = (k - 1 + triggers.length) % triggers.length;
+        else if (e.key === 'Home') next = 0;
+        else if (e.key === 'End') next = triggers.length - 1;
+        if (next < 0) return;
+        e.preventDefault();
+        triggers[next].focus();
       });
     });
-
-    if (reduceMotion) {
-      // Keep the markup's open item; just enforce one at a time
-      items.forEach(function (item) {
-        item.addEventListener('toggle', function () {
-          if (!item.open) return;
-          items.forEach(function (other) {
-            if (other !== item) other.open = false;
-          });
-        });
-      });
-      return;
-    }
-
-    // Close everything before first paint, then open the first on view
-    var first = items.filter(function (i) { return i.open; })[0] || items[0];
-    items.forEach(function (item) { item.open = false; });
-
-    function intro() {
-      // A beat after the section's own entrance
-      window.setTimeout(function () { openItem(first); }, 520);
-    }
-
-    var list = document.querySelector('.faq__list');
-    if (list && hasObserver) onFirstView(list, 0.25, intro);
-    else intro();
   }
 
 

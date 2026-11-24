@@ -56,6 +56,22 @@
         "mainEntity": [
           {
             "@type": "Question",
+            "name": "What is power quality?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Power quality is how clean and stable the electricity inside your facility is: a steady voltage, a smooth sine wave and a healthy power factor. Drives, UPS systems, welding lines and other modern loads distort it, and the effects show up as heat, tripping and higher bills."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Why is power quality important?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Poor power quality wastes energy, raises kVAh billing, overheats motors, transformers and cables, and causes breakers to trip without warning. Good power quality protects your equipment and production uptime, and lowers what you pay for every unit of work."
+            }
+          },
+          {
+            "@type": "Question",
             "name": "What exactly does Yansa do?",
             "acceptedAnswer": {
               "@type": "Answer",
@@ -64,7 +80,7 @@
           },
           {
             "@type": "Question",
-            "name": "What is a Power Quality Study and do I need one?",
+            "name": "What is YanQ, and do I need one?",
             "acceptedAnswer": {
               "@type": "Answer",
               "text": "YanQ is a structured diagnostic process that measures your electrical system against IEEE 519-2022. If you are experiencing unexplained failures, rising bills, or nuisance tripping, you need one."
@@ -72,26 +88,18 @@
           },
           {
             "@type": "Question",
-            "name": "How is Yansa different from a regular electrical contractor?",
+            "name": "How is Yansa different from others?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "A contractor fixes what is visible. Yansa finds what is not. Every recommendation is backed by measured data, not assumptions."
+              "text": "We start with measurement, not a product. Our team of doctorates and engineers in power electronics and power systems reads what your system is actually doing, sizes the solution to that data, and stays to support it after handover. Diagnosis, solution and support come from one team."
             }
           },
           {
             "@type": "Question",
-            "name": "Is the PQ Study priced upfront?",
+            "name": "Does Yansa deal in hybrid panels?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Pricing is customised per engagement. Scope and measurement points vary by facility. Reach out and we will assess your requirements first."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Does Yansa work across industries?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes. Industrial sites such as automotive, textiles, power generation, petrochemicals and FMCG; commercial and institutional buildings such as hotels, schools, offices and hospitals; and data centres and critical infrastructure such as telecom."
+              "text": "Yes. We are a system integrator of hybrid panels, combining active and passive correction, such as an active harmonic filter with a detuned capacitor stage, in one panel engineered for your site."
             }
           }
         ]
@@ -234,46 +242,90 @@
           <p>Everything you need to know about Yansa.</p>
         </div>
         <div class="faq__list">
-          <details class="faq__item" open>
-            <summary>
-              <span class="faq__num">01</span>
-              <span class="faq__question">What exactly does Yansa do?</span>
-              <img src="images/icons/chevron-open.svg" alt="" class="faq__chevron">
-            </summary>
-            <p class="faq__answer">We measure, diagnose, and resolve power quality problems in industrial facilities, end to end, from first study to post installation support.</p>
-          </details>
-          <details class="faq__item">
-            <summary>
-              <span class="faq__num">02</span>
-              <span class="faq__question">What is a Power Quality Study and do I need one?</span>
-              <img src="images/icons/chevron-open.svg" alt="" class="faq__chevron">
-            </summary>
-            <p class="faq__answer">YanQ is a structured diagnostic process that measures your electrical system against IEEE 519-2022. If you are experiencing unexplained failures, rising bills, or nuisance tripping, you need one.</p>
-          </details>
-          <details class="faq__item">
-            <summary>
-              <span class="faq__num">03</span>
-              <span class="faq__question">How is Yansa different from a regular electrical contractor?</span>
-              <img src="images/icons/chevron-open.svg" alt="" class="faq__chevron">
-            </summary>
-            <p class="faq__answer">A contractor fixes what is visible. Yansa finds what is not. Every recommendation is backed by measured data, not assumptions.</p>
-          </details>
-          <details class="faq__item">
-            <summary>
-              <span class="faq__num">04</span>
-              <span class="faq__question">Is the PQ Study priced upfront?</span>
-              <img src="images/icons/chevron-open.svg" alt="" class="faq__chevron">
-            </summary>
-            <p class="faq__answer">Pricing is customised per engagement. Scope and measurement points vary by facility. Reach out and we will assess your requirements first.</p>
-          </details>
-          <details class="faq__item">
-            <summary>
-              <span class="faq__num">05</span>
-              <span class="faq__question">Does Yansa work across industries?</span>
-              <img src="images/icons/chevron-open.svg" alt="" class="faq__chevron">
-            </summary>
-            <p class="faq__answer">Yes. Industrial sites such as automotive, textiles, power generation, petrochemicals and FMCG; commercial and institutional buildings such as hotels, schools, offices and hospitals; and data centres and critical infrastructure such as telecom.</p>
-          </details>
+          <div class="faq__item is-open">
+            <h3 class="faq__q">
+              <button class="faq__trigger" type="button" id="faq-q1" aria-expanded="true" aria-controls="faq-a1">
+                <span class="faq__num">01</span>
+                <span class="faq__question">What is power quality?</span>
+                <span class="faq__plus" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq__panel" id="faq-a1" role="region" aria-labelledby="faq-q1">
+              <div class="faq__panel-inner">
+                <p class="faq__answer">Power quality is how clean and stable the electricity inside your facility is: a steady voltage, a smooth sine wave and a healthy power factor. Drives, UPS systems, welding lines and other modern loads distort it, and the effects show up as heat, tripping and higher bills.</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq__item">
+            <h3 class="faq__q">
+              <button class="faq__trigger" type="button" id="faq-q2" aria-expanded="false" aria-controls="faq-a2">
+                <span class="faq__num">02</span>
+                <span class="faq__question">Why is power quality important?</span>
+                <span class="faq__plus" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq__panel" id="faq-a2" role="region" aria-labelledby="faq-q2">
+              <div class="faq__panel-inner">
+                <p class="faq__answer">Poor power quality wastes energy, raises kVAh billing, overheats motors, transformers and cables, and causes breakers to trip without warning. Good power quality protects your equipment and production uptime, and lowers what you pay for every unit of work.</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq__item">
+            <h3 class="faq__q">
+              <button class="faq__trigger" type="button" id="faq-q3" aria-expanded="false" aria-controls="faq-a3">
+                <span class="faq__num">03</span>
+                <span class="faq__question">What exactly does Yansa do?</span>
+                <span class="faq__plus" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq__panel" id="faq-a3" role="region" aria-labelledby="faq-q3">
+              <div class="faq__panel-inner">
+                <p class="faq__answer">We measure, diagnose, and resolve power quality problems in industrial facilities, end to end, from first study to post installation support.</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq__item">
+            <h3 class="faq__q">
+              <button class="faq__trigger" type="button" id="faq-q4" aria-expanded="false" aria-controls="faq-a4">
+                <span class="faq__num">04</span>
+                <span class="faq__question">What is YanQ, and do I need one?</span>
+                <span class="faq__plus" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq__panel" id="faq-a4" role="region" aria-labelledby="faq-q4">
+              <div class="faq__panel-inner">
+                <p class="faq__answer">YanQ is a structured diagnostic process that measures your electrical system against IEEE 519-2022. If you are experiencing unexplained failures, rising bills, or nuisance tripping, you need one.</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq__item">
+            <h3 class="faq__q">
+              <button class="faq__trigger" type="button" id="faq-q5" aria-expanded="false" aria-controls="faq-a5">
+                <span class="faq__num">05</span>
+                <span class="faq__question">How is Yansa different from others?</span>
+                <span class="faq__plus" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq__panel" id="faq-a5" role="region" aria-labelledby="faq-q5">
+              <div class="faq__panel-inner">
+                <p class="faq__answer">We start with measurement, not a product. Our team of doctorates and engineers in power electronics and power systems reads what your system is actually doing, sizes the solution to that data, and stays to support it after handover. Diagnosis, solution and support come from one team.</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq__item">
+            <h3 class="faq__q">
+              <button class="faq__trigger" type="button" id="faq-q6" aria-expanded="false" aria-controls="faq-a6">
+                <span class="faq__num">06</span>
+                <span class="faq__question">Does Yansa deal in hybrid panels?</span>
+                <span class="faq__plus" aria-hidden="true"></span>
+              </button>
+            </h3>
+            <div class="faq__panel" id="faq-a6" role="region" aria-labelledby="faq-q6">
+              <div class="faq__panel-inner">
+                <p class="faq__answer">Yes. We are a system integrator of hybrid panels, combining active and passive correction, such as an active harmonic filter with a detuned capacitor stage, in one panel engineered for your site.</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

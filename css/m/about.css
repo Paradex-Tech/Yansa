@@ -11,7 +11,7 @@
    3. We Measure.   big left-anchored rotator (the word grows to the right,
                     so "We" never moves) and a box sized for the longest copy
    4. Industries    full-bleed scrolling tab row, compact table, swipe
-   5. FAQ           full-width tap rows, round chevron, eased open/close
+   5. FAQ           full-width tap rows, round plus, eased open/close
    Type sizes only through --fs-scale on the tiers in style.css.
    ========================================================= */
 
@@ -359,19 +359,13 @@
   border-top: 1px solid rgba(26, 65, 70, 0.14);
 }
 
-/* The whole row is the tap target; spacing below an open answer eases in
-   and out with it (the script writes opacity 0 at the start of a close) */
+/* The whole row is the tap target */
 .faq__item {
   padding: 0;
   border-bottom: 1px solid rgba(26, 65, 70, 0.14);
-  transition: padding-bottom 0.42s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
-.faq__item[open]:not(:has(.faq__answer[style*="opacity: 0"])) {
-  padding-bottom: 22px;
-}
-
-.faq__item summary {
+.faq__trigger {
   align-items: flex-start;
   gap: 12px;
   min-height: 68px;
@@ -380,7 +374,7 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.faq__item summary:active .faq__question {
+.faq__trigger:active .faq__question {
   color: var(--teal-deep);
 }
 
@@ -398,35 +392,33 @@
   transition: color 0.45s ease;
 }
 
-.faq__item[open] .faq__question {
+.faq__item.is-open .faq__question {
   color: var(--teal-deep);
 }
 
-/* The chevron sits in a soft round well that fills teal when open */
-.faq__chevron {
+/* The plus sits in a soft round well that deepens when open */
+.faq__plus {
   width: 32px;
   height: 32px;
   margin-top: -3px;
-  padding: 8px;
   border-radius: 50%;
   background: rgba(52, 182, 175, 0.12);
-  transition: transform 0.6s var(--ease-inout, cubic-bezier(0.65, 0, 0.35, 1)),
+  transition: transform 0.4s var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)),
     background-color 0.45s ease;
 }
 
-.faq__item[open] .faq__chevron {
+.faq__item.is-open .faq__plus {
   background: rgba(52, 182, 175, 0.26);
 }
 
 .faq__answer {
-  padding: 0 44px 0 38px;
+  padding: 0 44px 22px 38px;
   max-width: none;
-  margin-top: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .faq__item,
-  .faq__chevron,
+  .faq__question,
+  .faq__plus,
   .m-measure-steps span,
   .m-industry-dots span {
     transition: none;
