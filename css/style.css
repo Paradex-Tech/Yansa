@@ -4799,6 +4799,7 @@ ul {
   position: relative;
   display: flex;
   justify-content: center;
+  justify-content: safe center;
   gap: 32px;
   border-bottom: 1px solid rgba(244, 244, 233, 0.22);
   overflow-x: auto;
@@ -4822,16 +4823,18 @@ ul {
   transition: color 0.4s ease;
 }
 
-/* The bar under the chosen tab: the script sets its width and slides it */
+/* The bar under the chosen tab: 1px wide, the script scales it to the tab and
+   slides it, so only transform changes */
 .industry-tabs__bar {
   position: absolute;
   left: 0;
   bottom: 0;
+  width: 1px;
   height: 2px;
   background: var(--teal);
   pointer-events: none;
-  transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1),
-    width 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+  transform-origin: 0 0;
+  transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 .industry-tab:hover {
@@ -4891,8 +4894,8 @@ ul {
 /* With the script running, the cards give way to one table. Its hairlines
    are the grid's own gap showing through, so they stay right for any number
    of cells. The script lays the cells out on a six-column track (3 across, or
-   2 across on a phone, the last row stretching to fill) and morphs between
-   categories: the "+" hub turns, the text turns over, the cells glide. */
+   2 across on a phone, the last row stretching to fill) and swaps between
+   categories: the table fades out and back in with a 6px rise. */
 .industry-tabs.is-ready .industry-panel {
   display: none;
 }
@@ -4932,13 +4935,11 @@ ul {
 }
 
 /* The "+" markers where grid lines cross. The script writes --px/--py (their
-   position), --ps (1, or 0 when merged away) and --pr (a half turn more on
-   every switch); the transition makes them drift and spin. */
+   position), --ps (1, or 0 when merged away). */
 .industry-plus {
   --px: 50%;
   --py: 50%;
   --ps: 0;
-  --pr: 0deg;
   position: absolute;
   left: var(--px);
   top: var(--py);
@@ -4948,10 +4949,7 @@ ul {
   border-radius: 50%;
   background: var(--ivory);
   pointer-events: none;
-  transform: translate(-50%, -50%) rotate(var(--pr)) scale(var(--ps));
-  transition: left 1.1s cubic-bezier(0.65, 0, 0.35, 1),
-    top 1.1s cubic-bezier(0.65, 0, 0.35, 1),
-    transform 1.1s cubic-bezier(0.65, 0, 0.35, 1);
+  transform: translate(-50%, -50%) scale(var(--ps));
 }
 
 .industry-plus::before,
