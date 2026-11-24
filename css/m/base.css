@@ -137,7 +137,6 @@ html.m-lock {
 
 /* In-page targets clear the shorter bar */
 #contact-form,
-#case-studies,
 #faq {
   scroll-margin-top: calc(var(--nav-height) + 20px);
 }
@@ -193,7 +192,6 @@ html.m-lock {
 .yanq-hero__label,
 .symptoms__header h2,
 .why__header h2,
-.cases__header h2,
 .contact-form-col h2,
 .about-measure h2,
 .industries h2,

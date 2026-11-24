@@ -6,7 +6,7 @@
    3. Typography      the single source of font-size
    4. Buttons
    5. Layout          navbar, section shell, inner-page heroes
-   6. Home            hero, diagnosis, symptoms, quote, why, case studies
+   6. Home            hero, diagnosis, symptoms, quote, why
    7. Solutions       load explorer, problems, solution rows, inaction, results
    8. About           hero decor, statement, measure, values, industries, FAQ
    9. YanQ
@@ -59,13 +59,6 @@
   --hero-runway: 90vh;
   --hero-stage-h: calc(100vh - var(--nav-height));
   --hero-frame-w: 762px;
-
-  /* Case studies stepping: sized so one open card plus a strip for each of
-     the others still fits under the navbar in a single viewport. */
-  --case-strip: 104px;
-  --case-full: 360px;
-  --cases-runway: 140vh;
-  --cases-stage-h: calc(100vh - var(--nav-height));
 
   /* Type scale (see section 3) */
   --fs-scale: 1;
@@ -208,7 +201,7 @@ ul {
   list-style: none;
 }
 
-/* Must beat section rules that set display (e.g. the parked Case Studies) */
+/* Must beat section rules that set display */
 [hidden] {
   display: none !important;
 }
@@ -238,7 +231,6 @@ ul {
 
 /* Keeps an in-page target clear of the sticky navbar */
 #contact-form,
-#case-studies,
 #faq {
   scroll-margin-top: 110px;
 }
@@ -293,7 +285,6 @@ ul {
 .yanq-hero__label,
 .symptoms__header h2,
 .why__header h2,
-.cases__header h2,
 .contact-form-col h2,
 .about-measure h2,
 .industries h2,
@@ -321,9 +312,7 @@ ul {
 /* H3 — sub-section headings and figure labels */
 .svc-block__name,
 .pqs-next h2,
-.deliver-stat h3,
-.case-card__num,
-.case-card__title {
+.deliver-stat h3 {
   font-size: calc(var(--fs-h3) * var(--fs-scale, 1));
   line-height: 1.25;
   letter-spacing: -0.3px;
@@ -367,9 +356,6 @@ ul {
 .diagnosis__body,
 .symptoms__header p,
 .why__header p,
-.cases__header p,
-.case-card p,
-.case-card__more,
 .contact-form-col__sub,
 .yanq-works__lead,
 .yanq-hero__body,
@@ -1315,7 +1301,6 @@ ul {
 .symptoms,
 .quote,
 .why,
-.cases,
 .contact-hero,
 .contact-body,
 .yanq-hero-intro,
@@ -1341,7 +1326,6 @@ ul {
 }
 
 /* Content sections: card grids, forms, lists */
-.cases,
 .contact-body,
 .inaction,
 .results,
@@ -1363,7 +1347,6 @@ ul {
   .yanq-hero,
   .symptoms,
   .why,
-  .cases,
   .contact-body,
   .inaction,
   .results,
@@ -1381,7 +1364,6 @@ ul {
   .symptoms,
   .quote,
   .why,
-  .cases,
   .inaction,
   .results,
   .about-statement,
@@ -1409,8 +1391,6 @@ ul {
 .quote__inner,
 .why__header,
 .why__grid,
-.cases__header,
-.cases__stack,
 .contact-body__inner,
 .yanq-hero__inner,
 .yanq-delivers__grid,
@@ -2550,239 +2530,6 @@ ul {
   }
 }
 
-/* ---------- Case studies (hidden in the markup for now) ----------
-   Plain layout: three cards overlapping slightly. Animated mode (.is-scrolly,
-   added by the script when the stack fits the viewport) pins the section and
-   steps through the cards: the one being read is open, the ones already read
-   collapse to a header strip above it, the ones to come have not arrived. */
-.cases {
-  background: var(--ivory);
-  padding: var(--section-pad-y) var(--gutter);
-}
-
-.cases__stage {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.cases__header {
-  max-width: 1152px;
-  margin: 0 auto var(--header-gap);
-}
-
-.cases__header h2 {
-  color: var(--ink);
-  margin-bottom: 17px;
-}
-
-.cases__header p {
-  max-width: 896px;
-  color: var(--text);
-}
-
-.cases__stack {
-  max-width: 1152px;
-  margin: 0 auto;
-}
-
-.case-card {
-  position: relative;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(26, 65, 70, 0.08);
-  overflow: hidden;
-  display: flex;
-  align-items: stretch;
-  justify-content: space-between;
-  gap: 24px;
-  min-height: var(--case-full);
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.case-card__text {
-  padding: 49px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  flex: 1;
-}
-
-.case-card__label {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  flex-shrink: 0;
-  padding: 0 0 40px 0;
-}
-
-.case-card__num {
-  color: var(--ink);
-  opacity: 0.7;
-}
-
-.case-card__title {
-  color: var(--ink);
-}
-
-.case-card p {
-  color: var(--text);
-  max-width: 400px;
-  margin-bottom: 12px;
-}
-
-.case-card__more {
-  color: #f27800;
-  text-decoration: underline;
-}
-
-.case-card__photo {
-  width: 45%;
-  align-self: stretch;
-  object-fit: cover;
-}
-
-/* The overlap sits inside each card's own bottom padding, so no copy is
-   ever covered. */
-.case-card--01 {
-  background: #a6cdd3;
-  margin-top: 0;
-  z-index: 1;
-}
-
-.case-card--02 {
-  background: #ffd5ac;
-  margin-top: -32px;
-  z-index: 2;
-}
-
-.case-card--03 {
-  background: #aae2e2;
-  margin-top: -32px;
-  z-index: 3;
-}
-
-/* Animated mode. The shared section rule centres .cases as a flex column,
-   which would park half the runway as empty space above the stage, so it is
-   reset to a block that starts at the top. */
-.cases.is-scrolly {
-  display: block;
-  min-height: 0;
-  height: calc(var(--cases-stage-h) + var(--cases-runway));
-  padding-top: 0;
-  padding-bottom: 0;
-}
-
-.cases.is-scrolly .cases__stage {
-  position: sticky;
-  top: var(--nav-height);
-  height: var(--cases-stage-h);
-  justify-content: flex-start;
-  padding-top: 32px;
-}
-
-.cases.is-scrolly .cases__header {
-  margin-bottom: var(--header-gap);
-}
-
-.cases.is-scrolly .case-card {
-  min-height: 0;
-  margin-top: 0;
-  height: 0;
-  opacity: 0;
-  /* At height 0 the 1px borders would still take 2px and nudge the stack */
-  border-width: 0;
-  will-change: height, opacity;
-  transition: height 0.85s cubic-bezier(0.33, 1, 0.68, 1),
-    opacity 0.5s ease;
-}
-
-.cases.is-scrolly .case-card.is-past {
-  height: var(--case-strip);
-  opacity: 1;
-  border-width: 1px;
-}
-
-.cases.is-scrolly .case-card.is-active {
-  height: var(--case-full);
-  opacity: 1;
-  border-width: 1px;
-}
-
-/* Pinned to the open height so object-fit does not re-crop every frame
-   while the card's height animates. */
-.cases.is-scrolly .case-card__photo {
-  height: var(--case-full);
-  align-self: flex-start;
-  flex-shrink: 0;
-}
-
-/* Used for the one frame in which the script seeds the stack */
-.cases__stack.is-static .case-card {
-  transition: none;
-}
-
-/* Side tracker, only meaningful while stepping */
-.cases__dots {
-  display: none;
-}
-
-.cases.is-scrolly .cases__dots {
-  display: flex;
-  position: absolute;
-  right: -48px;
-  top: 50%;
-  transform: translateY(-50%);
-  flex-direction: column;
-  gap: 10px;
-  align-items: center;
-  z-index: 4;
-}
-
-.cases__dots .dot {
-  width: 6px;
-  height: 20px;
-  border-radius: 3px;
-  background: rgba(26, 65, 70, 0.2);
-  transition: background-color 0.4s ease, height 0.4s ease;
-}
-
-.cases__dots .dot.is-active {
-  background: var(--orange);
-  height: 24px;
-}
-
-@media (max-width: 900px) {
-  .case-card {
-    flex-direction: column;
-    align-items: stretch;
-    text-align: left;
-    min-height: 0;
-  }
-
-  .case-card__text {
-    padding: 28px;
-  }
-
-  .case-card__photo {
-    width: 100%;
-    height: 180px;
-  }
-
-  .case-card--01,
-  .case-card--02,
-  .case-card--03 {
-    width: 100%;
-    border-radius: 8px;
-  }
-
-  .case-card--02,
-  .case-card--03 {
-    margin-top: 16px;
-  }
-}
 
 
 /* =========================================================

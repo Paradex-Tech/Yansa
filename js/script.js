@@ -1374,7 +1374,7 @@
     function pinned() {
       var edge = navbar.offsetHeight;
       return toArray(document.querySelectorAll(
-        '.hero.is-scrolly .hero__stage, .cases.is-scrolly .cases__stage'
+        '.hero.is-scrolly .hero__stage'
       )).some(function (el) {
         return Math.abs(el.getBoundingClientRect().top - edge) <= 1.5;
       });
@@ -2186,8 +2186,6 @@
       { sel: '.quote__inner', step: 0 },
       { sel: '.why__header > *', step: 90 },
       { sel: '.why__grid > *', step: 90, mode: 'fade' },
-      { sel: '.cases__header > *', step: 90 },
-      { sel: '.cases__stack > *', step: 110, mode: 'fade' },
 
       /* about */
       { sel: '.industries > h2, .industries > p', step: 90 },
@@ -2674,92 +2672,6 @@
   }
 
 
-  /* ---------- Case studies: pinned stepping (home, hidden for now) ----------
-     One card is open at a time; the ones already read collapse to a strip
-     above it. Scroll position picks the card and the movement is a CSS
-     transition. Skipped while the section is hidden, and whenever the open
-     card plus the strips would not fit under the navbar. */
-  function initCaseStudies() {
-    var cases = document.querySelector('.cases');
-    if (!cases || cases.hidden || !cases.querySelector('.cases__stage')) return;
-
-    var stage = cases.querySelector('.cases__stage');
-    var stack = cases.querySelector('.cases__stack');
-    var header = cases.querySelector('.cases__header');
-    var cards = toArray(cases.querySelectorAll('.case-card'));
-    var dots = toArray(cases.querySelectorAll('.cases__dots .dot'));
-    var index = -1;
-    var on = false;
-
-    function cssNumber(name, fallback) {
-      var n = parseFloat(getComputedStyle(document.documentElement).getPropertyValue(name));
-      return isNaN(n) ? fallback : n;
-    }
-
-    function show(active) {
-      if (active === index) return;
-      index = active;
-      cards.forEach(function (card, i) {
-        card.classList.toggle('is-active', i === active);
-        card.classList.toggle('is-past', i < active);
-      });
-      dots.forEach(function (dot, i) {
-        dot.classList.toggle('is-active', i === active);
-      });
-    }
-
-    function reset() {
-      index = -1;
-      cards.forEach(function (card) { card.classList.remove('is-active', 'is-past'); });
-      dots.forEach(function (dot) { dot.classList.remove('is-active'); });
-    }
-
-    function fromScroll() {
-      var range = cases.offsetHeight - stage.getBoundingClientRect().height;
-      if (range <= 0) return cards.length - 1;
-      var stuckAt = parseFloat(getComputedStyle(stage).top) || 0;
-      var travelled = Math.min(Math.max(stuckAt - cases.getBoundingClientRect().top, 0), range);
-      return Math.min(cards.length - 1, Math.floor((travelled / range) * cards.length));
-    }
-
-    function fits() {
-      var tallest = cssNumber('--case-full', 400) + cssNumber('--case-strip', 112) * (cards.length - 1);
-      var stagePadTop = parseFloat(getComputedStyle(stage).paddingTop) || 0;
-      var headerH = header.getBoundingClientRect().height +
-        (parseFloat(getComputedStyle(header).marginBottom) || 0);
-      return stagePadTop + headerH + tallest + 24 <= window.innerHeight - cssNumber('--nav-height', 0);
-    }
-
-    function sync() {
-      if (reduceMotion || window.innerWidth <= 768 || !fits()) {
-        if (on || cases.classList.contains('is-scrolly')) {
-          cases.classList.remove('is-scrolly');
-          reset();
-        }
-        on = false;
-        return;
-      }
-
-      cases.classList.add('is-scrolly');
-      on = true;
-
-      // Seeded without transitions
-      stack.classList.add('is-static');
-      index = -1;
-      show(fromScroll());
-      void stack.offsetWidth;
-      stack.classList.remove('is-static');
-    }
-
-    sync();
-    onScrollFrame(function () {
-      if (on) show(fromScroll());
-    });
-    onResizeEnd(sync, 120);
-    window.addEventListener('load', sync);
-  }
-
-
   /* ---------- About hero: floating decor ----------
      The four image wells drift as though suspended in something thick.
      Three movements are summed into one transform:
@@ -3237,7 +3149,6 @@
   initScrollReveal();
   initQuote();
   initYanqWorks();
-  initCaseStudies();
   initAboutDecor();
   initContactForm();
   initBrochure();

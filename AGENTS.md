@@ -54,8 +54,7 @@ after CSS/JS changes (http.server lets Chrome cache old CSS).
   (poster `images/hero-poster.jpg`), "We Measure
   What Others Miss." card, Diagnosis, Symptoms (four line drawings that play in
   view and loop on hover, link to Know Your Loads), quote, Why Yansa (three
-  whole-card links: YanQ, Solutions, Services). Case Studies and its footer
-  link stay `hidden` until real case studies exist.
+  whole-card links: YanQ, Solutions, Services).
 - **About**: photo hero, "We Measure. Solve. Support." cycling word, team
   statement, Industries tabs (4 tabs, fixed table height, sliding indicator),
   six FAQs (button + region accordion; FAQPage JSON-LD must match the text).
