@@ -4523,6 +4523,22 @@ ul {
   fill: var(--yanq-anim-surface);
 }
 
+/* Narrow laptops: the same row, tighter. The longest step name still fits
+   its box (Recommendations is about 180px at full size, so a 1280 box with 36px of padding is tight). */
+@media (min-width: 1024px) and (max-width: 1319px) {
+  .yanq-works__row {
+    --works-gap: 32px;
+  }
+
+  .yanq-step {
+    padding: 18px 14px 22px;
+  }
+
+  .yanq-step h3 {
+    --fs-scale: 0.8;
+  }
+}
+
 /* Tablets: two by two. The arrow after box 1 points right; the arrow after
    box 2 points down, through the row gap; box 3's points right again. */
 @media (min-width: 769px) and (max-width: 1023px) {
