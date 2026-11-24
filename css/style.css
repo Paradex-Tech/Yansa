@@ -4201,7 +4201,7 @@ ul {
   top: var(--nav-height);
   transition: top 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
   z-index: 20;
-  background: rgba(250, 250, 239, 0.9);
+  background: var(--cream);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--line);
@@ -4276,7 +4276,7 @@ ul {
 /* A chip lands on its card: the card clears the navbar and the jump bar with
    the row's heading still in sight above it, and a ring marks it for a moment. */
 .pqs .solution-card {
-  scroll-margin-top: calc(var(--nav-height) + 72px + 140px);
+  scroll-margin-top: calc(var(--nav-height) + 72px + 175px);
 }
 
 .pqs .solution-card:target::after {

@@ -225,6 +225,11 @@
   scroll-margin-top: calc(var(--nav-height, 64px) + 62px);
 }
 
+/* A chip lands on its card with the row heading still clear of the jump bar */
+.pqs .solution-card {
+  scroll-margin-top: calc(var(--nav-height, 64px) + 62px + 210px);
+}
+
 /* ---------- Solution rows: snap carousels, no arrows ---------- */
 .solutions-row {
   padding: 44px var(--gutter, 20px) 36px;
