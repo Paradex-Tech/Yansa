@@ -210,8 +210,9 @@
   width: auto;
   margin: 0 calc(-1 * var(--gutter, 20px));
   /* Room under the cards for their shadows, which the track would clip */
-  padding: 8px var(--gutter, 20px) 30px;
-  margin-bottom: -14px;
+  padding: 24px var(--gutter, 20px) 46px;
+  margin-top: -16px;
+  margin-bottom: -30px;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;

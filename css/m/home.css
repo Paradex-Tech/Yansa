@@ -219,8 +219,10 @@
 .symptoms.m-deck-on .symptoms__grid {
   display: flex;
   gap: 12px;
-  margin: 0 calc(-1 * var(--gutter, 20px));
-  padding: 8px var(--gutter, 20px) 12px;
+  /* Room inside the scroller for the active card's shadow (it reaches ~52px
+     down and ~20px up): the negative margins give it back, so nothing moves */
+  margin: -20px calc(-1 * var(--gutter, 20px)) -40px;
+  padding: 28px var(--gutter, 20px) 52px;
   width: auto;
   max-width: none;
   overflow-x: auto;
