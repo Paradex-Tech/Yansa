@@ -30,6 +30,9 @@
   <link rel="stylesheet" href="css/m/base.css" media="(max-width: 768px)">
   <link rel="stylesheet" href="css/m/services.css" media="(max-width: 768px)">
 
+  <!-- Arms the script-driven states (closed panels, reveals) before first paint, so nothing animates shut on load -->
+  <script>document.documentElement.classList.add('js-svc');</script>
+
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -97,6 +100,7 @@
         <img src="images/hero-plant.jpg" alt="Aerial view of an industrial power plant" width="1672" height="941" fetchpriority="high">
         <div class="header-placeholder__overlay">
           <h1>Services.</h1>
+          <p>Support that starts before the equipment arrives and stays long after it runs.</p>
         </div>
       </div>
     </section>
