@@ -89,6 +89,7 @@
 
 .loads-x h2 {
   margin-bottom: 24px;
+  text-align: left;
 }
 
 .loads-x__board {
@@ -185,4 +186,393 @@
 
 .loads-x__note {
   margin-top: 20px;
+}
+
+
+/* =========================================================
+   3. SHARED: SNAP CAROUSEL
+   One pattern for the two card rows on this page: a full-bleed track, the
+   card in view sits on the gutter and the next one peeks in from the right.
+   --m-d is each card's distance (0 to 1) from the snapped position, so cards
+   ease down and dim slightly as they leave, scroll-linked.
+   ========================================================= */
+.problems .problems__stack,
+.inaction__grid {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  max-width: none;
+  width: auto;
+  margin: 0 calc(-1 * var(--gutter, 20px));
+  /* Room under the cards for their shadows, which the track would clip */
+  padding: 8px var(--gutter, 20px) 30px;
+  margin-bottom: -14px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gutter, 20px);
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.problems .problems__stack::-webkit-scrollbar,
+.inaction__grid::-webkit-scrollbar {
+  display: none;
+}
+
+/* Progress dots, injected by the script under each carousel. The button is
+   the tap area; the dot is drawn inside it and stretches when active. */
+.m-dots {
+  display: flex;
+  justify-content: center;
+  margin-top: 6px;
+  color: var(--petrol, #1a4146);
+}
+
+.m-dots--light {
+  color: var(--text-on-dark, #f1f1e6);
+}
+
+.m-dots button {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.m-dots button::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background: currentColor;
+  opacity: 0.28;
+  transition: width 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.7s ease, background-color 0.7s ease;
+}
+
+.m-dots button.is-active::before {
+  width: 22px;
+  opacity: 1;
+  background: var(--orange, #ff8c40);
+}
+
+.m-dots button:focus-visible {
+  outline: 2px solid var(--teal, #34b6af);
+  outline-offset: -4px;
+  border-radius: 8px;
+}
+
+
+/* =========================================================
+   4. THE PROBLEMS THESE LOADS CREATE
+   Three orange cards in a swipe row, each about 85% of the screen so the
+   next one peeks in. The desktop dealing classes (script.js still writes
+   them) are overridden by specificity; the state the phone needs lives in
+   data attributes and custom properties, which that script does not touch.
+   ========================================================= */
+.problems {
+  text-align: left;
+}
+
+.problems .problems__sticky {
+  padding: var(--section-pad-y, 64px) 0 calc(var(--section-pad-y, 64px) - 14px);
+  overflow: visible;
+}
+
+.problems h2 {
+  margin-bottom: 20px;
+}
+
+.problems h2 .accent {
+  color: var(--teal, #34b6af);
+}
+
+.problems .problems__stack .problem-card {
+  position: relative;
+  flex: 0 0 min(85%, 340px);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  min-height: 0;
+  padding: 22px 22px 26px;
+  border-radius: 16px;
+  box-shadow: 0 12px 24px rgba(4, 25, 23, 0.28);
+  transform: none;
+  opacity: calc(1 - var(--m-d, 0) * 0.32);
+  scale: calc(1 - var(--m-d, 0) * 0.045);
+  transition: none;
+  pointer-events: auto;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.problems .problems__stack .problem-card > * {
+  opacity: 1;
+  transition: none;
+}
+
+.problems .problems__stack .problem-card__num {
+  margin-bottom: 26px;
+}
+
+.problems .problems__stack .problem-card__icon {
+  position: absolute;
+  top: 24px;
+  right: 20px;
+  width: 104px;
+  height: 70px;
+  margin: 0;
+}
+
+.problems .problem-card__text p {
+  max-width: none;
+}
+
+/* Icons: the desktop draw-ins are replaced by the same ones keyed to this
+   scene (data-m-front marks the card that has just arrived). Without it
+   every icon rests fully drawn. */
+.problems.m-swipe .problem-card .anim-draw-wave,
+.problems.m-swipe .problem-card .anim-dial,
+.problems.m-swipe .problem-card .anim-band,
+.problems.m-swipe .problem-card .anim-tick,
+.problems.m-swipe .problem-card .anim-hub,
+.problems.m-swipe .problem-card .anim-needle,
+.problems.m-swipe .problem-card .anim-origin,
+.problems.m-swipe .problem-card .anim-h,
+.problems.m-swipe .problem-card .anim-h-head,
+.problems.m-swipe .problem-card .anim-swing,
+.problems.m-swipe .problem-card .anim-d-head,
+.problems.m-swipe .problem-card .anim-pf-arc,
+.problems.m-swipe .problem-card .anim-phi {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .problems.m-swipe .problem-card[data-m-front] .anim-draw-wave { animation: pqDraw 1.6s cubic-bezier(0.35, 0, 0.5, 1) both; }
+
+  .problems.m-swipe .problem-card[data-m-front] .anim-dial   { animation: pqDraw 1.2s cubic-bezier(0.4, 0, 0.55, 1) both; }
+  .problems.m-swipe .problem-card[data-m-front] .anim-band   { animation: pqFadeIn 0.3s ease-out 1.05s both; }
+  .problems.m-swipe .problem-card[data-m-front] .anim-tick   { animation: pqPopIn 0.25s cubic-bezier(0.3, 1.5, 0.6, 1) both; }
+  .problems.m-swipe .problem-card[data-m-front] .anim-tick-1 { animation-delay: 0.08s; }
+  .problems.m-swipe .problem-card[data-m-front] .anim-tick-2 { animation-delay: 0.34s; }
+  .problems.m-swipe .problem-card[data-m-front] .anim-tick-3 { animation-delay: 0.6s; }
+  .problems.m-swipe .problem-card[data-m-front] .anim-tick-4 { animation-delay: 0.86s; }
+  .problems.m-swipe .problem-card[data-m-front] .anim-tick-5 { animation-delay: 1.1s; }
+  .problems.m-swipe .problem-card[data-m-front] .anim-hub    { animation: pqPopIn 0.3s cubic-bezier(0.3, 1.5, 0.6, 1) both; }
+  .problems.m-swipe .problem-card[data-m-front] .anim-needle { animation: pqExtend 1s cubic-bezier(0.25, 1.15, 0.4, 1) 0.15s both; }
+
+  .problems.m-swipe .problem-card[data-m-front] .anim-origin { animation: pqPopIn 0.3s cubic-bezier(0.3, 1.5, 0.6, 1) both; }
+  .problems.m-swipe .problem-card[data-m-front] .anim-h      { animation: pqStretch 0.55s cubic-bezier(0.3, 0, 0.4, 1) 0.1s both; }
+  .problems.m-swipe .problem-card[data-m-front] .anim-h-head { animation: pqFadeIn 0.2s ease-out 0.6s both; }
+  .problems.m-swipe .problem-card[data-m-front] .anim-swing  { animation: pqSwingUp 0.5s cubic-bezier(0.35, 0, 0.3, 1.1) 0.7s both; }
+  .problems.m-swipe .problem-card[data-m-front] .anim-d-head { animation: pqFadeIn 0.2s ease-out 1.15s both; }
+  .problems.m-swipe .problem-card[data-m-front] .anim-pf-arc { animation: pqDraw 0.4s ease-out 1.1s both; }
+  .problems.m-swipe .problem-card[data-m-front] .anim-phi    { animation: pqPopIn 0.3s cubic-bezier(0.3, 1.5, 0.6, 1) 1.3s both; }
+}
+
+
+
+
+/* =========================================================
+   5. WHAT INACTION COSTS
+   Tall photo cards in a swipe row: the photo fills the card, the cost tag
+   sits on it, and the copy rests on a dark foot. The section is light, as
+   it is on wider screens, so it separates the dark Problems band above it
+   from the dark fan below.
+   ========================================================= */
+.inaction {
+  padding: var(--section-pad-y, 64px) var(--gutter, 20px) calc(var(--section-pad-y, 64px) - 14px);
+  background: var(--cream, #fafaef);
+  text-align: left;
+}
+
+.inaction h2 {
+  color: var(--ink, #1a1c16);
+}
+
+.inaction__inner > p {
+  margin-bottom: 24px;
+  color: var(--text, #3d4948);
+}
+
+.inaction-card {
+  flex: 0 0 min(80%, 320px);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  scale: calc(1 - var(--m-d, 0) * 0.045);
+  opacity: calc(1 - var(--m-d, 0) * 0.32);
+}
+
+.inaction-card {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  aspect-ratio: 4 / 5;
+  max-height: 440px;
+  border-radius: 16px;
+  background: #143338;
+  box-shadow: 0 12px 24px rgba(4, 25, 23, 0.28);
+}
+
+.inaction-card__photo {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  height: auto;
+  border-radius: 0;
+}
+
+.inaction-card__photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(20, 51, 56, 0) 28%,
+    rgba(20, 51, 56, 0.72) 58%,
+    rgba(20, 51, 56, 0.96) 100%
+  );
+}
+
+.inaction-card__row {
+  padding: 0 20px 8px;
+}
+
+.inaction-card__tag {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  color: #ffd2b3;
+  background: rgba(20, 51, 56, 0.62);
+  border-color: rgba(3, 153, 153, 0.55);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.inaction-card p {
+  padding: 0 20px 22px;
+  color: rgba(241, 241, 230, 0.8);
+}
+
+
+/* =========================================================
+   6. NOW SEE IT SOLVED (the fan)
+   One column: the line, the fan, then the way in. The copy block is
+   dissolved (display: contents) so the button can close the section under
+   the cards. The fan keeps the desktop idea, sized down: the four cards lie
+   stacked and leaning, and settle into a column as the fan itself rises up
+   the screen (--pq-fan, written on .pq-entry__fan by js/m/loads.js).
+   ========================================================= */
+.pq-entry__stage {
+  display: block;
+  padding: var(--section-pad-y, 64px) var(--gutter, 20px);
+}
+
+.pq-entry__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+}
+
+.pq-entry__copy {
+  display: contents;
+}
+
+.pq-entry__eyebrow {
+  order: 0;
+  margin-bottom: 14px;
+}
+
+.pq-entry h2 {
+  order: 1;
+  margin-bottom: 14px;
+}
+
+.pq-entry__lead {
+  order: 2;
+  margin-bottom: 0;
+}
+
+.pq-entry__fan {
+  order: 3;
+  gap: 12px;
+  padding: 28px 0 32px;
+}
+
+.pq-entry__cta {
+  order: 4;
+  align-self: stretch;
+  min-height: 56px;
+  box-shadow: 0 16px 34px rgba(255, 140, 64, 0.28);
+}
+
+.pq-entry .glimpse {
+  padding: 16px 18px 18px;
+  border-radius: 16px;
+  transform:
+    translateY(calc((1 - var(--pq-fan, 1)) * var(--k) * -74%))
+    rotate(calc((1 - var(--pq-fan, 1)) * (var(--k) - 1.5) * -2.2deg))
+    scale(calc(0.94 + 0.06 * var(--pq-fan, 1)));
+  box-shadow: 0 -8px 24px rgba(4, 25, 23, calc(0.3 * (1 - var(--pq-fan, 1))));
+  transition: border-color 0.5s ease, background-color 0.5s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pq-entry .glimpse:hover {
+  translate: none;
+}
+
+.pq-entry .glimpse:active {
+  border-color: var(--cyan, #4cc8c0);
+  background: color-mix(in srgb, var(--petrol, #1a4146) 78%, #ffffff 22%);
+}
+
+.glimpse p {
+  margin-bottom: 0;
+}
+
+.pq-entry .glimpse__go {
+  top: 16px;
+  right: 18px;
+}
+
+/* Ripples: two centres, one high behind the heading, one behind the fan */
+.pq-entry__rings span {
+  left: 88%;
+  top: 14%;
+  width: 620px;
+}
+
+.pq-entry__rings span:nth-child(n + 5) {
+  left: 18%;
+  top: 66%;
+  width: 560px;
+}
+
+
+/* Reduced motion: no lean, no scale, nothing scroll-linked on the cards */
+@media (prefers-reduced-motion: reduce) {
+  .problems .problems__stack .problem-card,
+  .inaction-card {
+    scale: none;
+    opacity: 1;
+  }
+
+  .pq-entry .glimpse {
+    transform: none;
+    box-shadow: none;
+  }
 }
