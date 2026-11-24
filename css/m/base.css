@@ -92,6 +92,26 @@ html.m-bar-on {
 }
 
 
+/* Phones (S15 scale): display 44/40, H1 34/31, H2 29/27, statement 24/22,
+   H3 22, numeral 40/36. Sections no longer multiply the tiers here. */
+@media (max-width: 599px) {
+  :root {
+    --fs-display: clamp(40px, 11.3vw, 44px);
+    --fs-numeral: clamp(36px, 10.3vw, 40px);
+    --fs-h1: clamp(31px, 8.8vw, 34px);
+    --fs-h2: clamp(27px, 7.5vw, 29px);
+    --fs-statement: clamp(22px, 6.2vw, 24px);
+    --fs-h3: 22px;
+    --fs-h4: 20px;
+    --fs-lead: 17px;
+    --fs-body: 16px;
+    --fs-small: 14px;
+    --fs-label: 13px;
+    --fs-scale: 1;
+  }
+}
+
+
 /* =========================================================
    2. BASE
    ========================================================= */
@@ -217,6 +237,174 @@ h1, h2, h3, h4, p, li, a {
   overflow-wrap: break-word;
 }
 
+/* Phone scale line-heights and wrapping (S15): headings balance, paragraphs
+   avoid one-word last lines */
+@media (max-width: 599px) {
+  /* Display 1.05 */
+  .yanq-hero-intro .header-placeholder__overlay h1,
+  .pqs-hero h1,
+  .diagnosis h2,
+  .yanq-hero h2 {
+    line-height: 1.05;
+  }
+
+  /* Numeral 1 */
+  .problem-card__num,
+  .pqs-stat__num {
+    line-height: 1;
+  }
+
+  /* H1 1.12 */
+  .legal h1,
+  .hero__heading h1,
+  .header-placeholder__overlay h1,
+  .yanq-works h2,
+  .yanq-delivers h2 {
+    line-height: 1.12;
+  }
+
+  /* H2 1.15 */
+  .offered h2,
+  .pqs-intro h2,
+  .pq-entry h2,
+  .hero__desc h2,
+  .diagnosis__eyebrow,
+  .yanq-hero__label,
+  .symptoms__header h2,
+  .why__header h2,
+  .contact-form-col h2,
+  .about-measure h2,
+  .industries h2,
+  .faq__header h2,
+  .loads-x h2,
+  .solutions-row h2,
+  .problems h2,
+  .inaction h2,
+  .results h2,
+  .svc-flow h2,
+  .footer__cta h2 {
+    line-height: 1.15;
+  }
+
+  /* Statement 1.32 */
+  .quote p,
+  .about-statement p {
+    line-height: 1.32;
+  }
+
+  /* H3 1.2 */
+  .svc-block__name,
+  .pqs-next h2,
+  .deliver-stat h3 {
+    line-height: 1.2;
+  }
+
+  /* H4 1.25 */
+  .legal h2,
+  .solution-card:not(.solution-card--photo) .solution-card__name,
+  .offered-col h3,
+  .industry-panel__title,
+  .glimpse h3,
+  .why-card h3,
+  .symptom-card__title,
+  .inaction-card__row h3,
+  .results__title,
+  .problem-card__text h3,
+  .loads-x__item h3,
+  .faq__question,
+  .svc-step__word,
+  .yanq-step h3 {
+    line-height: 1.25;
+  }
+
+  /* Lead 1.55 */
+  .yanq-expect__title,
+  .offered__inner > p,
+  .pq-entry__lead,
+  .pqs-lead,
+  .hero__desc p,
+  .hero__heading p,
+  .header-placeholder__overlay p,
+  .diagnosis__body,
+  .symptoms__header p,
+  .why__header p,
+  .contact-form-col__sub,
+  .yanq-works__lead,
+  .yanq-hero__body,
+  .pqs-next p,
+  .solutions-row__inner > p,
+  .svc-block__text,
+  .inaction__inner > p,
+  .results__inner > p,
+  .results__plus,
+  .industries > p,
+  .faq__header p,
+  .footer__cta p {
+    line-height: 1.55;
+  }
+
+  /* Body 1.6 */
+  .legal p,
+  .legal li,
+  .contact-map__open,
+  .offered-col a,
+  .svc-more,
+  .svc-detail__list li,
+  .btn,
+  .diagnosis__team,
+  .symptoms__more,
+  .why-card__go,
+  .why-card p,
+  .symptom-card__detail p,
+  .deliver-stat p,
+  .glimpse p,
+  .glimpse__go,
+  .loads-x__load,
+  .loads-x__links a,
+  .loads-x__note,
+  .industry-tab,
+  .industry-panel li,
+  .industry-cell,
+  .faq__answer,
+  .results__desc,
+  .form-field input,
+  .form-field textarea,
+  .form-field select,
+  .footer__brand p,
+  .footer__col a {
+    line-height: 1.6;
+  }
+
+  /* Small 1.5 */
+  .offered-col__sub,
+  .yanq-step__tag,
+  .loads-x__item p,
+  .loads-x__chips li,
+  .problem-card__text p,
+  .inaction-card p,
+  .svc-step__line,
+  .pqs-stat__label,
+  .yanq-expect__list p,
+  .footer__legal small,
+  .footer__legal-links a,
+  .svc-ask,
+  .solution-card__label {
+    line-height: 1.5;
+  }
+
+  /* Label 1.4 is already the desktop value */
+
+  h1, h2, h3, h4,
+  .diagnosis__eyebrow,
+  .yanq-hero__label {
+    text-wrap: balance;
+  }
+
+  p, li {
+    text-wrap: pretty;
+  }
+}
+
 
 /* =========================================================
    4. BUTTONS
@@ -270,6 +458,24 @@ h1, h2, h3, h4, p, li, a {
   align-items: stretch;
   width: 100%;
   max-width: 360px;
+}
+
+/* Phone scale (S15): 48px buttons, 16px text, 24px sides; 404 stack gap 12;
+   legal pages start 40px under the bar and end 64px above the footer */
+@media (max-width: 599px) {
+  .btn {
+    min-height: 48px;
+    padding: 0 24px;
+    font-size: var(--fs-body);
+  }
+
+  .not-found__links {
+    gap: 12px;
+  }
+
+  .legal {
+    padding: calc(var(--nav-height) + 40px) var(--gutter) 64px;
+  }
 }
 
 
