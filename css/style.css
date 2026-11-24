@@ -415,6 +415,7 @@ ul {
 .solution-card__label .plus,
 .form-field input,
 .form-field textarea,
+.form-field select,
 .footer__brand p,
 .footer__col a {
   font-size: calc(var(--fs-body) * var(--fs-scale, 1));
@@ -6248,13 +6249,42 @@ ul {
 }
 
 .form-field input,
-.form-field textarea {
+.form-field textarea,
+.form-field select {
   background: #ffffff;
   border: 1px solid var(--mist);
   border-radius: 8px;
   padding: 16px 13px;
   font-family: inherit;
   color: #151515;
+}
+
+/* The select looks like the inputs; the native arrow gives way to a chevron
+   drawn in the site's petrol (same shape as the nav chevron: a turned corner) */
+.form-select {
+  position: relative;
+}
+
+.form-field select {
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 44px;
+  cursor: pointer;
+  text-overflow: ellipsis;
+}
+
+.form-select::after {
+  content: "";
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid var(--petrol);
+  border-bottom: 1.5px solid var(--petrol);
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
 }
 
 .form-field textarea {
@@ -6268,7 +6298,8 @@ ul {
 }
 
 .form-field input:focus,
-.form-field textarea:focus {
+.form-field textarea:focus,
+.form-field select:focus {
   outline: none;
   border-color: var(--teal);
 }

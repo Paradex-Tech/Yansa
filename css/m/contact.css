@@ -112,7 +112,8 @@
 }
 
 .form-field input,
-.form-field textarea {
+.form-field textarea,
+.form-field select {
   border-width: 1.5px;
   border-radius: 12px;
   padding: 13px 15px;

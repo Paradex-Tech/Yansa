@@ -34,7 +34,9 @@ var FORMS = {
     sheet: 'Contact',
     label: 'Contact form',
     fields: ['fullname', 'email', 'facility', 'message'],
-    headers: ['Timestamp', 'Full Name', 'Email', 'Facility/Company', 'Message', 'Page']
+    // Saved after Page, so the columns of rows already in the sheet stay aligned
+    extra: ['phone', 'interest'],
+    headers: ['Timestamp', 'Full Name', 'Email', 'Facility/Company', 'Message', 'Page', 'Phone', 'Interested In']
   },
   brochure: {
     sheet: 'Brochure',
@@ -60,6 +62,7 @@ function doPost(e) {
     var row = [new Date()];
     form.fields.forEach(function (f) { row.push(clean(p[f])); });
     row.push(clean(p.page));
+    (form.extra || []).forEach(function (f) { row.push(clean(p[f])); });
     getSheet(form).appendRow(row);
   } finally {
     lock.releaseLock();
@@ -134,6 +137,13 @@ function getSheet(form) {
     sheet.appendRow(form.headers);
     sheet.getRange(1, 1, 1, form.headers.length).setFontWeight('bold');
     sheet.setFrozenRows(1);
+  }
+  // A sheet made before a form gained columns: add the missing header cells
+  var have = sheet.getLastColumn();
+  if (have < form.headers.length) {
+    sheet.getRange(1, have + 1, 1, form.headers.length - have)
+      .setValues([form.headers.slice(have)])
+      .setFontWeight('bold');
   }
   return sheet;
 }

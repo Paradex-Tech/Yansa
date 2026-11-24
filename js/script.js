@@ -2943,6 +2943,16 @@
     status.setAttribute('role', 'status');
     form.appendChild(status);
 
+    // contact.html?interest=amc#contact-form picks that option; only the
+    // values the list holds count, anything else is ignored
+    var interest = form.querySelector('select[name="interest"]');
+    var wanted = new URLSearchParams(location.search).get('interest');
+    if (interest && wanted && wanted !== '') {
+      toArray(interest.options).forEach(function (opt) {
+        if (opt.value === wanted) interest.value = wanted;
+      });
+    }
+
     form.addEventListener('submit', function (event) {
       event.preventDefault();
       button.disabled = true;

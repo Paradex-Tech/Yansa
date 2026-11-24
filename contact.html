@@ -153,6 +153,23 @@
               <input type="text" id="facility" name="facility" autocomplete="organization" enterkeyhint="next" placeholder="Facility name">
             </div>
             <div class="form-field">
+              <label for="phone">Phone (optional)</label>
+              <input type="tel" id="phone" name="phone" autocomplete="tel" inputmode="tel" enterkeyhint="next" placeholder="Your phone number">
+            </div>
+            <div class="form-field">
+              <label for="interest">I'm interested in</label>
+              <div class="form-select">
+                <select id="interest" name="interest">
+                  <option value="">Choose one (optional)</option>
+                  <option value="yanq">YanQ Power Quality Study</option>
+                  <option value="solution">A solution (active, passive or hybrid)</option>
+                  <option value="commissioning">Commissioning Support</option>
+                  <option value="amc">Annual Maintenance Contract (AMC)</option>
+                  <option value="not-sure">Not sure yet</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-field">
               <label for="message">Message</label>
               <textarea id="message" name="message" rows="4" required placeholder="Write something...."></textarea>
             </div>
