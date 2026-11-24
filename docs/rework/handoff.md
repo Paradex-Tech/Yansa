@@ -1,5 +1,11 @@
 # Handoff for the build (fresh FRIDAY)
 
+> **Status 2026-11-24 (S16 Know Your Loads redesign):** KYL rebuilt in the approved site language (Direction A in
+> `kyl-redesign.md`, spec `specs/S16-kyl-redesign.md`, log in `progress.md` S16). Desktop 4,218 px, phone 4,890; other
+> pages unchanged (identical heights). Waiting for Shrey's look on localhost. Open: whether he prefers the Match-the-fix
+> copy column top-aligned; the explorer board keeps empty space under the solution pills on loads with short text
+> (the price of no layout jump). Nothing pushed.
+
 > **Status 2026-11-24 (S15 phone pass):** phone type and spacing scale set and applied to every page except Know
 > Your Loads (Shrey: KYL gets its own redesign next; do not reuse its current phone CSS as a model). Scale, findings
 > and fixes: `audit-phone.md`, `progress.md` (S15). All phone rules are additive inside `max-width: 599px` /

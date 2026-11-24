@@ -85,3 +85,15 @@ explorer 885 / 1,231, problems 599 / 494, inaction 720 / 644, pq-entry 894 / 1,1
 
 ## 3. Build log
 (rounds, heights and findings per section are added below as the build runs)
+
+- **Area A (hero + explorer)** 4a2e689; round 1 (FRIDAY, headless 1440/1024/390): list too narrow (names wrapped),
+  list edge off the container, solution pills pinned leaving a 200 px hole (spec revised 17d70fd), tile grid and
+  sheet edges differ at 1024, "Welding & presses" wrapping -> fixed in 67e3acc.
+- **Area B (problems + inaction)** 12d0ad5, **area C (match the fix)** a4cbfaa.
+- **Round 2** (VISION opus, 9 sheets opened, 8.5/10, no blockers; FRIDAY live in Chrome at ~1568 px and frame.html
+  390): connector crowding the Solution eyebrow at 1024 and 390, problem drawings too small -> fixed in 66a0eec.
+  Not taken: Match-the-fix copy column vertically centred (VISION wanted top-aligned; live it reads balanced, its
+  still was mid-reveal); floating "Book a Diagnosis" bar over content (site-wide, unchanged on purpose); empty space
+  under the solution pills on short-solution loads (tallest-item board, no jump).
+- Heights after: desktop 4,218 px (4.69 screens; was 4,644), phone 4,890 (5.79; was 4,958). Sections desktop /
+  phone: hero 811 / 506, explorer 822 / 1,379, problems 558 / ~555, inaction 637 / 654, match 654 / 978.

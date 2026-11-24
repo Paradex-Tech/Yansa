@@ -181,3 +181,16 @@ overflow, paddings at 390/360). Know Your Loads out of scope (own redesign next)
   solutions 5,844 -> 5,942; services 3,639 -> 3,668; yanq 4,298 -> 4,273; 404 1,221 -> 1,168; privacy 2,688 ->
   2,569; terms 3,967 -> 3,815; know-your-loads 4,997 -> 4,958 (shared tokens only). Checks: links, nav-footer,
   head, site, dead-css all pass.
+
+## S16 Know Your Loads redesign (done, 2 UI rounds per section)
+Commits 35c589d (spec), 17d70fd (spec revision), 4a2e689 (A hero + explorer), 67e3acc (A round 1), 12d0ad5 (B problems
++ inaction), a4cbfaa (C match the fix), 66a0eec (round 2). Diagnosis, directions and log: `kyl-redesign.md`.
+- Direction A "Field guide" (chosen over B "Instrument console"): built from approved components only.
+- Explorer: index list with gliding petrol highlight (>=1100), 4x2 tiles (600-1099), 2x4 short-name tiles (<600);
+  ivory load sheet with Problem pane (petrol signature plate, tags) and tinted Solution pane (Solutions pills);
+  ARIA tabs with arrows/Home/End, constant height for all 8 loads at 1440/1024/820/390/360, no scroll on pick.
+- Problems: Home symptom-card petrol cards with enlarged teal drawings; phone swipe deck on cream.
+- Inaction: full-photo cards at every width, tag top-left. Match the fix: light band, copy left, 2x2 why-style cards;
+  fan, rings, glass cards, initPqScroll/initEntry/initSpotlight removed.
+- Heights: desktop 4,644 -> 4,218 (4.69 screens), phone 4,958 -> 4,890 (5.79). Every other page measures identical
+  to `tools/out/measure-pre-s16.json`. All check scripts pass; 0 console errors; reduced motion shows everything.
