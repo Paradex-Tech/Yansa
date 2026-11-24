@@ -433,3 +433,61 @@
     transition: none;
   }
 }
+
+
+/* =========================================================
+   S15 phone scale (<= 599px only)
+   Tiers unscaled, 64/64 section rhythm. "We Measure." sits on the H1 tier
+   and its copy on Lead; FAQ questions on Body + 1.
+   ========================================================= */
+@media (max-width: 599px) {
+  .about-hero .header-placeholder__overlay h1 {
+    --fs-scale: 1;
+  }
+
+  .about-statement {
+    padding-top: var(--section-pad-y, 64px);
+    padding-bottom: var(--section-pad-y, 64px);
+  }
+
+  .about-statement p {
+    --fs-scale: 1;
+  }
+
+  .about-measure {
+    padding-top: var(--section-pad-y, 64px);
+    padding-bottom: var(--section-pad-y, 64px);
+  }
+
+  .about-measure h2 {
+    --fs-scale: 1;
+    font-size: var(--fs-h1);
+    line-height: 1.12;
+  }
+
+  .about-measure p {
+    font-size: var(--fs-lead);
+    line-height: 1.55;
+  }
+
+  .industries {
+    --fs-scale: 1;
+    padding-top: var(--section-pad-y, 64px);
+    padding-bottom: var(--section-pad-y, 64px);
+  }
+
+  .faq {
+    --fs-scale: 1;
+    padding-top: var(--section-pad-y, 64px);
+    padding-bottom: var(--section-pad-y, 64px);
+  }
+
+  .faq__header h2 {
+    --fs-scale: 1;
+  }
+
+  .faq__question {
+    --fs-scale: 1;
+    font-size: calc(var(--fs-body) + 1px);
+  }
+}

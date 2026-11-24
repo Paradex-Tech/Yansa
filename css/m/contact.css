@@ -294,3 +294,11 @@
     animation: none;
   }
 }
+
+
+/* S15 phone scale (<= 599px only): hero title on the H1 tier */
+@media (max-width: 599px) {
+  .contact-hero .header-placeholder__overlay h1 {
+    --fs-scale: 1;
+  }
+}
