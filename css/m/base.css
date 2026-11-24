@@ -1134,11 +1134,29 @@ h1, h2, h3, h4, p, li, a {
 /* Narrowest phones (S15): the side-by-side pair keeps >= 8px clear each side of the label */
 @media (max-width: 380px) {
   .footer__buttons {
+    flex-wrap: nowrap;
     gap: 10px;
   }
 
   .footer__buttons .btn {
+    flex: 1 1 auto;
+    padding: 12px 10px;
     font-size: 15px;
+  }
+
+  /* Privacy, Terms and Back to top stay on one row */
+  .footer__legal {
+    gap: 0 12px;
+  }
+
+  .footer__legal-links {
+    flex-wrap: nowrap;
+    gap: 0 16px;
+    white-space: nowrap;
+  }
+
+  .m-footer-end button {
+    padding-left: 4px;
   }
 }
 
