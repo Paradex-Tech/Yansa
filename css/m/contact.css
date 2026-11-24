@@ -125,6 +125,10 @@
   color: #8a9a98;
 }
 
+.form-field select:has(option[value=""]:checked) {
+  color: #8a9a98;
+}
+
 /* The script grows it with what is typed, so no resize grip */
 .form-field textarea {
   min-height: 132px;

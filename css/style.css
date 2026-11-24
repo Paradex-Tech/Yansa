@@ -2004,6 +2004,12 @@ ul {
   .symptom-card:focus-within .symptom-card__detail {
     max-height: 220px;
   }
+
+  /* Room for the longest title (three lines here), so every card's divider
+     sits on the same line */
+  .symptom-card__title {
+    min-height: 113px;
+  }
 }
 
 @media (min-width: 1200px) and (max-width: 1359px) {
@@ -2023,6 +2029,11 @@ ul {
 
   .symptom-card {
     min-height: 396px;
+  }
+
+  /* The longest title wraps to two lines at this width */
+  .symptom-card__title {
+    min-height: 81px;
   }
 }
 
@@ -5639,7 +5650,8 @@ ul {
 }
 
 /* The standard's name never breaks across lines */
-.yanq-step__tag .nb {
+.yanq-step__tag .nb,
+.yanq-expect__list .nb {
   white-space: nowrap;
 }
 
@@ -5893,6 +5905,18 @@ ul {
 
 .yanq-expect__list p {
   color: var(--text);
+  text-wrap: pretty;
+}
+
+/* Narrower laptops: a tighter gap so the longest title stays on one line */
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .yanq-expect__inner {
+    margin: 0 -32px;
+  }
+
+  .yanq-expect__list {
+    gap: 24px;
+  }
 }
 
 /* Tablet: two by two */
@@ -6072,6 +6096,15 @@ ul {
   padding-right: 44px;
   cursor: pointer;
   text-overflow: ellipsis;
+}
+
+/* While nothing is chosen the select reads like the placeholders above it */
+.form-field select:has(option[value=""]:checked) {
+  color: var(--line);
+}
+
+.form-field select option {
+  color: #151515;
 }
 
 .form-select::after {
