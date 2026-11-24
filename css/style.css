@@ -362,6 +362,7 @@ ul {
 .hero__desc p,
 .hero__heading p,
 .header-placeholder__overlay p,
+.nav-menu__feature-title,
 .diagnosis__body,
 .symptoms__header p,
 .why__header p,
@@ -396,6 +397,7 @@ ul {
 .symptoms__more,
 .why-card__go,
 .navbar__links a,
+.nav-menu__title,
 .why-card p,
 .symptom-card__detail p,
 .deliver-stat p,
@@ -426,6 +428,8 @@ ul {
 .problem-card__text p,
 .inaction-card p,
 .svc-step__line,
+.nav-menu__desc,
+.nav-menu__feature-line,
 .solution-card__label {
   font-size: calc(var(--fs-small) * var(--fs-scale, 1));
   line-height: 1.55;
@@ -433,6 +437,7 @@ ul {
 
 /* Label — eyebrows, tags, counters, form labels */
 .pq-entry__eyebrow,
+.nav-menu__eyebrow,
 .pqs-eyebrow,
 .glimpse__tag,
 .loads-x__head,
@@ -704,46 +709,185 @@ ul {
   border-radius: 6px;
 }
 
-/* Panel: ivory card, hairline border, soft shadow. Fades and rises a few
-   pixels; it floats, so it never moves the bar or the page. */
+/* Panel: two zones (a list of rows and one featured tile) on an ivory card.
+   It floats ~10px under the bar with a caret on its top edge pointing at the
+   trigger; the script sets --menu-x (the shift that keeps it inside the
+   window) and --caret-x (where the caret sits). A transparent ::before
+   bridges the gap, so the pointer never leaves the item on its way down. */
 .nav-menu {
+  --menu-x: -16px;
+  --caret-x: 40px;
   position: absolute;
-  top: 100%;
-  left: -16px;
+  top: calc(100% + 10px);
+  left: var(--menu-x);
   z-index: 5;
-  min-width: 100%;
+  width: 564px;
   padding: 8px;
   display: flex;
-  flex-direction: column;
+  gap: 8px;
   background: var(--ivory-card);
   border: 1px solid var(--line);
-  border-radius: 8px;
-  box-shadow: 0 16px 32px rgba(26, 65, 70, 0.12);
+  border-radius: 12px;
+  box-shadow: 0 24px 48px rgba(26, 65, 70, 0.14), 0 2px 6px rgba(26, 65, 70, 0.06);
   opacity: 0;
   visibility: hidden;
-  transform: translateY(6px);
-  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0s linear 0.18s;
+  transform: translateY(8px) scale(0.98);
+  transform-origin: var(--caret-x) 0;
+  transition: opacity 0.14s ease, transform 0.14s ease, visibility 0s linear 0.14s;
+}
+
+.nav-menu::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -18px;
+  height: 18px;
+}
+
+.nav-menu::after {
+  content: "";
+  position: absolute;
+  top: -7px;
+  left: calc(var(--caret-x) - 6px);
+  width: 12px;
+  height: 12px;
+  background: var(--ivory-card);
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+  border-top-left-radius: 3px;
+  transform: rotate(45deg);
 }
 
 .nav-item.is-open .nav-menu {
   opacity: 1;
   visibility: visible;
   transform: none;
-  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0s;
+  transition: opacity 0.2s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.2s cubic-bezier(0.2, 0.7, 0.2, 1), visibility 0s;
 }
 
-.nav-menu a {
-  display: block;
-  padding: 10px 14px;
-  border-radius: 6px;
+/* Rows and tile rise in 30ms apart; closing drops the stagger */
+.nav-menu .nav-menu__list a,
+.nav-menu .nav-menu__feature {
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.14s ease, transform 0.14s ease;
 }
 
-.nav-menu a:hover,
-.nav-menu a:focus-visible {
+.nav-item.is-open .nav-menu .nav-menu__list a,
+.nav-item.is-open .nav-menu .nav-menu__feature {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.2s cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--k, 0) * 30ms),
+    transform 0.2s cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--k, 0) * 30ms);
+}
+
+.nav-menu__list a:nth-of-type(1) { --k: 1; }
+.nav-menu__list a:nth-of-type(2) { --k: 2; }
+.nav-menu__list a:nth-of-type(3) { --k: 3; }
+.nav-menu__feature { --k: 2; }
+
+/* Left zone: the rows, with one highlight that slides between them. The
+   script sets its translateY and --glow-h (height jumps, never animates). */
+.nav-menu__list {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-menu__glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--glow-h, 0px);
+  border-radius: 8px;
   background: var(--cream);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.22s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.22s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-.nav-menu a[aria-current="page"] {
+.nav-menu__glow.is-on {
+  opacity: 1;
+}
+
+.nav-menu__glow.is-jump {
+  transition: opacity 0.22s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.nav-menu .nav-menu__list a {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  color: var(--ink);
+  white-space: normal;
+}
+
+.nav-menu__icon {
+  flex: 0 0 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: rgba(52, 182, 175, 0.12);
+  color: var(--teal-deep);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.nav-menu__icon svg {
+  display: block;
+}
+
+.nav-menu__text {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-right: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-menu__title {
+  color: var(--ink);
+}
+
+.nav-menu__desc {
+  min-height: 2lh;   /* both menus' rows share one height, so the panels match */
+  color: var(--text);
+}
+
+.nav-menu .nav-menu__list a .nav-menu__go {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  margin-top: -8px;
+  color: var(--teal-deep);
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.nav-menu .nav-menu__list a:hover .nav-menu__icon,
+.nav-menu .nav-menu__list a:focus-visible .nav-menu__icon,
+.nav-menu .nav-menu__list a[aria-current="page"] .nav-menu__icon {
+  background: var(--teal-deep);
+  color: var(--ivory-card);
+}
+
+.nav-menu .nav-menu__list a:hover .nav-menu__go,
+.nav-menu .nav-menu__list a:focus-visible .nav-menu__go {
+  opacity: 1;
+  transform: translateX(3px);
+}
+
+.nav-menu .nav-menu__list a[aria-current="page"] .nav-menu__title {
   color: var(--teal-deep);
 }
 
@@ -752,15 +896,117 @@ ul {
   outline-offset: -2px;
 }
 
+/* Right zone: one photo tile in the petrol overlay language of the heroes */
+.nav-menu .nav-menu__feature {
+  position: relative;
+  flex: 0 0 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--petrol);
+  color: var(--text-on-dark);
+  white-space: normal;
+}
+
+.nav-menu__feature img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.nav-menu__feature:hover img,
+.nav-menu__feature:focus-visible img {
+  transform: scale(1.04);
+}
+
+.nav-menu__feature::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--petrol) 96%, transparent) 0%,
+    color-mix(in srgb, var(--petrol) 84%, transparent) 50%,
+    color-mix(in srgb, var(--petrol) 0%, transparent) 100%
+  );
+}
+
+.nav-menu__feature-body {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+}
+
+.nav-menu__eyebrow {
+  color: var(--mist);
+}
+
+.nav-menu__feature-title,
+.nav-menu__feature-line {
+  color: var(--text-on-dark);
+}
+
+.nav-menu__feature-go {
+  display: inline-flex;
+  color: var(--text-on-dark);
+  transition: transform 0.2s ease;
+}
+
+.nav-menu__feature:hover .nav-menu__feature-go,
+.nav-menu__feature:focus-visible .nav-menu__feature-go {
+  transform: translateX(3px);
+}
+
+/* Tablet: the tile narrows so the panel clears the window edges */
+@media (max-width: 1000px) {
+  .nav-menu {
+    width: 520px;
+  }
+
+  .nav-menu .nav-menu__feature {
+    flex-basis: 170px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .nav-menu,
   .nav-item.is-open .nav-menu,
+  .nav-menu .nav-menu__list a,
+  .nav-item.is-open .nav-menu .nav-menu__list a,
+  .nav-menu .nav-menu__feature,
+  .nav-item.is-open .nav-menu .nav-menu__feature,
+  .nav-menu__glow,
+  .nav-menu__feature img,
+  .nav-menu__feature-go,
+  .nav-menu .nav-menu__list a .nav-menu__go,
   .nav-item__chev svg {
     transition: none;
   }
 
-  .nav-menu {
+  .nav-menu,
+  .nav-menu .nav-menu__list a,
+  .nav-menu .nav-menu__feature,
+  .nav-menu__feature:hover img,
+  .nav-menu__feature:focus-visible img,
+  .nav-menu__feature:hover .nav-menu__feature-go,
+  .nav-menu__feature:focus-visible .nav-menu__feature-go,
+  .nav-menu .nav-menu__list a:hover .nav-menu__go,
+  .nav-menu .nav-menu__list a:focus-visible .nav-menu__go {
     transform: none;
+  }
+
+  .nav-menu .nav-menu__list a,
+  .nav-menu .nav-menu__feature {
+    opacity: 1;
   }
 }
 
@@ -989,18 +1235,45 @@ ul {
 
   .nav-menu {
     position: static;
+    display: block;
+    width: auto;
     padding: 0 0 0 16px;
     border: 0;
+    border-radius: 0;
     box-shadow: none;
     background: none;
     opacity: 1;
     visibility: visible;
     transform: none;
+    transition: none;
   }
 
-  .nav-menu a {
+  .nav-menu::before,
+  .nav-menu::after,
+  .nav-menu__glow,
+  .nav-menu__icon,
+  .nav-menu__desc,
+  .nav-menu .nav-menu__go,
+  .nav-menu__feature {
+    display: none;
+  }
+
+  .nav-menu__list {
+    display: block;
+  }
+
+  .nav-menu .nav-menu__list a {
+    display: block;
     padding: 12px 0;
     border-radius: 0;
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .nav-menu__text {
+    display: inline;
+    padding: 0;
   }
 
   .navbar__indicator {
