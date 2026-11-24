@@ -3522,7 +3522,7 @@ ul {
 .glimpse {
   --k: 0;
   display: block;
-  padding: 22px 24px 20px;
+  padding: 22px 24px 22px;
   border: 1px solid rgba(169, 209, 215, 0.28);
   border-radius: 14px;
   background: color-mix(in srgb, var(--petrol) 84%, #ffffff 16%);
@@ -3548,15 +3548,6 @@ ul {
   outline: none;
 }
 
-/* One still icon per family, orange as every graphic accent is */
-.glimpse__icon {
-  display: block;
-  width: 40px;
-  height: 40px;
-  margin-bottom: 16px;
-  color: var(--orange);
-}
-
 .glimpse__tag {
   display: block;
   color: var(--cyan);
@@ -3571,10 +3562,13 @@ ul {
 
 .glimpse p {
   color: var(--mist);
-  margin-bottom: 10px;
 }
 
+/* The cards carry no icon: "Explore" sits on the tag's line, so each is a row shorter */
 .glimpse__go {
+  position: absolute;
+  top: 22px;
+  right: 24px;
   color: var(--text-on-dark);
 }
 

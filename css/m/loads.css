@@ -540,10 +540,6 @@
   background: color-mix(in srgb, var(--petrol, #1a4146) 78%, #ffffff 22%);
 }
 
-.glimpse p {
-  margin-bottom: 0;
-}
-
 .pq-entry .glimpse__go {
   top: 16px;
   right: 18px;
