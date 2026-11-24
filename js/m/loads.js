@@ -90,7 +90,7 @@
     if (items.length < 2) return null;
 
     var dots = document.createElement('div');
-    dots.className = 'm-dots' + (opts.light ? ' m-dots--light' : '');
+    dots.className = 'm-dots';
     var buttons = items.map(function (item, i) {
       var b = document.createElement('button');
       b.type = 'button';
@@ -194,7 +194,6 @@
 
     var c = carousel(track, {
       label: 'Problem',
-      light: true,
       onActive: function (card) {
         current = card;
         mark(card);

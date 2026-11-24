@@ -1017,130 +1017,6 @@
   }
 
 
-  /* ---------- PQ Solved: scroll-linked wave, cursor spotlight, jump bar ----------
-     initPqScroll writes --pq-p (0 to 1) on every [data-pq-progress]
-     section, a pure function of scroll position:
-       enter  0 as the section's top is 85% down the viewport, 1 once it has
-              travelled 80% of a viewport up (the glimpse cards fan out)
-       leave  0 at the top of the page, 1 after three quarters of the hero
-              has scrolled away
-       The Solutions entry also sends out ripples (two centres of four rings)
-       for as long as it is on screen: a slow steady flow, pushed along by
-       scrolling (the unclamped distance, so they keep coming after p has
-       reached 1)
-     It also redraws each [data-pq-wave] svg: a clean sine, plus a distorted
-     copy (extra harmonics) whose distortion and opacity fall as p rises, so
-     the wave straightens as you scroll. Under reduced motion p stays 1. */
-  function pqWavePath(w, h, amp, cycles, dist, phase) {
-    var N = 140;
-    var d = '';
-    for (var i = 0; i <= N; i++) {
-      var x = i / N;
-      var a = x * Math.PI * 2 * cycles + phase;
-      var y = Math.sin(a) +
-        dist * (0.34 * Math.sin(3 * a + 1.1) + 0.2 * Math.sin(5 * a + 0.4) + 0.11 * Math.sin(9 * a));
-      d += (i ? 'L' : 'M') + (x * w).toFixed(1) + ' ' + (h / 2 - y * amp).toFixed(1);
-    }
-    return d;
-  }
-
-  function initPqScroll() {
-    var targets = toArray(document.querySelectorAll('[data-pq-progress]'));
-    if (!targets.length) return;
-
-    var items = targets.map(function (el) {
-      return {
-        el: el,
-        mode: el.getAttribute('data-pq-progress'),
-        rings: toArray(el.querySelectorAll('.pq-entry__rings span')),
-        waves: toArray(el.querySelectorAll('[data-pq-wave]'))
-      };
-    });
-
-    function progress(it, rect) {
-      if (reduceMotion) return 1;
-      if (it.mode === 'leave') {
-        return clamp01(window.pageYOffset / Math.max(rect.height * 0.75, 1));
-      }
-      return clamp01((window.innerHeight * 0.85 - rect.top) / (window.innerHeight * 0.8));
-    }
-
-    // Rings come in two centres of four. Each ring is one step further round
-    // a cycle that p drives: it grows from nothing, thins and fades as it
-    // widens. The second centre runs half a step behind the first.
-    function spread(it, phase) {
-      it.rings.forEach(function (ring, i) {
-        var s = (phase + (i % 4) / 4 + (i >= 4 ? 0.5 / 4 : 0)) % 1;
-        var grow = Math.min(1, s * 6);
-        ring.style.setProperty('--rs', (0.06 + s * 1.2).toFixed(4));
-        ring.style.setProperty('--ro', (0.65 * (1 - s) * grow).toFixed(4));
-      });
-    }
-
-    function draw(svg, p, phase) {
-      var box = svg.viewBox.baseVal;
-      var cycles = parseFloat(svg.getAttribute('data-cycles')) || 3;
-      var amp = box.height * 0.34;
-      var raw = svg.querySelector('.pq-wave__raw');
-      var clean = svg.querySelector('.pq-wave__clean');
-      var dist = (1 - p) * 1.15;
-      raw.setAttribute('d', pqWavePath(box.width, box.height, amp, cycles, dist, phase));
-      raw.style.opacity = ((1 - p) * 0.9).toFixed(3);
-      clean.setAttribute('d', pqWavePath(box.width, box.height, amp, cycles, 0, phase));
-      clean.style.opacity = (0.4 + 0.6 * p).toFixed(3);
-    }
-
-    var queued = false;
-    function frame() {
-      queued = false;
-      var vh = window.innerHeight;
-      items.forEach(function (it) {
-        var rect = it.el.getBoundingClientRect();
-        if (rect.bottom < -50 || rect.top > vh + 50) return;
-        var p = progress(it, rect);
-        it.el.style.setProperty('--pq-p', p.toFixed(4));
-        it.el.style.setProperty('--pq-fan', p.toFixed(4));
-        // The small waves hold still, drawn clean (client request, 12 Oct)
-        it.waves.forEach(function (svg) { draw(svg, 1, 0); });
-        if (it.rings.length) {
-          // Distance travelled since the section started entering, past p = 1 too
-          it.q = Math.max(0, (window.innerHeight * 0.85 - rect.top) / (window.innerHeight * 0.8));
-          if (reduceMotion || !it.flowing) spread(it, it.q * 0.3);
-        }
-      });
-    }
-    function queue() {
-      if (!queued) {
-        queued = true;
-        requestAnimationFrame(frame);
-      }
-    }
-
-    // Ripples keep coming while the section is on screen
-    items.forEach(function (it) {
-      if (!it.rings.length || reduceMotion || !('IntersectionObserver' in window)) return;
-      it.q = 0;
-      it.flowing = false;
-      var raf = null;
-      function tick(now) {
-        if (!it.flowing) {
-          raf = null;
-          return;
-        }
-        spread(it, it.q * 0.3 + now / 18000);
-        raf = requestAnimationFrame(tick);
-      }
-      new IntersectionObserver(function (entries) {
-        it.flowing = entries[0].isIntersecting;
-        if (it.flowing && !raf) raf = requestAnimationFrame(tick);
-      }).observe(it.el);
-    });
-
-    window.addEventListener('scroll', queue, { passive: true });
-    window.addEventListener('resize', queue);
-    frame();
-  }
-
   /* ---------- PQ Solved hero: cursor glow and pings ----------
      The bright grid shows round the pointer (--hx / --hy), and the pointer
      sheds a ring every so often as it moves; a click sheds a bigger one.
@@ -1339,15 +1215,37 @@
     }, 120);
   }
 
-  // The glow on [data-spot] cards follows the pointer
-  function initSpotlight() {
-    toArray(document.querySelectorAll('[data-spot]')).forEach(function (el) {
-      el.addEventListener('pointermove', function (e) {
-        var r = el.getBoundingClientRect();
-        el.style.setProperty('--mx', (e.clientX - r.left) + 'px');
-        el.style.setProperty('--my', (e.clientY - r.top) + 'px');
+  /* ---------- Problem cards (Know Your Loads) ----------
+     Each card draws its drawing once as the row comes into view (the cards
+     one after another), and again whenever the mouse enters it. The drawing
+     rests fully drawn; the animation is the CSS keyed to [data-play], which
+     only applies from 769px up (phones have their own, js/m/loads.js). Under
+     reduced motion nothing plays. */
+  function initProblemCards() {
+    var cards = toArray(document.querySelectorAll('.problem-card'));
+    if (!cards.length || reduceMotion) return;
+
+    function play(card) {
+      card.removeAttribute('data-play');
+      void card.offsetWidth;
+      card.setAttribute('data-play', '');
+    }
+
+    cards.forEach(function (card) {
+      card.addEventListener('pointerenter', function (e) {
+        if (e.pointerType === 'mouse') play(card);
       });
     });
+
+    if (!hasObserver) return;
+    var io = new IntersectionObserver(function (entries) {
+      if (!entries[0].isIntersecting) return;
+      io.disconnect();
+      cards.forEach(function (card, i) {
+        window.setTimeout(function () { play(card); }, i * 140);
+      });
+    }, { threshold: 0.4 });
+    io.observe(cards[0].parentNode);
   }
 
   /* A jump to Active, Passive or Hybrid (a chip, a drop-down link, the URL
@@ -2278,6 +2176,7 @@
       { sel: '.loads-x h2', step: 0 },
       { sel: '.loads-x__board', step: 0 },
       { sel: '.problems__sticky > h2', step: 0 },
+      { sel: '.problems__stack > *', step: 90 },
       { sel: '.solutions-row__inner > h2, .solutions-row__inner > p', step: 90 },
       { sel: '.solutions-row__grid > *', step: 90 },
       { sel: '.inaction__inner > h2, .inaction__inner > p', step: 90 },
@@ -3218,8 +3117,7 @@
   initFaq();
   initIndustryTabs();
   initNavAutoHide();
-  initPqScroll();
-  initSpotlight();
+  initProblemCards();
   initPqHover();
   initPqWave();
   initPqPills();

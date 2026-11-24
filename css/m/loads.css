@@ -215,19 +215,15 @@
 .m-dots {
   display: flex;
   justify-content: center;
-  margin-top: 6px;
+  margin-top: 0;
   color: var(--petrol, #1a4146);
-}
-
-.m-dots--light {
-  color: var(--text-on-dark, #f1f1e6);
 }
 
 .m-dots button {
   display: grid;
   place-items: center;
-  width: 26px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   border: 0;
   background: none;
@@ -262,18 +258,12 @@
 
 /* =========================================================
    4. THE PROBLEMS THESE LOADS CREATE
-   Three orange cards in a swipe row, each about 85% of the screen so the
-   next one peeks in. The desktop dealing classes (script.js still writes
-   them) are overridden by specificity; the state the phone needs lives in
-   data attributes and custom properties, which that script does not touch.
+   The desktop petrol cards (style.css) in a swipe row on the cream section,
+   each about 85% of the screen so the next one peeks in. The number sits top
+   right and the drawing top left, as on the Home deck.
    ========================================================= */
 .problems {
-  background: var(--petrol, #1a4146);
   text-align: left;
-}
-
-.problems h2 {
-  color: var(--text-on-dark, #f1f1e6);
 }
 
 .problems .problems__sticky {
@@ -285,50 +275,22 @@
   margin-bottom: 20px;
 }
 
-.problems h2 .accent {
-  color: var(--teal, #34b6af);
-}
-
 .problems .problems__stack .problem-card {
-  position: relative;
   flex: 0 0 min(85%, 340px);
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0;
-  min-height: 0;
-  padding: 22px 22px 26px;
-  border-radius: 16px;
-  box-shadow: 0 12px 24px rgba(4, 25, 23, 0.28);
+  gap: 22px;
+  padding: 24px 22px 26px;
+  box-shadow: 0 12px 24px rgba(26, 65, 70, 0.22);
   transform: none;
   opacity: calc(1 - var(--m-d, 0) * 0.32);
   scale: calc(1 - var(--m-d, 0) * 0.045);
   transition: none;
-  pointer-events: auto;
   scroll-snap-align: start;
   scroll-snap-stop: always;
 }
 
-.problems .problems__stack .problem-card > * {
-  opacity: 1;
-  transition: none;
-}
-
 .problems .problems__stack .problem-card__num {
-  display: block;
-  margin-bottom: 26px;
-}
-
-.problems .problems__stack .problem-card__icon {
-  position: absolute;
-  top: 24px;
-  right: 20px;
-  width: 104px;
-  height: 70px;
-  margin: 0;
-}
-
-.problems .problem-card__text p {
-  max-width: none;
+  top: 26px;
+  right: 22px;
 }
 
 /* Icons: the card in view draws its icon (data-m-front, set by the script).
@@ -357,69 +319,29 @@
 }
 
 
-
-
 /* =========================================================
    5. WHAT INACTION COSTS
-   Tall photo cards in a swipe row: the photo fills the card, the cost tag
-   sits on it, and the copy rests on a dark foot. The section is light, as
-   it is on wider screens, so it separates the dark Problems band above it
-   from the dark fan below.
+   The desktop full-photo cards (style.css) in a swipe row, each about 80% of
+   the screen. The section is ivory, like the desktop one, between the cream
+   Problems and the cream "Now see it solved".
    ========================================================= */
 .inaction {
   padding: var(--section-pad-y, 64px) var(--gutter, 20px) calc(var(--section-pad-y, 64px) - 14px);
-  background: var(--cream, #fafaef);
   text-align: left;
-}
-
-.inaction h2 {
-  color: var(--ink, #1a1c16);
 }
 
 .inaction__inner > p {
   margin-bottom: 24px;
-  color: var(--text, #3d4948);
 }
 
 .inaction-card {
   flex: 0 0 min(80%, 320px);
+  aspect-ratio: 4 / 5;
+  max-height: 440px;
   scroll-snap-align: start;
   scroll-snap-stop: always;
   scale: calc(1 - var(--m-d, 0) * 0.045);
   opacity: calc(1 - var(--m-d, 0) * 0.32);
-}
-
-.inaction-card {
-  position: relative;
-  isolation: isolate;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  aspect-ratio: 4 / 5;
-  max-height: 440px;
-  border-radius: 16px;
-  background: #143338;
-  box-shadow: 0 12px 24px rgba(4, 25, 23, 0.28);
-}
-
-.inaction-card__photo {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  height: auto;
-  border-radius: 0;
-}
-
-.inaction-card__photo::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(20, 51, 56, 0) 28%,
-    rgba(20, 51, 56, 0.72) 58%,
-    rgba(20, 51, 56, 0.96) 100%
-  );
 }
 
 .inaction-card__row {
@@ -427,21 +349,12 @@
 }
 
 .inaction-card__tag {
-  position: absolute;
   top: 16px;
   left: 16px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  color: #ffd2b3;
-  background: rgba(20, 51, 56, 0.62);
-  border-color: rgba(3, 153, 153, 0.55);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
 }
 
 .inaction-card p {
   padding: 0 20px 22px;
-  color: rgba(241, 241, 230, 0.8);
 }
 
 

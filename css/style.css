@@ -257,8 +257,7 @@ ul {
   letter-spacing: -2px;
 }
 
-/* Numeral — the outsized figure on a problem card */
-.problem-card__num,
+/* Numeral — the outsized figure in a stat */
 .pqs-stat__num {
   font-size: calc(var(--fs-numeral) * var(--fs-scale, 1));
   line-height: 1;
@@ -437,6 +436,7 @@ ul {
 .loads-x__head,
 .loads-x__num,
 .loads-x__seen span,
+.problem-card__num,
 .pqs-pills a,
 .pqs-marquee li,
 .yanq-step__num,
@@ -3164,23 +3164,27 @@ ul {
 }
 
 /* ---------- The Problems These Loads Create ----------
-   Three cards sit still in one row, icons drawn and at rest (client request,
-   12 Oct). The section is light so each band on the page reads as its own
-   section. On phones the cards become a swipe deck (css/m/loads.css). */
+   Three petrol cards in the Home symptom-card language: the load drawing
+   top-left in teal line, the number top-right, a hairline, the title, then
+   the copy in muted cream. The section is cream, so the band before it
+   (explorer, ivory) and the one after (inaction, ivory) each read as their
+   own section. The drawings play once as the cards come into view and again
+   on hover (initProblemCards). On phones the cards become a swipe deck
+   (css/m/loads.css). */
 .problems {
   position: relative;
   padding: 0 var(--gutter);
-  background: var(--ivory);
+  background: var(--cream);
   text-align: center;
 }
 
 .problems__sticky {
-  padding: 112px 0;
+  padding: 80px 0;
 }
 
 .problems h2 {
   color: var(--ink);
-  margin-bottom: 48px;
+  margin-bottom: 40px;
 }
 
 .problems h2 .accent {
@@ -3195,41 +3199,63 @@ ul {
   margin: 0 auto;
 }
 
-/* Simple cards: icon, title, copy. The big numerals show on phones only. */
 .problem-card {
-  background: var(--orange);
-  border-radius: 8px;
+  position: relative;
+  background: var(--petrol);
+  border-radius: 9px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 20px;
-  padding: 32px 28px 36px;
+  justify-content: flex-start;
+  gap: 28px;
+  padding: 32px;
   text-align: left;
+  transition: box-shadow 0.35s ease, background-color 0.35s ease;
 }
 
+.problem-card:hover {
+  background: #1d4a50;
+  box-shadow: 0 20px 44px rgba(26, 65, 70, 0.28);
+}
+
+/* The number, top right, quiet (as on the Home deck) */
 .problem-card__num {
-  display: none;
-  font-weight: bold;
-  color: var(--petrol);
-  flex-shrink: 0;
+  position: absolute;
+  top: 34px;
+  right: 32px;
+  color: var(--mist);
+  opacity: 0.6;
+  letter-spacing: 1.5px;
+}
+
+.problem-card__text {
+  width: 100%;
 }
 
 .problem-card__text h3 {
-  color: var(--petrol);
+  color: var(--text-on-dark);
   margin-bottom: 8px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .problem-card__text p {
-  color: #39383a;
+  color: #9fc2c0;
 }
 
 .problem-card__icon {
   order: -1;
-  width: 84px;
-  height: 56px;
+  width: 96px;
+  height: 64px;
   flex-shrink: 0;
   overflow: visible;
 }
+
+/* The drawings were made for orange cards: dark petrol line and a cream
+   accent. On petrol they take teal line and a cream accent. */
+.problem-card__icon [stroke="#114B47"] { stroke: var(--teal); }
+.problem-card__icon [fill="#114B47"]   { fill: var(--teal); }
+.problem-card__icon [stroke="#fff4e6"] { stroke: var(--text-on-dark); }
 
 /* Rest pose of the swung vector on Power Factor, which otherwise only comes
    from its keyframe (the draw-in animations are in section 13). */
@@ -3248,6 +3274,18 @@ ul {
 
 .problem-card__icon .anim-needle { transform-origin: 150px 160px; }
 .problem-card__icon .anim-h      { transform-origin: 85px 150px; }
+
+@media (max-width: 900px) {
+  .problem-card {
+    padding: 24px;
+    gap: 22px;
+  }
+
+  .problem-card__num {
+    top: 26px;
+    right: 24px;
+  }
+}
 
 /* ---------- Active / Passive / Hybrid solution rows ---------- */
 .solutions-row {
@@ -3448,10 +3486,18 @@ ul {
   }
 }
 
-/* ---------- What Inaction Costs ---------- */
+/* ---------- What Inaction Costs ----------
+   Three full-photo cards at every width (a swipe deck on phones, see
+   css/m/loads.css): the photo fills the card, a dark gradient rises from the
+   foot to carry the title and copy, and the cost tag is a pill at the top
+   left. The gradient is at least 0.72 dark where the copy starts, so the
+   cream text keeps AA contrast over any part of the photo. */
 .inaction {
-  background: var(--petrol);
-  padding: 90px var(--gutter);
+  min-height: 0;
+  display: block;
+  background: var(--ivory);
+  padding: 72px var(--gutter);
+  text-align: center;
 }
 
 .inaction__inner {
@@ -3460,34 +3506,55 @@ ul {
 }
 
 .inaction h2 {
-  color: var(--text-on-dark);
-  margin-bottom: 8px;
+  color: var(--ink);
+  margin-bottom: 12px;
 }
 
 .inaction__inner > p {
-  color: #95c3c3;
-  margin-bottom: 40px;
+  color: var(--text);
+  margin-bottom: 32px;
 }
 
 .inaction__grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(220px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 24px;
+  text-align: left;
 }
 
 .inaction-card {
-  background: #143338;
-  border-radius: 6px;
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
+  border-radius: 9px;
+  background: #143338;
+  box-shadow: 0 12px 28px rgba(26, 65, 70, 0.16);
 }
 
 .inaction-card__photo {
-  height: 160px;
-  border-radius: 6px 6px 0 0;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   background-color: #2a4d51;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+.inaction-card__photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(20, 51, 56, 0) 20%,
+    rgba(20, 51, 56, 0.74) 48%,
+    rgba(20, 51, 56, 0.96) 100%
+  );
 }
 
 .inaction-card__photo--1 { background-image: url("../images/inaction-bearing.jpg"); }
@@ -3495,12 +3562,7 @@ ul {
 .inaction-card__photo--3 { background-image: url("../images/inaction-resonance.jpg"); background-position: 45% center; }
 
 .inaction-card__row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 16px 16px 8px;
-  flex-wrap: wrap;
+  padding: 0 24px 8px;
 }
 
 .inaction-card__row h3 {
@@ -3508,40 +3570,45 @@ ul {
 }
 
 .inaction-card__tag {
-  color: #ffb98a;
-  background: rgba(3, 153, 153, 0.15);
-  border: 1px solid rgba(3, 153, 153, 0.4);
-  padding: 3px 8px;
-  border-radius: 4px;
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  padding: 6px 12px;
+  border: 1px solid rgba(3, 153, 153, 0.55);
+  border-radius: 999px;
+  color: #ffd2b3;
+  background: rgba(20, 51, 56, 0.86);
   white-space: nowrap;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
 }
 
 .inaction-card p {
-  color: #8fb0af;
-  padding: 0 16px 20px;
+  padding: 0 24px 24px;
+  color: rgba(241, 241, 230, 0.88);
 }
 
+/* Narrow tablets: the three stay across, a little closer and tighter */
 @media (max-width: 900px) {
   .inaction__grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-
-/* ---------- What Inaction Costs: light on wider screens ----------
-   Between the dark PQ entry and the dark footer, so each dark band reads as
-   its own section. The cards keep their dark face. */
-@media (min-width: 769px) {
-  .inaction {
-    background: var(--cream);
+    gap: 16px;
   }
 
-  .inaction h2 {
-    color: var(--ink);
+  .inaction-card {
+    aspect-ratio: 4 / 5;
   }
 
-  .inaction__inner > p {
-    color: var(--text);
+  .inaction-card__row {
+    padding: 0 18px 6px;
+  }
+
+  .inaction-card p {
+    padding: 0 18px 20px;
+  }
+
+  .inaction-card__tag {
+    top: 14px;
+    left: 14px;
   }
 }
 
@@ -3646,30 +3713,6 @@ ul {
 .pqs-hero {
   --pq-p: 1;
   --pq-fan: 1;
-}
-
-.pq-wave {
-  display: block;
-  width: 100%;
-  overflow: visible;
-}
-
-.pq-wave path {
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-}
-
-.pq-wave__raw {
-  stroke: var(--orange);
-  stroke-width: 1.6;
-  stroke-dasharray: 5 6;
-}
-
-.pq-wave__clean {
-  stroke: var(--cyan);
-  stroke-width: 2.4;
 }
 
 .pq-arrow {
@@ -6821,9 +6864,11 @@ body.sol-dialog-open {
 }
 
 /* ---------- Problem card icons: draw-in ----------
-   On wider screens the icons rest fully drawn. On phones the card in view
-   draws its icon (css/m/loads.css keys these keyframes to it). The dash
-   length is 1 against pathLength 1, so a path at rest is solid. */
+   The icons rest fully drawn. On wider screens each card draws its icon once
+   as it comes into view, and again on hover (initProblemCards sets and
+   restarts [data-play]). On phones the card in view draws its icon
+   (css/m/loads.css keys these keyframes to it). The dash length is 1 against
+   pathLength 1, so a path at rest is solid. */
 @media (prefers-reduced-motion: no-preference) {
   @keyframes pqDraw    { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
   @keyframes pqPopIn   { from { opacity: 0; transform: scale(0.4); } to { opacity: 1; transform: scale(1); } }
@@ -6837,6 +6882,29 @@ body.sol-dialog-open {
   .problem-card__icon .anim-pf-arc {
     stroke-dasharray: 1;
   }
+}
+
+@media (min-width: 769px) and (prefers-reduced-motion: no-preference) {
+  .problem-card[data-play] .anim-draw-wave { animation: pqDraw 1.6s cubic-bezier(0.35, 0, 0.5, 1) both; }
+
+  .problem-card[data-play] .anim-dial   { animation: pqDraw 1.2s cubic-bezier(0.4, 0, 0.55, 1) both; }
+  .problem-card[data-play] .anim-band   { animation: pqFadeIn 0.3s ease-out 1.05s both; }
+  .problem-card[data-play] .anim-tick   { animation: pqPopIn 0.25s cubic-bezier(0.3, 1.5, 0.6, 1) both; }
+  .problem-card[data-play] .anim-tick-1 { animation-delay: 0.08s; }
+  .problem-card[data-play] .anim-tick-2 { animation-delay: 0.34s; }
+  .problem-card[data-play] .anim-tick-3 { animation-delay: 0.6s; }
+  .problem-card[data-play] .anim-tick-4 { animation-delay: 0.86s; }
+  .problem-card[data-play] .anim-tick-5 { animation-delay: 1.1s; }
+  .problem-card[data-play] .anim-hub    { animation: pqPopIn 0.3s cubic-bezier(0.3, 1.5, 0.6, 1) both; }
+  .problem-card[data-play] .anim-needle { animation: pqExtend 1s cubic-bezier(0.25, 1.15, 0.4, 1) 0.15s both; }
+
+  .problem-card[data-play] .anim-origin { animation: pqPopIn 0.3s cubic-bezier(0.3, 1.5, 0.6, 1) both; }
+  .problem-card[data-play] .anim-h      { animation: pqStretch 0.55s cubic-bezier(0.3, 0, 0.4, 1) 0.1s both; }
+  .problem-card[data-play] .anim-h-head { animation: pqFadeIn 0.2s ease-out 0.6s both; }
+  .problem-card[data-play] .anim-swing  { animation: pqSwingUp 0.5s cubic-bezier(0.35, 0, 0.3, 1.1) 0.7s both; }
+  .problem-card[data-play] .anim-d-head { animation: pqFadeIn 0.2s ease-out 1.15s both; }
+  .problem-card[data-play] .anim-pf-arc { animation: pqDraw 0.4s ease-out 1.1s both; }
+  .problem-card[data-play] .anim-phi    { animation: pqPopIn 0.3s cubic-bezier(0.3, 1.5, 0.6, 1) 1.3s both; }
 }
 
 /* ---------- Load drawings: hover and pick ----------
