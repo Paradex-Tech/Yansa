@@ -295,7 +295,6 @@ ul {
 .cases__header h2,
 .contact-form-col h2,
 .about-measure h2,
-.about-values h2,
 .industries h2,
 .faq__header h2,
 .loads-x h2,
@@ -372,7 +371,6 @@ ul {
 .contact-form-col__sub,
 .yanq-works__lead,
 .yanq-hero__body,
-.about-values__copy,
 .pqs-next p,
 .solutions-row__inner > p,
 .svc-block__text,
@@ -4492,7 +4490,6 @@ ul {
    ========================================================= */
 .about-statement,
 .about-measure,
-.about-values,
 .industries,
 .faq {
   --fs-scale: 1.1;
@@ -4767,146 +4764,6 @@ ul {
 .about-measure.is-rotating .about-measure__copy.is-swapping {
   opacity: 0;
   transform: translateY(8px);
-}
-
-/* ---------- Our Values: compact, scroll-jacked ----------
-   Only as tall as its content. The script holds the page while the
-   panel is centred and steps through the values on each scroll. */
-.about-values {
-  position: relative;
-  background: var(--ivory);
-  text-align: center;
-}
-
-.about-values__panel {
-  position: relative;
-  min-height: 420px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 48px var(--gutter);
-  overflow: hidden;
-}
-
-.about-values h2 {
-  color: #2e3440;
-  margin-bottom: 22px;
-}
-
-.about-values__accent {
-  color: var(--teal-mid);
-}
-
-.about-values p {
-  color: #5f6673;
-  letter-spacing: 0.5px;
-  max-width: 558px;
-  margin: 0 auto;
-}
-
-/* Position indicator: the active value's bar widens to a solid teal
-   block; the others stay slim and pale. */
-.about-values__bars {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  height: 38px;
-  margin-bottom: 28px;
-}
-
-.value-bar {
-  cursor: pointer;
-  width: 18px;
-  height: 38px;
-  border-radius: 4px;
-  background: #a6dbd2;
-  transition: width 0.6s cubic-bezier(0.65, 0, 0.35, 1),
-    background-color 0.45s ease;
-}
-
-.value-bar.is-active {
-  width: 58px;
-  background: var(--teal-mid);
-}
-
-/* Used for the one frame in which the script seeds the row */
-.about-values__bars.is-static .value-bar {
-  transition: none;
-}
-
-.value-hl {
-  color: inherit;
-}
-
-/* Small spaced-out label naming the current value */
-.about-values .about-values__label {
-  color: var(--teal-mid);
-  font-size: 14px;
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-  margin: 0 auto 18px;
-  transition: opacity 0.34s ease, transform 0.34s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.about-values__label.is-swapping {
-  opacity: 0;
-  transform: translateY(8px);
-}
-
-.about-values__copy {
-  transition: opacity 0.34s ease, transform 0.34s cubic-bezier(0.2, 0.8, 0.2, 1),
-    height 0.38s cubic-bezier(0.2, 0.8, 0.2, 1);
-  overflow: hidden;
-}
-
-.about-values__copy.is-swapping {
-  opacity: 0;
-  transform: translateY(8px);
-}
-
-/* Entrance: bars, heading and copy rise into place a beat apart while the
-   panel travels in. The script removes both classes once it has played, as
-   they would otherwise override the copy's swap transition. */
-.about-values.is-armed .about-values__bars,
-.about-values.is-armed .about-values__panel > h2,
-.about-values.is-armed .about-values__label,
-.about-values.is-armed .about-values__copy {
-  opacity: 0;
-  transform: translateY(36px);
-  transition: opacity 0.72s cubic-bezier(0.22, 0.61, 0.36, 1),
-    transform 0.72s cubic-bezier(0.22, 0.61, 0.36, 1);
-}
-
-.about-values.is-armed.is-visible .about-values__bars,
-.about-values.is-armed.is-visible .about-values__panel > h2,
-.about-values.is-armed.is-visible .about-values__label,
-.about-values.is-armed.is-visible .about-values__copy {
-  opacity: 1;
-  transform: none;
-}
-
-.about-values.is-armed.is-visible .about-values__panel > h2 {
-  transition-delay: 0.12s;
-}
-
-.about-values.is-armed.is-visible .about-values__label {
-  transition-delay: 0.16s;
-}
-
-.about-values.is-armed.is-visible .about-values__copy {
-  transition-delay: 0.2s;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .about-values.is-armed .about-values__bars,
-  .about-values.is-armed .about-values__panel > h2,
-  .about-values.is-armed .about-values__label,
-  .about-values.is-armed .about-values__copy {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
 }
 
 /* ---------- Industries We Serve ---------- */

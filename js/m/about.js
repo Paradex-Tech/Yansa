@@ -4,7 +4,7 @@
    and a teardown, so leaving the phone width puts the DOM back as it was.
 
    Works alongside js/script.js, which keeps running the desktop behaviours
-   on phones too (typewriter, the rotator, values, industry tabs, FAQ); this
+   on phones too (typewriter, the rotator, industry tabs, FAQ); this
    file only adds what a phone needs on top of them. */
 (function () {
   'use strict';
@@ -124,23 +124,18 @@
 
 
   /* ---------- Rotating copy that never moves the page ----------
-     The We Measure. copy and the Values copy swap between paragraphs of
-     different lengths, and script.js eases the box between their heights.
+     The We Measure. copy swaps between paragraphs of different lengths,
+     and script.js eases the box between their heights.
      On a narrow screen that is a line or two each time, which shoves
      everything below while someone is reading. So the box is held at the
      tallest paragraph's height (a min-height through --m-copy-h), measured
      at the current width from a hidden clone.
-     The texts mirror SLIDES / VALUES in js/script.js; if those change, a
+     The texts mirror SLIDES in js/script.js; if those change, a
      stale copy here only makes the reserved height a line off. */
   var MEASURE_COPY = [
     'Every engagement begins with <span class="accent">on site</span> power quality measurement. Before any solution is proposed, we read what the facility\'s electrical system is actually doing.',
     'The right solution is <span class="accent">never assumed</span>. It is sized to what the measurement reveals. Recommendation follows the data, not a standard SKU.',
     'Delivery does not end at installation. Yansa stays <span class="accent">accountable</span> through AMC and post commissioning support, because outcomes matter more than equipment.'
-  ];
-  var VALUES_COPY = [
-    'Every measurement serves a <span class="value-hl">purpose</span>. To solve a real problem, not to move a product.',
-    '<span class="value-hl">Clarity</span> over jargon. Harmonics and power factor, translated into cost, uptime, and equipment life.',
-    '<span class="value-hl">Excellence</span> is delivering more than we commit. On every engagement, at every stage.'
   ];
 
   function reserve(el, texts) {
@@ -172,7 +167,6 @@
   }
 
   var measureBox = reserve(document.querySelector('.about-measure__copy'), MEASURE_COPY);
-  var valuesBox = reserve(document.querySelector('.about-values__copy'), VALUES_COPY);
 
 
   /* ---------- We Measure.: which word is up ----------
@@ -381,7 +375,7 @@
 
 
   /* ---------- Build / tear down with the phone width ---------- */
-  var parts = [hero, measureBox, valuesBox, measureSteps, industries, faq].filter(Boolean);
+  var parts = [hero, measureBox, measureSteps, industries, faq].filter(Boolean);
   var built = false;
 
   function build() {

@@ -10,9 +10,8 @@
    2. Statement     left-aligned editorial paragraph with an orange rule
    3. We Measure.   big left-anchored rotator (the word grows to the right,
                     so "We" never moves) and a box sized for the longest copy
-   4. Values        tighter panel, bars and copy that never resize the page
-   5. Industries    full-bleed scrolling tab row, compact table, swipe
-   6. FAQ           full-width tap rows, round chevron, eased open/close
+   4. Industries    full-bleed scrolling tab row, compact table, swipe
+   5. FAQ           full-width tap rows, round chevron, eased open/close
    Type sizes only through --fs-scale on the tiers in style.css.
    ========================================================= */
 
@@ -197,55 +196,7 @@
 }
 
 
-/* ---------- 4. Our Values ---------- */
-.about-values__panel {
-  min-height: 0;
-  padding: calc(var(--section-pad-y, 64px) + 4px) var(--gutter, 20px);
-}
-
-.about-values h2 {
-  --fs-scale: 1.25;
-  margin-bottom: 14px;
-}
-
-.about-values__bars {
-  height: 30px;
-  gap: 6px;
-  margin-bottom: 26px;
-}
-
-.value-bar {
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  width: 14px;
-  height: 30px;
-  border-radius: 4px;
-}
-
-.value-bar.is-active {
-  width: 48px;
-}
-
-.about-values .about-values__label {
-  margin-bottom: 14px;
-  letter-spacing: 0.3em;
-}
-
-.about-values p {
-  letter-spacing: 0.2px;
-}
-
-.about-values__copy {
-  min-height: var(--m-copy-h, 0px);
-  max-width: 30em;
-}
-
-.about-values .value-hl {
-  color: var(--teal-mid);
-}
-
-
-/* ---------- 5. Industries We Serve ---------- */
+/* ---------- 4. Industries We Serve ---------- */
 .industries {
   min-height: 0;
   text-align: left;
@@ -382,7 +333,7 @@
 }
 
 
-/* ---------- 6. FAQ ---------- */
+/* ---------- 5. FAQ ---------- */
 .faq {
   padding: var(--section-pad-y, 64px) var(--gutter, 20px) calc(var(--section-pad-y, 64px) + 8px);
 }
