@@ -2183,6 +2183,11 @@
       { sel: '.pqs-fit__header > *', step: 90 },
       { sel: '.pqs-fit__grid > *', step: 80, mode: 'fade' },
 
+      /* Solutions */
+      { sel: '.pqs-intro h2', step: 0 },
+      { sel: '.offered h2, .offered__inner > p', step: 90 },
+      { sel: '.offered__grid > *', step: 80, mode: 'fade' },
+
       /* contact */
       { sel: '.contact-map', step: 0 },
       { sel: '.contact-form-col > *', step: 80 },

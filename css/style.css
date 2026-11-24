@@ -285,6 +285,7 @@ ul {
 
 /* H2 — section headings, including the footer call to action */
 .offered h2,
+.pqs-intro h2,
 .pq-entry h2,
 .pqs-fit h2,
 .hero__desc h2,
@@ -2123,11 +2124,13 @@ ul {
    ========================================================= */
 
 /* ---------- Solutions We Offer ----------
-   The full yansa.in range at a glance, straight under the hero. Each name
-   links to its card on PQ Solved; the colours match the PQ Solved rows. */
+   The full range at a glance and the page's index, straight under the team
+   line. Every item is a chip that jumps to its card in the rows below (or to
+   its page, for Services). The column colour is the family colour of the
+   rows; it tints the chip on hover. */
 .offered {
   background: var(--ivory);
-  padding: 112px var(--gutter);
+  padding: 40px var(--gutter) 88px;
 }
 
 .offered__inner {
@@ -2166,13 +2169,13 @@ ul {
   border: 1px solid var(--line);
   border-top: 4px solid currentColor;
   border-radius: 12px;
-  padding: 28px 24px;
+  padding: 28px 20px;
 }
 
-.offered-col--active  { color: #e6483c; }
-.offered-col--passive { color: var(--highlight); }
+.offered-col--active   { color: var(--teal-deep); }
+.offered-col--passive  { color: var(--highlight); }
 .offered-col--hybrid   { color: var(--teal); }
-.offered-col--services { color: var(--teal-deep); }
+.offered-col--services { color: var(--petrol); }
 
 .offered-col__sub {
   display: block;
@@ -2183,25 +2186,55 @@ ul {
 .offered-col h3 { margin-bottom: 16px; }
 
 .offered-col ul {
+  display: grid;
+  gap: 10px;
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.offered-col li + li { border-top: 1px solid var(--line); }
-
+/* The chip: reads as a button before it is touched. The arrow nudges 3px
+   right and the family colour tints the pill on hover and focus. */
 .offered-col a {
+  --chip: currentColor;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 46px;
+  padding: 8px 14px 8px 18px;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  line-height: 1.4;
+  background: var(--ivory);
   color: var(--text);
   text-decoration: none;
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
 }
 
-.offered-col a {
-  display: block;
-  padding: 10px 0;
+.offered-col a::after {
+  content: "\2192";
+  flex: none;
+  color: var(--chip);
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .offered-col a:hover,
-.offered-col a:focus-visible { color: var(--teal-deep); }
+.offered-col a:focus-visible {
+  border-color: var(--chip);
+  background: color-mix(in srgb, var(--chip) 12%, var(--ivory-card));
+  color: var(--ink);
+}
+
+.offered-col a:hover::after,
+.offered-col a:focus-visible::after {
+  transform: translateX(3px);
+}
+
+.offered-col a:focus-visible {
+  outline: 2px solid var(--chip);
+  outline-offset: 2px;
+}
 
 /* ---------- What Generates Power Quality Problems ---------- */
 .generates {
@@ -2588,10 +2621,9 @@ ul {
   margin-bottom: 12px;
 }
 
-.solutions-row__label--active  { color: #e6483c; }
+.solutions-row__label--active  { color: var(--teal-deep); }
 .solutions-row__label--passive { color: var(--highlight); }
 .solutions-row__label--hybrid  { color: var(--teal); }
-.solutions-row__label--services { color: var(--teal-deep); }
 
 .solutions-row__inner > p {
   color: #8a8a8a;
@@ -3697,6 +3729,18 @@ ul {
 
 .about-statement .teal-text {
   color: var(--teal-mid);
+}
+
+/* Solutions: the heading sits over the team line, which keeps its
+   statement size; the offered range follows on the same ivory */
+.pqs-intro {
+  padding-bottom: 72px;
+}
+
+.pqs-intro h2 {
+  --fs-scale: 1;
+  color: var(--ink);
+  margin-bottom: 28px;
 }
 
 .tw-char {
