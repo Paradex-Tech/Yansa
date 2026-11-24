@@ -105,6 +105,16 @@
   background: color-mix(in srgb, var(--teal-deep) 9%, var(--ivory-card));
 }
 
+.svc-ask {
+  margin-top: 4px;
+}
+
+.svc-ask a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap, 48px);
+}
+
 .svc-detail__list li:first-child {
   margin-top: 20px;
 }

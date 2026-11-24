@@ -434,6 +434,7 @@ ul {
 .nav-menu__desc,
 .nav-menu__feature-line,
 .yanq-expect__list p,
+.svc-ask,
 .solution-card__label {
   font-size: calc(var(--fs-small) * var(--fs-scale, 1));
   line-height: 1.55;
@@ -4521,6 +4522,34 @@ ul {
 .svc-more:focus-visible {
   outline: 2px solid var(--teal-deep);
   outline-offset: 2px;
+}
+
+/* Ask link: a quiet text link under Learn More (and its panel), the same
+   underlined orange link and arrow as the Home "Know Your Loads" line */
+.svc-ask {
+  margin-top: 16px;
+}
+
+.svc-ask a {
+  display: inline-block;
+  color: var(--orange-edge);
+  text-decoration: none;
+  border-radius: 2px;
+}
+
+.svc-ask__text {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.svc-ask a:hover .pq-arrow,
+.svc-ask a:focus-visible .pq-arrow {
+  transform: translateX(5px);
+}
+
+.svc-ask a:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 4px;
 }
 
 /* The detail panel: one grid row that grows from 0fr to 1fr, so the script
