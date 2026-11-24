@@ -1,4 +1,4 @@
-// node docs/rework/tools/shots.mjs <label> <page> [--w 1440,390] [--sel css] [--base url]
+// node docs/rework/tools/shots.mjs <label> <page> [--w 1440,390] [--sel css] [--reduced] [--settle ms] [--base url]
 // node docs/rework/tools/shots.mjs <label> --nav [page]   (header at 1440..390, each drop-down open once)
 import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
@@ -11,6 +11,9 @@ const base = opt('--base', 'http://' + ['127', '0', '0', '1'].join('.') + ':8765
 const widths = opt('--w', '1440,390').split(',').map(Number);
 const sel = opt('--sel', null);
 const nav = flag('--nav');
+const reduced = flag('--reduced');            // emulate prefers-reduced-motion: reduce
+const settle = Number(opt('--settle', 350));   // ms to wait after each scroll stop (animations: use 6500)
+const suffix = reduced ? '-reduced' : '';
 const label = args[0];
 const pageName = args[1] || 'index.html';
 if (!label) { console.error('usage: shots.mjs <label> <page> [--w 1440,390] [--sel css] | <label> --nav [page]'); process.exit(2); }
@@ -38,6 +41,7 @@ try {
   const b = await launch();
   const page = await (await b.newPage()).init();
   const saved = [];
+  if (reduced) await page.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
   if (nav) {
     for (const w of [1440, 1280, 1024, 900, 820, 769, 390]) {
       await page.viewport(w, heightFor(w), w <= 500);
@@ -87,8 +91,8 @@ try {
         // step toward y in small increments so scroll-linked motion is in its real state
         const dist = y - cur, steps = Math.max(1, Math.ceil(Math.abs(dist) / (h * 0.4)));
         for (let s = 1; s <= steps; s++) { await page.eval(`scrollTo(0, ${Math.round(cur + (dist * s) / steps)})`); await sleep(110); }
-        cur = y; await sleep(350);
-        const f = join(dir, `${stem}-${w}-${String(++n).padStart(2, '0')}.png`);
+        cur = y; await sleep(settle);
+        const f = join(dir, `${stem}-${w}${suffix}-${String(++n).padStart(2, '0')}.png`);
         await page.screenshot(f); saved.push(f);
       }
     }

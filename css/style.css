@@ -272,11 +272,11 @@ ul {
   letter-spacing: -2px;
 }
 
-/* H1 — page hero titles, and the two pinned YanQ headings */
+/* H1 — page hero titles, and the two YanQ section headings */
 .legal h1,
 .hero__heading h1,
 .header-placeholder__overlay h1,
-.yanq-flow__title,
+.yanq-works h2,
 .yanq-delivers h2 {
   font-size: calc(var(--fs-h1) * var(--fs-scale, 1));
   line-height: 1.15;
@@ -311,7 +311,6 @@ ul {
 
 /* Statement — pull quotes and standalone claims */
 .quote p,
-.yanq-flow__quote,
 .about-statement p {
   font-size: calc(var(--fs-statement) * var(--fs-scale, 1));
   line-height: 1.4;
@@ -319,8 +318,7 @@ ul {
 }
 
 /* H3 — sub-section headings and figure labels */
-.header-placeholder__overlay .yanq-hero-intro__tag,
-.yanq-flow__step h3,
+.yanq-next__line,
 .deliver-stat h3,
 .case-card__num,
 .case-card__title {
@@ -342,7 +340,8 @@ ul {
 .results__title,
 .problem-card__text h3,
 .generates__card h3,
-.faq__question {
+.faq__question,
+.yanq-step h3 {
   font-size: calc(var(--fs-h4) * var(--fs-scale, 1));
   line-height: 1.3;
   letter-spacing: -0.2px;
@@ -369,6 +368,7 @@ ul {
 .case-card p,
 .case-card__more,
 .contact-form-col__sub,
+.yanq-works__lead,
 .yanq-hero__body,
 .about-values__copy,
 .generates > p,
@@ -392,7 +392,6 @@ ul {
 .navbar__links a,
 .why-card p,
 .symptom-card__detail p,
-.yanq-flow__step > p,
 .deliver-stat p,
 .glimpse p,
 .pqs-card p,
@@ -414,6 +413,7 @@ ul {
 
 /* Small — dense copy inside compact cards */
 .offered-col__sub,
+.yanq-step__tag,
 .generates__card p,
 .problem-card__text p,
 .inaction-card p,
@@ -429,10 +429,7 @@ ul {
 .pqs-card__num,
 .pqs-pills a,
 .pqs-marquee li,
-.yanq-flow__number,
-.yanq-flow__tag,
-.yanq-flow__sampling,
-.yanq-pill,
+.yanq-step__num,
 .deliver-stat__num,
 .inaction-card__tag,
 .results__num,
@@ -1023,7 +1020,6 @@ ul {
 .contact-body,
 .yanq-hero-intro,
 .yanq-hero,
-.yanq-flow,
 .yanq-delivers,
 .about-hero,
 .about-statement,
@@ -1045,10 +1041,9 @@ ul {
   min-height: 100vh;
 }
 
-/* Full screen below the sticky navbar: every YanQ section after the intro.
-   Kept at every width (it is left out of the tablet reset below), and as a
-   minimum a section taller than the screen still grows. */
-.yanq-flow,
+/* Full screen below the sticky navbar: What YanQ Delivers. Kept at every
+   width (it is left out of the tablet reset below), and as a minimum a
+   section taller than the screen still grows. */
 .yanq-delivers {
   min-height: var(--inner-hero-height);
 }
@@ -1106,7 +1101,6 @@ ul {
   .about-measure,
   .industries,
   .yanq-hero,
-  .yanq-flow,
   .yanq-delivers,
   .contact-body {
     padding-top: var(--section-pad-y);
@@ -1132,7 +1126,6 @@ ul {
 .cases__stack,
 .contact-body__inner,
 .yanq-hero__inner,
-.yanq-flow__stage,
 .yanq-delivers__grid,
 .industry-tabs,
 .faq__inner,
@@ -1242,11 +1235,6 @@ ul {
   .contact-hero .header-placeholder__overlay,
   .yanq-hero-intro .header-placeholder__overlay {
     --fs-scale: 1.5;
-  }
-
-  /* The YanQ tagline keeps its own size between title and subline */
-  .header-placeholder__overlay .yanq-hero-intro__tag {
-    --fs-scale: 1;
   }
 
   .yanq-hero-intro .header-placeholder__overlay h1 {
@@ -2452,9 +2440,7 @@ ul {
   align-items: center;
 }
 
-/* Also the YanQ How It Works step indicator */
-.problems__dots .dot,
-.yanq-flow__dot {
+.problems__dots .dot {
   width: 6px;
   height: 20px;
   border-radius: 3px;
@@ -2462,8 +2448,7 @@ ul {
   transition: background-color 0.4s ease, height 0.4s ease;
 }
 
-.problems__dots .dot.is-active,
-.yanq-flow__dot.is-active {
+.problems__dots .dot.is-active {
   background: var(--orange);
   height: 24px;
 }
@@ -4377,13 +4362,7 @@ ul {
   color: var(--cyan);
 }
 
-/* Tagline and subline sit softer than pure white, with the same weight as the
-   Solution hero's subline */
-.header-placeholder__overlay .yanq-hero-intro__tag {
-  font-weight: 500;
-  margin-bottom: 8px;
-}
-
+/* The subline sits softer than pure white */
 .yanq-hero-intro .header-placeholder__overlay p {
   color: rgba(255, 255, 255, 0.86);
 }
@@ -4399,257 +4378,128 @@ ul {
   margin-bottom: 40px;
 }
 
-/* ---------- How YanQ Works: pinned sequence ----------
-   One section, driven by initYanqFlow in the script.
-
-   Written first is the finished, stacked layout on petrol: heading,
-   statement, then each step followed by its visual. The list and the
-   visual column dissolve (display: contents) so every step and slot is a
-   flex item of the stage, and --i on each orders them in pairs. This is what
-   no JS, reduced motion and narrow screens get.
-
-   .is-scrolly pins the stage (the sticky-plus-runway pattern of the Home
-   hero). The script then writes everything that moves as a pure function
-   of scroll position, so nothing here carries a transition:
-     --yanq-flow-bg / -title / -brand   the cream to petrol colour change
-     --yanq-flow-intro                  1 to 0 as the statement leaves
-     --yanq-flow-reveal                 0 to 1 as the steps arrive
-     --yanq-flow-runway                 the runway in stage heights
-     --yanq-flow-marker-* / -wave-y     the rail (see .yanq-flow__spine) */
-/* The stage height is shared with What YanQ Delivers, which overlaps the
-   end of the runway while pinned (see that section) */
-.yanq-flow,
-.yanq-delivers {
-  --yanq-flow-stage-h: calc(100vh - var(--nav-height));
-}
-
-@supports (height: 100svh) {
-  .yanq-flow,
-  .yanq-delivers {
-    --yanq-flow-stage-h: calc(100svh - var(--nav-height));
-  }
-}
-
-.yanq-flow {
-  --yanq-flow-bg: var(--petrol);
-  --yanq-flow-title: #989898;
-  --yanq-flow-brand: var(--cyan);
-  --yanq-flow-intro: 1;
-  --yanq-flow-reveal: 1;
-  --yanq-flow-out: 0;
-  --yanq-flow-swap: 0;
-  background: var(--yanq-flow-bg);
+/* ---------- How YanQ Works ----------
+   A plain petrol section: heading, one lead line, then an <ol> of four boxes
+   joined by arrows. Each box holds a process drawing (the supplied SVGs, see
+   .yanq-diagram below). Written finished: with no JS, or under reduced
+   motion, every drawing and arrow shows as it ends. initYanqWorks adds
+   .is-armed to hide the parts it will play once, as the row scrolls into
+   view; it only ever touches opacity, transform and stroke-dashoffset, so
+   nothing moves the layout. Phones are in css/m/yanq.css. */
+.yanq-works {
+  --works-title: #989898;
+  background: var(--petrol);
   padding: var(--section-pad-y) var(--gutter);
-  position: relative;
 }
 
-.yanq-flow__stage {
+.yanq-works__inner {
   max-width: 1152px;
   margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
 }
 
-.yanq-flow__body,
-.yanq-flow__steps,
-.yanq-flow__window,
-.yanq-flow__list,
-.yanq-flow__visual {
-  display: contents;
+.yanq-works h2 {
+  color: var(--works-title);
+  margin-bottom: 16px;
 }
 
-.yanq-flow__spine,
-.yanq-flow__dots,
-.yanq-flow__morph {
-  display: none;
-}
-
-.yanq-flow__title {
-  color: var(--yanq-flow-title);
-  margin-bottom: 60px;
-}
-
-.yanq-flow__brand {
-  color: var(--yanq-flow-title);
-}
-
-/* Only the Q of YanQ is coloured, in every YanQ heading */
-.yanq-flow__q {
-  color: var(--yanq-flow-brand);
+.yanq-works__lead {
+  color: var(--text-on-dark);
+  max-width: 896px;
+  margin-bottom: 56px;
 }
 
 .yanq-q {
   color: var(--cyan);
 }
 
-/* The swap into "What YanQ Delivers." exists only while pinned */
-.yanq-flow__word-in {
-  display: none;
-}
-
-/* The statement: the same read-along as the Home quote (readAlong in the
-   script). Its rail and colours are for petrol here and cream when pinned. */
-.yanq-flow__intro {
-  margin-bottom: 72px;
-}
-
-.yanq-flow__quote {
-  position: relative;
-  max-width: 896px;
-  padding-left: 26px;
-}
-
-/* The rail: a dim track and a solid fill scaled from the top */
-.yanq-flow__quote::before,
-.yanq-flow__quote::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 2px;
-  height: 100%;
-  border-radius: 1px;
-}
-
-.yanq-flow__quote::before {
-  background: rgba(188, 201, 199, 0.2);
-}
-
-.yanq-flow__quote::after {
-  background: var(--line);
-  transform-origin: 50% 0;
-  transform: scaleY(var(--quote-rail, 1));
-}
-
-.yanq-flow__lead {
-  color: var(--text-on-dark);
-}
-
-.yanq-flow__rest {
-  color: #75a1a7;
-}
-
-/* Steps and their slots, paired by --i */
-.yanq-flow__step {
-  order: calc(var(--i, 1) * 2);
-  max-width: 448px;
-  margin-bottom: 32px;
+/* Four boxes and the arrows between them. The arrow sits inside its box
+   (absolutely placed in the column gap), so the <ol> holds only <li>s and
+   the arrow is always centred on its own box. */
+.yanq-works__row {
+  --works-gap: 40px;
   list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--works-gap);
 }
 
-.yanq-flow__tag-row {
+.yanq-step {
+  --yanq-anim-surface: color-mix(in srgb, var(--petrol) 94%, #ffffff);
+  position: relative;
   display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  padding: 20px 18px 24px;
+  color: var(--text-on-dark);
+  background: var(--yanq-anim-surface);
+  border: 1px solid rgba(188, 201, 199, 0.3);
+  border-radius: 8px;
 }
 
-.yanq-flow__number {
+.yanq-step__num {
   letter-spacing: 1.2px;
   text-transform: uppercase;
-  color: #75a1a7;
-  border-bottom: 1px solid #d4d4d4;
+  color: var(--mist);
+  border-bottom: 1px solid rgba(188, 201, 199, 0.5);
   padding-bottom: 3px;
+  margin-bottom: 18px;
 }
 
-.yanq-flow__tag {
-  letter-spacing: 1.1px;
-  text-transform: uppercase;
-  color: var(--highlight, #039999);
-}
-
-.yanq-flow__step h3 {
-  color: var(--text-on-dark);
-  margin-bottom: 12px;
-}
-
-.yanq-flow__step > p {
-  color: #75a1a7;
-  margin-bottom: 16px;
-}
-
-.yanq-flow__pills {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-/* Step 4 hands over to the Solution page's PQ Solved entry */
-.yanq-flow__cta {
-  margin-top: 24px;
-}
-
-.yanq-flow__cta:hover .pq-arrow {
-  transform: translateX(6px);
-}
-
-.yanq-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: #f5f5f5;
-  border: 1px solid #e5e5e5;
-  border-radius: 4px;
-  padding: 5px 11px;
-  color: #017474;
-}
-
-.yanq-pill__dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--teal-mid);
-}
-
-.yanq-flow__sampling {
-  color: var(--highlight, #039999);
-}
-
-/* The hook for the supplied step visuals (see the comment above the slots
-   in yanq.html). Outside the pinned mode everything reads as finished. */
-.yanq-flow__visual {
-  --flow-progress: 1;
-  --flow-step: 1;
-}
-
-/* A step's visual slot: the framed box holds its size while empty. Its
-   surface is opaque so a diagram's filled shapes can hide the lines behind
-   them in the box's own colour. */
-.yanq-anim {
-  --step-progress: 1;
-  --yanq-anim-surface: color-mix(in srgb, var(--petrol) 97%, #ffffff);
-  order: calc(var(--i, 1) * 2 + 1);
-  color: var(--text-on-dark);
+/* The drawing's space is reserved by the box ratio, so nothing shifts when
+   it plays. The SVGs keep their viewBox and letterbox inside it. */
+.yanq-step__art {
   position: relative;
   width: 100%;
-  max-width: 384px;
-  aspect-ratio: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  padding: 24px;
-  border: 1px solid #e5e5e5;
-  border-radius: 8px;
-  background: var(--yanq-anim-surface);
-  margin-bottom: 64px;
+  aspect-ratio: 5 / 4;
+  margin-bottom: 18px;
 }
 
-.yanq-anim:last-child {
-  margin-bottom: 0;
-}
-
-/* Fits the box, centred (the SVGs keep their viewBox, so they letterbox) */
-.yanq-anim > svg,
-.yanq-anim > img {
+.yanq-step__art > svg {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
+}
+
+.yanq-step h3 {
+  color: var(--text-on-dark);
+  margin-bottom: 6px;
+}
+
+.yanq-step__tag {
+  color: #c5d9d0;
+}
+
+/* Arrow: a thin line and head, orange, the drawings' stroke weight */
+.yanq-arrow {
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 4px);
+  width: calc(var(--works-gap) - 8px);
+  height: 16px;
+  margin-top: -8px;
+  overflow: visible;
+  color: var(--orange);
+  pointer-events: none;
+}
+
+/* The play: hidden only while armed, then each box fades in and rises 16px */
+.yanq-works.is-armed .yanq-step {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.yanq-works.is-armed .yanq-step.is-in {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
 
 /* The supplied process diagrams, recoloured for petrol. Linework is
-   currentColor (the slot's light text colour); these pick out the rest. */
+   currentColor (the box's light text colour); these pick out the rest. */
 .yanq-diagram .yd-clean {
   color: var(--teal);          /* the clean, measured signal */
 }
@@ -4667,273 +4517,22 @@ ul {
   fill: var(--yanq-anim-surface);
 }
 
-/* Pinned mode. The height past the stage is the scroll runway, in stage
-   heights; the script works it out from the number of steps and its STEP
-   length and writes it as --yanq-flow-runway, so the pin releases as the
-   last step leaves. The shared section rule centres .yanq-flow as a flex
-   column, which would park half the runway above the stage, so it is
-   reset to a block. */
-.yanq-flow.is-scrolly {
-  display: block;
-  min-height: 0;
-  padding: 0;
-  height: calc(var(--yanq-flow-stage-h) * (1 + var(--yanq-flow-runway, 3)));
-}
+/* Tablets: two by two. The arrow after box 1 points right; the arrow after
+   box 2 points down, through the row gap; box 3's points right again. */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .yanq-works__row {
+    --works-rgap: 56px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: var(--works-rgap);
+  }
 
-.yanq-flow.is-scrolly .yanq-flow__stage {
-  position: sticky;
-  top: var(--nav-height);
-  height: var(--yanq-flow-stage-h);
-  max-width: none;
-  padding: 0 var(--gutter);
-  /* Open at the top so the spine can reach up behind the navbar */
-  overflow-x: clip;
-  overflow-y: visible;
-  align-items: stretch;
-}
-
-.yanq-flow.is-scrolly .yanq-flow__title {
-  position: relative;
-  z-index: 2;
-  flex: none;
-  width: 100%;
-  max-width: 1152px;
-  margin: clamp(32px, 14vh, 160px) auto 0;
-}
-
-/* The outro swap (--yanq-flow-swap, 0 to 1). "YanQ" never moves: the
-   incoming words hang off its edges (their own space included, so the
-   spacing is the sentence's), and the gradient "YanQ" of What YanQ
-   Delivers fades in over the orange one. */
-.yanq-flow.is-scrolly .yanq-flow__brand {
-  position: relative;
-  display: inline-block;
-}
-
-.yanq-flow.is-scrolly .yanq-flow__word {
-  display: inline-block;
-  opacity: calc(1 - var(--yanq-flow-swap));
-  transform: translateY(calc(var(--yanq-flow-swap) * -0.4em));
-}
-
-.yanq-flow.is-scrolly .yanq-flow__word-in {
-  display: block;
-  position: absolute;
-  top: 0;
-  white-space: pre;
-  color: var(--yanq-flow-title);
-  opacity: var(--yanq-flow-swap);
-  transform: translateY(calc((1 - var(--yanq-flow-swap)) * 0.4em));
-}
-
-.yanq-flow.is-scrolly .yanq-flow__word-in--l {
-  right: 100%;
-}
-
-.yanq-flow.is-scrolly .yanq-flow__word-in--r {
-  left: 100%;
-}
-
-.yanq-flow.is-scrolly .yanq-flow__body {
-  display: block;
-  position: relative;
-  flex: 1 1 auto;
-  min-height: 0;
-  width: 100%;
-  max-width: 1152px;
-  margin: 0 auto;
-}
-
-/* The statement sits where it did in the plain section, then rises and
-   fades as the colour turns */
-.yanq-flow.is-scrolly .yanq-flow__intro {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 60px;
-  z-index: 1;
-  margin: 0;
-  opacity: var(--yanq-flow-intro);
-  transform: translateY(calc((1 - var(--yanq-flow-intro)) * -96px));
-}
-
-.yanq-flow.is-scrolly .yanq-flow__quote::before {
-  background: rgba(57, 89, 93, 0.2);
-}
-
-.yanq-flow.is-scrolly .yanq-flow__quote::after {
-  background: #39595d;
-}
-
-.yanq-flow.is-scrolly .yanq-flow__lead {
-  color: var(--ink);
-}
-
-.yanq-flow.is-scrolly .yanq-flow__rest {
-  color: #6f8b8d;
-}
-
-/* Unlit words are pale; a lit word takes its span's colour, so the lead
-   and the rest keep their two tones once read. */
-.yanq-flow__intro.is-scrolly .quote__word {
-  color: var(--line);
-}
-
-.yanq-flow__intro.is-scrolly .quote__word.is-lit {
-  color: inherit;
-}
-
-/* Two equal columns either side of the centre line the spine runs down.
-   The wide gap keeps both columns about 100px clear of the wave's swing at
-   1920px. The block starts at the heading's bottom edge, and the list is
-   clipped there, so a step leaving upwards never passes behind it. */
-.yanq-flow.is-scrolly .yanq-flow__steps {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  column-gap: clamp(96px, 12.5vw, 240px);
-  position: absolute;
-  inset: 0;
-  /* The outro carries the steps up and out with the page, fading them
-     over its first two thirds as the petrol gives way to cream */
-  opacity: calc(var(--yanq-flow-reveal) * max(0, 1 - var(--yanq-flow-out) * 1.5));
-  transform: translateY(calc(var(--yanq-flow-out) * -1 * var(--yanq-flow-stage-h)));
-}
-
-/* The list scrolls inside this window with the step in focus on a line
-   just under the heading (--yanq-flow-focus, from the script's FOCUS).
-   A step above that line fades out as it rises, and the mask's top band
-   takes the rest; below it the next steps dim and fade towards the
-   bottom edge. */
-.yanq-flow.is-scrolly .yanq-flow__window {
-  display: block;
-  position: relative;
-  justify-self: end;
-  width: min(448px, 100%);
-  height: 100%;
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 calc(var(--yanq-flow-focus, 64px) - 8px), #000 68%, transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0, #000 calc(var(--yanq-flow-focus, 64px) - 8px), #000 68%, transparent 100%);
-  /* During the outro the window rises with the steps; clipping its top by
-     the same distance keeps the cut on the heading's bottom edge */
-  clip-path: inset(calc(var(--yanq-flow-out) * var(--yanq-flow-stage-h)) 0 0 0);
-}
-
-.yanq-flow.is-scrolly .yanq-flow__list {
-  display: flex;
-  flex-direction: column;
-  gap: 120px;
-  will-change: transform;
-}
-
-.yanq-flow.is-scrolly .yanq-flow__step {
-  margin: 0;
-}
-
-/* The box is centred on the focus line, the stage's centre, like the step
-   in focus (--yanq-flow-box-y, its top in px, from the script) */
-.yanq-flow.is-scrolly .yanq-flow__visual {
-  display: block;
-  position: relative;
-  align-self: start;
-  justify-self: start;
-  /* Extra room between the wave's swing and the box; the box gives up
-     width rather than overflow its column when space is tight */
-  --yanq-box-nudge: clamp(0px, 7vw - 40px, 64px);
-  width: min(384px, 34vw, 44vh, calc(100% - var(--yanq-box-nudge)));
-  margin-left: var(--yanq-box-nudge);
-  aspect-ratio: 1;
-  transform: translateY(var(--yanq-flow-box-y, 0px));
-}
-
-/* The slots and the morph share the one fixed box; the slots crossfade */
-.yanq-flow.is-scrolly .yanq-anim {
-  position: absolute;
-  inset: 0;
-  max-width: none;
-  margin: 0;
-  opacity: 0;
-}
-
-.yanq-flow.is-scrolly .yanq-flow__morph {
-  display: block;
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-}
-
-.yanq-flow__morph > svg,
-.yanq-flow__morph > img {
-  width: 100%;
-  height: 100%;
-}
-
-/* The progress rail runs the full height of the stage and on up by the
-   navbar's height, tucked behind the (always visible) navbar, so the
-   rail never shows a cut end under the bar. The dashed
-   wave is one period (yanq-wave-tile.svg, 40 x 246, matching WAVE in the
-   script) repeated as a mask over a two-stop gradient: orange above the
-   marker, grey below. The script writes, all in px:
-     --yanq-flow-marker-y  the marker's height from the stage top, which is
-                           also the split
-     --yanq-flow-marker-x  its x, on the wave at that height
-     --yanq-flow-wave-y    the mask's offset, so the wave slides up past a
-                           marker parked in the middle during the steps */
-.yanq-flow.is-scrolly .yanq-flow__spine {
-  display: block;
-  position: absolute;
-  left: 50%;
-  top: calc(-1 * var(--nav-height));
-  bottom: 0;
-  width: 40px;
-  transform: translate(-50%, calc(var(--yanq-flow-out) * -1 * var(--yanq-flow-stage-h)));
-  pointer-events: none;
-  z-index: 0;
-  opacity: calc(var(--yanq-flow-reveal) * (1 - var(--yanq-flow-out)));
-}
-
-.yanq-flow.is-scrolly .yanq-flow__spine::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    var(--orange) calc(var(--yanq-flow-marker-y, 0px) + var(--nav-height)),
-    #d9d9d9 calc(var(--yanq-flow-marker-y, 0px) + var(--nav-height))
-  );
-  -webkit-mask: url("../images/icons/yanq-wave-tile.svg") 0 var(--yanq-flow-wave-y, 0px) / 40px 246px repeat-y;
-  mask: url("../images/icons/yanq-wave-tile.svg") 0 var(--yanq-flow-wave-y, 0px) / 40px 246px repeat-y;
-}
-
-.yanq-flow__marker {
-  position: absolute;
-  left: var(--yanq-flow-marker-x, 50%);
-  top: calc(var(--yanq-flow-marker-y, 0px) + var(--nav-height));
-  width: 10px;
-  height: 10px;
-  margin: -5px 0 0 -5px;
-  border-radius: 50%;
-  background: var(--orange);
-  box-shadow: 0 0 0 4px rgba(255, 140, 64, 0.22);
-}
-
-/* The bars themselves share the Solutions Problems indicator's styling
-   (.problems__dots .dot); only their placement and the pure-scroll rule
-   (no transition) are set here. */
-.yanq-flow.is-scrolly .yanq-flow__dots {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  position: absolute;
-  right: 40px;
-  top: 50%;
-  transform: translateY(calc(-50% - var(--yanq-flow-out) * var(--yanq-flow-stage-h)));
-  z-index: 1;
-  opacity: calc(var(--yanq-flow-reveal) * (1 - var(--yanq-flow-out)));
-}
-
-.yanq-flow__dot {
-  transition: none;
+  .yanq-step:nth-child(2) .yanq-arrow {
+    top: calc(100% + var(--works-rgap) / 2);
+    left: 50%;
+    width: calc(var(--works-rgap) - 8px);
+    margin: -8px 0 0 calc((var(--works-rgap) - 8px) / -2);
+    transform: rotate(90deg);
+  }
 }
 
 /* ---------- What YanQ Delivers ---------- */
@@ -5026,30 +4625,33 @@ ul {
   color: var(--text);
 }
 
-/* While How YanQ Works is pinned, this section is its outro's end state.
-   It is pulled up one stage height so it rises into the pinned stage over
-   the last stage of the runway, exactly as the steps scroll out, and lands
-   on the stage as the pin releases; from then on both scroll as one, so
-   there is no handover jump. Its heading is laid out under the pinned one
-   but kept invisible (still read by screen readers): the pinned heading
-   shows the words instead. The top stage's worth of background is clear so
-   the stage's colour change shows through. */
-.yanq-flow.is-scrolly + .yanq-delivers {
-  position: relative;
-  z-index: 1;
-  min-height: var(--yanq-flow-stage-h);
-  margin-top: calc(-1 * var(--yanq-flow-stage-h));
-  padding-top: clamp(32px, 14vh, 160px);
-  justify-content: flex-start;
-  background: linear-gradient(
-    to bottom,
-    transparent var(--yanq-flow-stage-h),
-    var(--cream) var(--yanq-flow-stage-h)
-  );
+/* ---------- Next step ----------
+   A short cream band after the stats: one line, two buttons. */
+.yanq-next {
+  background: var(--cream);
+  border-top: 1px solid rgba(188, 201, 199, 0.55);
+  padding: 56px var(--gutter);
 }
 
-.yanq-flow.is-scrolly + .yanq-delivers h2 {
-  opacity: 0;
+.yanq-next__inner {
+  max-width: 1152px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px 48px;
+  flex-wrap: wrap;
+}
+
+.yanq-next__line {
+  color: var(--ink);
+  max-width: 640px;
+}
+
+.yanq-next__buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 @media (max-width: 900px) {
@@ -5061,18 +4663,14 @@ ul {
     display: none;
   }
 
-  .yanq-flow,
+  .yanq-works,
   .yanq-delivers {
     padding: var(--section-pad-y) var(--gutter);
   }
 
-  .yanq-flow__title,
+  .yanq-works h2,
   .yanq-delivers h2 {
     margin-bottom: 36px;
-  }
-
-  .yanq-flow__intro {
-    margin-bottom: 48px;
   }
 }
 
