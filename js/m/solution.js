@@ -2,7 +2,7 @@
    Runs on every width but does nothing unless the phone media query matches
    (see isPhone), and re-checks on resize/rotation.
 
-   Serves solutions.html, services.html and know-your-loads.html. Everything here is built by
+   Serves services.html and know-your-loads.html (the Solutions page has js/m/solutions.js). Everything here is built by
    build() and taken apart by teardown(), so leaving the phone width (a
    rotation, a resized window) hands the page back to the desktop scripts
    with no classes, nodes or inline styles left behind. Scroll-linked values
@@ -410,163 +410,13 @@
   }
 
 
-  /* ---------- What Inaction Costs, Match the fix, solution rows ---------- */
+  /* ---------- What Inaction Costs, Match the fix ---------- */
   function initCarousels() {
     var inaction = document.querySelector('.inaction__grid');
     if (inaction) carousel(inaction, { label: 'Cost', light: true });
 
     var fit = document.querySelector('.pqs-fit__grid');
     if (fit) carousel(fit, { label: 'Problem', light: true });
-
-    toArray(document.querySelectorAll('.solutions-row__grid')).forEach(function (grid) {
-      carousel(grid, { label: 'Product' });
-    });
-  }
-
-
-  /* ---------- PQ Solved hero: ambient glow ----------
-     With no cursor, the bright grid's window drifts on two slow sine waves
-     (periods of about 40 and 30 seconds) while the hero is on screen, and
-     sheds a faint ring every few seconds. A tap still pings a big ring
-     (initPqHover's click handler). */
-  function initPqHero() {
-    var hero = document.querySelector('.pqs-hero');
-    if (!hero || reduce || !('IntersectionObserver' in window)) return;
-
-    var PING_EVERY = 5600;
-    var raf = null;
-    var lastPing = 0;
-
-    function ping(x, y) {
-      var ring = document.createElement('span');
-      ring.className = 'pq-ping';
-      ring.style.left = x + 'px';
-      ring.style.top = y + 'px';
-      ring.setAttribute('aria-hidden', 'true');
-      ring.addEventListener('animationend', function () { ring.remove(); });
-      hero.insertBefore(ring, hero.firstChild.nextSibling);
-    }
-
-    function tick(now) {
-      var w = hero.clientWidth;
-      var h = hero.clientHeight;
-      var x = w * (0.5 + 0.34 * Math.sin(now / 6400));
-      var y = h * (0.44 + 0.24 * Math.sin(now / 4800 + 1.3));
-      hero.style.setProperty('--hx', x.toFixed(1) + 'px');
-      hero.style.setProperty('--hy', y.toFixed(1) + 'px');
-      // initPqHover drops .is-hot on pointerleave, which a touch fires after every tap
-      hero.classList.add('is-hot');
-      if (now - lastPing > PING_EVERY) {
-        lastPing = now;
-        ping(x, y);
-      }
-      raf = requestAnimationFrame(tick);
-    }
-
-    var io = new IntersectionObserver(function (entries) {
-      if (entries[0].isIntersecting) {
-        if (!raf) raf = requestAnimationFrame(tick);
-      } else if (raf) {
-        cancelAnimationFrame(raf);
-        raf = null;
-      }
-    });
-    io.observe(hero);
-
-    undo.push(function () {
-      io.disconnect();
-      if (raf) cancelAnimationFrame(raf);
-      raf = null;
-      hero.classList.remove('is-hot');
-      hero.style.removeProperty('--hx');
-      hero.style.removeProperty('--hy');
-    });
-  }
-
-
-  /* ---------- Product dialog: bottom sheet ----------
-     The sheet's look and motion are in the CSS. This adds the drag handle,
-     starts each product at the top of its copy, and closes the sheet on a
-     swipe down that begins at the top of the content (or on the handle): a
-     pull of more than about a quarter of the sheet, or a quick flick. The
-     close itself is script.js's (the close button), so focus and the scroll
-     lock are handled in one place. */
-  function initSheet() {
-    var dialog = document.querySelector('.sol-dialog');
-    if (!dialog) return;
-
-    var panel = dialog.querySelector('.sol-dialog__panel');
-    var scroller = dialog.querySelector('.sol-dialog__scroll');
-    var closeButton = dialog.querySelector('.sol-dialog__close');
-    if (!panel || !scroller || !closeButton) return;
-
-    var handle = document.createElement('div');
-    handle.className = 'm-sheet-handle';
-    handle.setAttribute('aria-hidden', 'true');
-    inject(handle, panel, panel.firstChild);
-
-    var wasOpen = false;
-    var mo = new MutationObserver(function () {
-      var open = dialog.classList.contains('is-open');
-      if (open && !wasOpen) scroller.scrollTop = 0;
-      wasOpen = open;
-    });
-    mo.observe(dialog, { attributes: true, attributeFilter: ['class'] });
-
-    var startY = 0;
-    var startT = 0;
-    var dy = 0;
-    var armed = false;
-    var dragging = false;
-
-    function release() {
-      dialog.classList.remove('m-dragging');
-      panel.style.setProperty('--m-drag', '0px');
-    }
-
-    on(panel, 'touchstart', function (e) {
-      if (!dialog.classList.contains('is-open') || e.touches.length > 1) return;
-      startY = e.touches[0].clientY;
-      startT = e.timeStamp;
-      dy = 0;
-      dragging = false;
-      armed = scroller.scrollTop <= 0 || !!e.target.closest('.m-sheet-handle');
-    }, { passive: true });
-
-    on(panel, 'touchmove', function (e) {
-      if (!armed) return;
-      var d = e.touches[0].clientY - startY;
-      if (!dragging) {
-        if (d < -6) { armed = false; return; }  // scrolling the copy up
-        if (d < 6) return;
-        dragging = true;
-        dialog.classList.add('m-dragging');
-      }
-      e.preventDefault();
-      dy = Math.max(0, d);
-      panel.style.setProperty('--m-drag', dy.toFixed(1) + 'px');
-    }, { passive: false });
-
-    function end(e) {
-      if (!dragging) return;
-      dragging = false;
-      armed = false;
-      var speed = dy / Math.max(1, e.timeStamp - startT);
-      var far = dy > Math.min(160, panel.offsetHeight * 0.26);
-      // Letting go of the drag class re-arms the transition, so the sheet
-      // either glides on out from where the finger left it, or back up.
-      release();
-      if (far || speed > 0.65) closeButton.click();
-    }
-
-    on(panel, 'touchend', end);
-    on(panel, 'touchcancel', end);
-
-    undo.push(function () {
-      mo.disconnect();
-      release();
-      panel.style.removeProperty('--m-drag');
-    });
   }
 
 
@@ -581,8 +431,6 @@
     initProblems();
     initEntry();
     initCarousels();
-    initPqHero();
-    initSheet();
     on(window, 'scroll', queue, { passive: true });
     on(window, 'resize', queue);
     runScroll();

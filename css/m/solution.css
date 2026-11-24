@@ -5,7 +5,7 @@
    by order. Written for phones first: carousels, sheets, thumb reach, not
    desktop layouts stacked into a column.
 
-   Serves solutions.html, services.html and know-your-loads.html. Tokens come from :root (BASE sets
+   Serves services.html and know-your-loads.html (the Solutions page has css/m/solutions.css). Tokens come from :root (BASE sets
    the phone values); every var() carries a fallback so this file reads
    correctly on its own. Scroll-linked values (--m-d, --m-y, --m-s, --m-dim,
    --m-par, --pq-fan) are written by js/m/solution.js; without it every one of
@@ -20,8 +20,7 @@
    ease down and dim slightly as they leave, scroll-linked. */
 .generates__grid,
 .inaction__grid,
-.pqs-fit__grid,
-.solutions-row__grid {
+.pqs-fit__grid {
   position: relative;
   display: flex;
   gap: 12px;
@@ -42,15 +41,13 @@
 
 .generates__grid::-webkit-scrollbar,
 .inaction__grid::-webkit-scrollbar,
-.pqs-fit__grid::-webkit-scrollbar,
-.solutions-row__grid::-webkit-scrollbar {
+.pqs-fit__grid::-webkit-scrollbar {
   display: none;
 }
 
 .generates__card,
 .inaction-card,
-.pqs-card,
-.solutions-row__grid > .solution-card {
+.pqs-card {
   flex: 0 0 min(80%, 320px);
   scroll-snap-align: start;
   scroll-snap-stop: always;
@@ -703,58 +700,6 @@
 }
 
 
-/* ---------- PQ Solved: hero ----------
-   No cursor on touch: the bright grid drifts slowly by itself (--hx/--hy
-   from the script), sheds a faint ring now and then, and a tap pings a ring
-   where the finger lands (initPqHover's click handler). The hero stops just
-   short of a full screen so the marquee shows under it. */
-.pqs-hero {
-  min-height: calc(100vh - var(--nav-height, 64px) - 56px);
-  min-height: calc(100svh - var(--nav-height, 64px) - 56px);
-  padding: 56px var(--gutter, 20px) 64px;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.pqs-hero__grid,
-.pqs-hero__glow {
-  background-size: 40px 40px;
-}
-
-.pqs-hero__glow {
-  -webkit-mask-image: radial-gradient(170px circle at var(--hx, 50%) var(--hy, 45%), #000, transparent 72%);
-  mask-image: radial-gradient(170px circle at var(--hx, 50%) var(--hy, 45%), #000, transparent 72%);
-  transition: opacity 1.6s ease;
-}
-
-.pqs-hero__rings span {
-  width: 640px;
-}
-
-.pqs-lead {
-  margin-bottom: 32px;
-}
-
-.pqs-hero__ctas {
-  flex-direction: column;
-  align-items: stretch;
-  gap: 12px;
-  max-width: 360px;
-  margin: 0 auto;
-}
-
-.pqs-hero__ctas .btn {
-  min-height: 52px;
-}
-
-/* ---------- Marquee ---------- */
-.pqs-marquee {
-  padding: 15px 0;
-}
-
-.pqs-marquee li {
-  padding: 0 26px;
-}
-
 /* ---------- Match the fix to the problem: a swipe deck ---------- */
 .pqs-fit {
   padding: var(--section-pad-y, 64px) var(--gutter, 20px) calc(var(--section-pad-y, 64px) - 16px);
@@ -820,332 +765,11 @@
   margin-top: 18px;
 }
 
-/* ---------- Jump bar: a segmented control ----------
-   Sits under the compact navbar and rises to the top edge when the navbar
-   slides away (.nav-hidden on <html>). The thumb glides to the family in
-   view; :has() reads the active link initPqPills marks. */
-.pqs-pills {
-  padding: 10px var(--gutter, 20px);
-  transition: top 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.pqs-pills__inner {
-  position: relative;
-  gap: 0;
-  padding: 4px;
-  border-radius: 999px;
-  background: rgba(26, 65, 70, 0.07);
-  border: 1px solid rgba(26, 65, 70, 0.08);
-}
-
-.pqs-pills__inner::before {
-  content: "";
-  position: absolute;
-  top: 4px;
-  bottom: 4px;
-  left: 4px;
-  width: calc((100% - 8px) / 3);
-  border-radius: 999px;
-  background: var(--petrol, #1a4146);
-  box-shadow: 0 6px 16px rgba(26, 65, 70, 0.25);
-  opacity: 0;
-  transform: translateX(0);
-  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease;
-}
-
-.pqs-pills__inner:has(a.is-active)::before { opacity: 1; }
-.pqs-pills__inner:has(a:nth-child(2).is-active)::before { transform: translateX(100%); }
-.pqs-pills__inner:has(a:nth-child(3).is-active)::before { transform: translateX(200%); }
-
-.pqs-pills a {
-  position: relative;
-  z-index: 1;
-  flex: 1;
-  display: grid;
-  place-items: center;
-  min-height: 40px;
-  padding: 0 8px;
-  border: 0;
-  border-radius: 999px;
-  -webkit-tap-highlight-color: transparent;
-  transition: color 0.5s ease;
-}
-
-.pqs-pills a:hover {
-  color: var(--text, #3d4948);
-}
-
-.pqs-pills a.is-active,
-.pqs-pills a.is-active:hover {
-  background: transparent;
-  color: var(--text-on-dark, #f1f1e6);
-}
-
-.pqs .solutions-row {
-  scroll-margin-top: calc(var(--nav-height, 64px) + 62px);
-}
-
-/* ---------- Solution rows: snap carousels, no arrows ---------- */
-.solutions-row {
-  padding: 44px var(--gutter, 20px) 36px;
-}
-
-.solutions-row__inner > p {
-  margin-bottom: 20px;
-}
-
-.solutions-row__nav {
-  display: none !important;
-}
-
-.solutions-row__grid {
-  counter-reset: sol;
-}
-
-.solutions-row__grid > .solution-card {
-  flex-basis: min(72%, 290px);
-  aspect-ratio: 4 / 5;
-  border-radius: 16px;
-  counter-increment: sol;
-  box-shadow: 0 14px 30px rgba(26, 65, 70, 0.14);
-  -webkit-tap-highlight-color: transparent;
-}
-
-.solution-card:not(.solution-card--photo) {
-  background:
-    radial-gradient(240px circle at 85% 8%, rgba(76, 200, 192, 0.22), transparent 70%),
-    linear-gradient(165deg, var(--petrol-bright, #167777) -30%, var(--petrol, #1a4146) 48%, #102a2e 100%);
-}
-
-.solutions-row__grid > .solution-card::before {
-  content: counter(sol, decimal-leading-zero);
-  position: absolute;
-  top: 16px;
-  left: 18px;
-  z-index: 1;
-  color: var(--mist, #a9d1d7);
-  letter-spacing: 1.4px;
-  font-size: calc(var(--fs-label, 14px) * var(--fs-scale, 1));
-}
-
-.solutions-row__grid > .solution-card--photo::before {
-  color: var(--text, #3d4948);
-}
-
-.solution-card__label {
-  align-items: flex-end;
-  gap: 14px;
-  padding: 18px 18px 18px;
-}
-
-.solution-card:not(.solution-card--photo) .solution-card__label {
-  background: none;
-}
-
-.solution-card:not(.solution-card--photo) .solution-card__name {
-  font-size: calc(var(--fs-h4, 18px) * var(--fs-scale, 1));
-  line-height: 1.25;
-}
-
-.solution-card--photo .solution-card__label {
-  background: linear-gradient(180deg, rgba(16, 42, 46, 0.72), rgba(16, 42, 46, 0.92));
-}
-
-.solution-card__label .plus {
-  flex: none;
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 140, 64, 0.55);
-  background: rgba(255, 140, 64, 0.12);
-  line-height: 1;
-}
-
-.solution-card:hover .plus {
-  transform: none;
-}
-
-.solution-card:active .plus {
-  transform: rotate(90deg);
-}
-
-/* The sheet does not grow out of the card, so the card stays put */
-.solution-card.is-morphing {
-  opacity: 1;
-}
-
-
-/* ---------- Product dialog: a bottom sheet ----------
-   initSolutionDialog writes the panel's top/left/width/height inline to grow
-   it from the card; on a phone those are overruled and the panel rises from
-   the bottom edge instead. It closes on the button, the backdrop, Escape, or
-   a swipe down from the top of its content (js/m/solution.js). The close
-   transition stays under the 520ms the script waits before hiding it. */
-.sol-dialog__backdrop {
-  background: rgba(10, 26, 28, 0.55);
-  transition: opacity 0.5s ease;
-}
-
-.sol-dialog__panel {
-  top: auto !important;
-  bottom: 0;
-  left: 0 !important;
-  width: 100% !important;
-  height: auto !important;
-  max-height: calc(100vh - 40px);
-  max-height: calc(100svh - 40px);
-  border-radius: 22px 22px 0 0;
-  box-shadow: 0 -18px 50px rgba(0, 0, 0, 0.35);
-  transform: translate3d(0, calc(100% + 24px), 0);
-  transition: transform 0.48s cubic-bezier(0.65, 0, 0.35, 1);
-  will-change: transform;
-}
-
-.sol-dialog.is-open .sol-dialog__panel {
-  transform: translate3d(0, var(--m-drag, 0px), 0);
-  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.sol-dialog.is-open.m-dragging .sol-dialog__panel {
-  transition: none;
-}
-
-.sol-dialog__scroll {
-  width: auto !important;
-  overscroll-behavior: contain;
-}
-
-.sol-dialog__media {
-  height: 230px;
-}
-
-.sol-dialog__content {
-  padding: 24px var(--gutter, 20px) calc(32px + env(safe-area-inset-bottom, 0px));
-}
-
-/* No photo: room for the handle and the close button above the title */
-.sol-dialog__media:empty + .sol-dialog__content {
-  padding-top: 64px;
-}
-
-.sol-dialog__title {
-  padding-right: 8px;
-  margin-bottom: 14px;
-}
-
-.sol-dialog__body p + p {
-  margin-top: 16px;
-}
-
-/* The last line ("Problem addressed") reads as a tag strip */
-.sol-dialog__body p:last-child:has(strong) {
-  margin-top: 22px;
-  padding-top: 16px;
-  border-top: 1px solid rgba(241, 241, 230, 0.12);
-}
-
-.sol-dialog__close {
-  top: 14px;
-  right: 14px;
-  width: 44px;
-  height: 44px;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* Drag handle, injected by the script; a wide strip so the thumb finds it */
-.m-sheet-handle {
-  position: absolute;
-  top: 0;
-  left: 64px;
-  right: 64px;
-  z-index: 2;
-  display: grid;
-  place-items: center;
-  height: 30px;
-  touch-action: none;
-}
-
-.m-sheet-handle::before {
-  content: "";
-  width: 40px;
-  height: 5px;
-  border-radius: 3px;
-  background: rgba(150, 160, 158, 0.75);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25);
-}
-
-/* Tablet portrait: a sheet that does not run the full width */
-@media (min-width: 600px) {
-  .sol-dialog__panel {
-    left: 50% !important;
-    width: min(100%, 600px) !important;
-    margin-left: max(-50%, -300px);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .sol-dialog__panel,
-  .sol-dialog.is-open .sol-dialog__panel {
-    transition-duration: 0.01s;
-  }
-
   .generates__card,
   .inaction-card,
-  .pqs-card,
-  .solutions-row__grid > .solution-card {
+  .pqs-card {
     scale: none;
     opacity: 1;
   }
-}
-
-
-/* ---------- Solutions We Offer + team statement ----------
-   The four groups (Active, Passive, Hybrid, Services) stack as compact
-   cards. The statement mirrors the About page's phone treatment. */
-.offered {
-  padding: var(--section-pad-y, 64px) var(--gutter, 20px);
-}
-
-.offered__inner > p {
-  margin-bottom: 32px;
-}
-
-.offered__grid {
-  grid-template-columns: 1fr;
-  gap: 16px;
-}
-
-.offered-col {
-  padding: 20px;
-}
-
-.offered-col a {
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-  padding: 0;
-}
-
-.about-statement {
-  min-height: 0;
-  padding: calc(var(--section-pad-y, 64px) + 8px) var(--gutter, 20px) var(--section-pad-y, 64px);
-}
-
-.about-statement p {
-  --fs-scale: 1.08;
-  max-width: 34em;
-  margin: 0;
-  color: var(--petrol);
-}
-
-.about-statement__inner::before {
-  content: "";
-  display: block;
-  width: 36px;
-  height: 3px;
-  margin-bottom: 22px;
-  border-radius: 2px;
-  background: var(--orange, #ff8c40);
 }
