@@ -181,7 +181,7 @@ html.m-lock {
 
 .hero__heading h1,
 .header-placeholder__overlay h1,
-.yanq-flow__title,
+.yanq-works h2,
 .yanq-delivers h2 {
   line-height: var(--lh-heading);
   letter-spacing: -0.7px;
@@ -211,7 +211,6 @@ html.m-lock {
 }
 
 .quote p,
-.yanq-flow__quote,
 .about-statement p {
   line-height: var(--lh-statement);
   letter-spacing: -0.2px;
