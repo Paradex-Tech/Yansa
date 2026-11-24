@@ -1131,6 +1131,17 @@ h1, h2, h3, h4, p, li, a {
   border-radius: 999px;
 }
 
+/* Narrowest phones (S15): the side-by-side pair keeps >= 8px clear each side of the label */
+@media (max-width: 380px) {
+  .footer__buttons {
+    gap: 10px;
+  }
+
+  .footer__buttons .btn {
+    font-size: 15px;
+  }
+}
+
 .footer__bottom {
   flex-direction: column;
   align-items: stretch;
