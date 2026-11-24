@@ -29,6 +29,7 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/m/base.css" media="(max-width: 768px)">
   <link rel="stylesheet" href="css/m/solution.css" media="(max-width: 768px)">
+  <link rel="stylesheet" href="css/m/loads.css" media="(max-width: 768px)">
 
   <script type="application/ld+json">
   {
@@ -99,6 +100,182 @@
           <h1>Know Your Loads.</h1>
           <p>Every load leaves a signature on your power. Here is what each one does, and how we fix it.</p>
         </div>
+      </div>
+    </section>
+
+    <!-- LOAD EXPLORER: pick a load and the problem and Yansa's solution change with it. Loads | Problem | Solution.
+         Copy from the client's November revamp; drawings from the old "Loads Responsible" cards (hover-animated, here
+         replayed on each pick). All eight items of a column share one grid cell, so the board is as tall as the tallest
+         and switching never shifts the page. Tabs and crossfade: initLoadExplorer. Without the script the first load shows. -->
+    <section class="loads-x" id="explorer" aria-labelledby="loads-x-title">
+      <div class="loads-x__inner">
+        <h2 id="loads-x-title">Which loads run your <span class="accent">facility</span>?</h2>
+        <div class="loads-x__board">
+          <div class="loads-x__col loads-x__col--loads">
+            <p class="loads-x__head" id="lx-loads-label">Loads</p>
+            <div class="loads-x__list" role="tablist" aria-orientation="vertical" aria-labelledby="lx-loads-label">
+              <button class="loads-x__load is-active" type="button" role="tab" id="lx-tab-vfd" aria-selected="true" aria-controls="lx-panel" data-load="vfd">
+                <span class="loads-x__num" aria-hidden="true">01</span>
+                <span class="loads-x__name">Variable frequency drives</span>
+              </button>
+              <button class="loads-x__load" type="button" role="tab" id="lx-tab-textile" aria-selected="false" aria-controls="lx-panel" tabindex="-1" data-load="textile">
+                <span class="loads-x__num" aria-hidden="true">02</span>
+                <span class="loads-x__name">Textile machines</span>
+              </button>
+              <button class="loads-x__load" type="button" role="tab" id="lx-tab-welding" aria-selected="false" aria-controls="lx-panel" tabindex="-1" data-load="welding">
+                <span class="loads-x__num" aria-hidden="true">03</span>
+                <span class="loads-x__name">Welding lines and presses</span>
+              </button>
+              <button class="loads-x__load" type="button" role="tab" id="lx-tab-datacentre" aria-selected="false" aria-controls="lx-panel" tabindex="-1" data-load="datacentre">
+                <span class="loads-x__num" aria-hidden="true">04</span>
+                <span class="loads-x__name">UPS systems and servers</span>
+              </button>
+              <button class="loads-x__load" type="button" role="tab" id="lx-tab-office" aria-selected="false" aria-controls="lx-panel" tabindex="-1" data-load="office">
+                <span class="loads-x__num" aria-hidden="true">05</span>
+                <span class="loads-x__name">Lighting, computers and inverter AC</span>
+              </button>
+              <button class="loads-x__load" type="button" role="tab" id="lx-tab-furnace" aria-selected="false" aria-controls="lx-panel" tabindex="-1" data-load="furnace">
+                <span class="loads-x__num" aria-hidden="true">06</span>
+                <span class="loads-x__name">Arc and induction furnaces</span>
+              </button>
+              <button class="loads-x__load" type="button" role="tab" id="lx-tab-motors" aria-selected="false" aria-controls="lx-panel" tabindex="-1" data-load="motors">
+                <span class="loads-x__num" aria-hidden="true">07</span>
+                <span class="loads-x__name">Motors and compressors</span>
+              </button>
+              <button class="loads-x__load" type="button" role="tab" id="lx-tab-paint" aria-selected="false" aria-controls="lx-panel" tabindex="-1" data-load="paint">
+                <span class="loads-x__num" aria-hidden="true">08</span>
+                <span class="loads-x__name">Paint shops and rectifiers</span>
+              </button>
+            </div>
+          </div>
+          <div class="loads-x__panel" id="lx-panel" role="tabpanel" aria-labelledby="lx-tab-vfd">
+            <div class="loads-x__col loads-x__col--problem">
+              <span class="loads-x__link loads-x__link--a" aria-hidden="true"><svg viewBox="0 0 16 16" width="16" height="16" fill="none"><path d="M3 8h9.5M8.5 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <p class="loads-x__head">Problem</p>
+              <div class="loads-x__stack">
+                <div class="loads-x__item is-active" data-load="vfd">
+                  <div class="loads-x__lead">
+                    <div class="loads-x__art" data-anim="vfd"><svg class="loads-x__icon" aria-hidden="true" focusable="false" viewBox="0 0 223 127" xmlns="http://www.w3.org/2000/svg"><rect class="anim-bar" x="3" y="29" width="17" height="62" rx="8.5" fill="currentColor"/><rect class="anim-bar anim-bar-b" x="31" y="4" width="31" height="111" rx="8" fill="currentColor"/><rect class="anim-bar anim-bar-c" x="73" y="3" width="51" height="114" rx="8" fill="currentColor"/><clipPath id="vfdClip-vfd"><rect x="130" y="26" width="88" height="78"/></clipPath><g clip-path="url(#vfdClip-vfd)"><path class="anim-wave" d="M57,65 C66.75,42 86.25,42 96,65 C105.75,88 125.25,88 135,65 C144.75,42 164.25,42 174,65 C183.75,88 203.25,88 213,65 C222.75,42 242.25,42 252,65 C261.75,88 281.25,88 291,65" fill="none" stroke="currentColor" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></g></svg></div>
+                    <p class="loads-x__seen"><span>Seen in</span>Textile mills, automotive plants, pumps, fans and HVAC</p>
+                  </div>
+                  <h3>Harmonics</h3>
+                  <p>Drives draw current in short pulses, so 5th and 7th order harmonic currents flow back into the supply. Transformers and cables run hot, capacitor banks are stressed and breakers trip without an obvious reason.</p>
+                  <ul class="loads-x__chips"><li>High THDi</li><li>Transformer heating</li><li>Nuisance tripping</li></ul>
+                </div>
+                <div class="loads-x__item" data-load="textile">
+                  <div class="loads-x__lead">
+                    <div class="loads-x__art" data-anim="vfd"><svg class="loads-x__icon" aria-hidden="true" focusable="false" viewBox="0 0 223 127" xmlns="http://www.w3.org/2000/svg"><rect class="anim-bar" x="3" y="29" width="17" height="62" rx="8.5" fill="currentColor"/><rect class="anim-bar anim-bar-b" x="31" y="4" width="31" height="111" rx="8" fill="currentColor"/><rect class="anim-bar anim-bar-c" x="73" y="3" width="51" height="114" rx="8" fill="currentColor"/><clipPath id="vfdClip-textile"><rect x="130" y="26" width="88" height="78"/></clipPath><g clip-path="url(#vfdClip-textile)"><path class="anim-wave" d="M57,65 C66.75,42 86.25,42 96,65 C105.75,88 125.25,88 135,65 C144.75,42 164.25,42 174,65 C183.75,88 203.25,88 213,65 C222.75,42 242.25,42 252,65 C261.75,88 281.25,88 291,65" fill="none" stroke="currentColor" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></g></svg></div>
+                    <p class="loads-x__seen"><span>Seen in</span>Spinning, weaving and processing lines</p>
+                  </div>
+                  <h3>Harmonics and low power factor</h3>
+                  <p>Hundreds of drives and motors run together on ring frames, looms and humidification plants. Harmonics and reactive demand build up across the shift, and kVAh billing rises with them.</p>
+                  <ul class="loads-x__chips"><li>Rising kVAh billing</li><li>Capacitor failures</li><li>Heat in panels</li></ul>
+                </div>
+                <div class="loads-x__item" data-load="welding">
+                  <div class="loads-x__lead">
+                    <div class="loads-x__art" data-anim="heavy"><svg class="loads-x__icon" aria-hidden="true" focusable="false" viewBox="0 0 235 112" xmlns="http://www.w3.org/2000/svg"><path class="anim-square" d="M10,90 L57,90 L57,26 L107,26 L107,90 L155,90" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/><polygon class="anim-bolt" points="200,24 180,64 196,64 196,91 216,51 200,51" fill="currentColor"/></svg></div>
+                    <p class="loads-x__seen"><span>Seen in</span>Automotive plants and fabrication shops</p>
+                  </div>
+                  <h3>Fast-changing power factor</h3>
+                  <p>Spot welders and presses switch on and off within cycles. Reactive demand swings faster than a contactor panel can follow, so power factor drops and the voltage dips with every weld.</p>
+                  <ul class="loads-x__chips"><li>Voltage dips</li><li>Low power factor</li><li>Flicker</li></ul>
+                </div>
+                <div class="loads-x__item" data-load="datacentre">
+                  <div class="loads-x__lead">
+                    <div class="loads-x__art" data-anim="smps"><svg class="loads-x__icon" aria-hidden="true" focusable="false" viewBox="0 0 260 145" xmlns="http://www.w3.org/2000/svg"><defs><mask id="smpsMask-datacentre"><rect x="39" y="27" width="157" height="90" rx="9" fill="#fff"/><rect x="58" y="45" width="50" height="11" rx="5" fill="#000"/><rect x="58" y="71" width="50" height="11" rx="5" fill="#000"/><line class="anim-gap" x1="94" y1="136" x2="210" y2="8" stroke="#000" stroke-width="16"/></mask></defs><rect class="anim-body" x="30" y="10" width="180" height="120" fill="currentColor" mask="url(#smpsMask-datacentre)"/><rect class="anim-pin" x="208" y="50" width="42" height="10" rx="5" fill="currentColor"/><rect class="anim-pin anim-pin-b" x="208" y="83" width="42" height="10" rx="5" fill="currentColor"/></svg></div>
+                    <p class="loads-x__seen"><span>Seen in</span>Data centres, telecom and IT campuses</p>
+                  </div>
+                  <h3>High-frequency harmonics and leading power factor</h3>
+                  <p>Server power supplies and UPS rectifiers add harmonics, and at light load they push power factor leading. Triplen harmonics also load the neutral conductor.</p>
+                  <ul class="loads-x__chips"><li>Neutral current</li><li>Leading power factor</li><li>Generator instability</li></ul>
+                </div>
+                <div class="loads-x__item" data-load="office">
+                  <div class="loads-x__lead">
+                    <div class="loads-x__art" data-anim="smps"><svg class="loads-x__icon" aria-hidden="true" focusable="false" viewBox="0 0 260 145" xmlns="http://www.w3.org/2000/svg"><defs><mask id="smpsMask-office"><rect x="39" y="27" width="157" height="90" rx="9" fill="#fff"/><rect x="58" y="45" width="50" height="11" rx="5" fill="#000"/><rect x="58" y="71" width="50" height="11" rx="5" fill="#000"/><line class="anim-gap" x1="94" y1="136" x2="210" y2="8" stroke="#000" stroke-width="16"/></mask></defs><rect class="anim-body" x="30" y="10" width="180" height="120" fill="currentColor" mask="url(#smpsMask-office)"/><rect class="anim-pin" x="208" y="50" width="42" height="10" rx="5" fill="currentColor"/><rect class="anim-pin anim-pin-b" x="208" y="83" width="42" height="10" rx="5" fill="currentColor"/></svg></div>
+                    <p class="loads-x__seen"><span>Seen in</span>Offices, hospitals, hotels and schools</p>
+                  </div>
+                  <h3>Neutral overloading and leading power factor</h3>
+                  <p>Many small electronic loads together inject 3rd harmonic currents that add up in the neutral, while LED lighting and IT equipment can push power factor leading.</p>
+                  <ul class="loads-x__chips"><li>Hot neutrals</li><li>Leading power factor</li><li>Unexplained tripping</li></ul>
+                </div>
+                <div class="loads-x__item" data-load="furnace">
+                  <div class="loads-x__lead">
+                    <div class="loads-x__art" data-anim="arc"><svg class="loads-x__icon" aria-hidden="true" focusable="false" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><rect class="anim-rod" x="60" y="20" width="14" height="70" rx="6" fill="currentColor"/><rect class="anim-rod anim-rod-mid" x="84" y="18" width="16" height="95" rx="8" fill="currentColor"/><rect class="anim-rod" x="110" y="20" width="14" height="70" rx="6" fill="currentColor"/><path class="anim-dome" d="M57,150 A35,35 0 0 1 127,150" fill="none" stroke="currentColor" stroke-width="14" stroke-linecap="round"/><line class="anim-spark" x1="44" y1="98" x2="57" y2="111" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><line class="anim-spark anim-spark-b" x1="32" y1="118" x2="45" y2="131" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><line class="anim-spark anim-spark-c" x1="140" y1="98" x2="127" y2="111" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><line class="anim-spark anim-spark-d" x1="152" y1="118" x2="139" y2="131" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><path class="anim-shell" d="M25,95 L25,135 Q25,183 92,183 Q159,183 159,135 L159,95" fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round"/></svg></div>
+                    <p class="loads-x__seen"><span>Seen in</span>Steel plants, foundries and forging</p>
+                  </div>
+                  <h3>Flicker and harmonic injection</h3>
+                  <p>Furnaces draw rapid, unpredictable current. The voltage flickers for everyone on the network and harmonics spread through the plant.</p>
+                  <ul class="loads-x__chips"><li>Voltage flicker</li><li>Harmonics</li><li>Utility complaints</li></ul>
+                </div>
+                <div class="loads-x__item" data-load="motors">
+                  <div class="loads-x__lead">
+                    <div class="loads-x__art" data-anim="heavy"><svg class="loads-x__icon" aria-hidden="true" focusable="false" viewBox="0 0 235 112" xmlns="http://www.w3.org/2000/svg"><path class="anim-square" d="M10,90 L57,90 L57,26 L107,26 L107,90 L155,90" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/><polygon class="anim-bolt" points="200,24 180,64 196,64 196,91 216,51 200,51" fill="currentColor"/></svg></div>
+                    <p class="loads-x__seen"><span>Seen in</span>Pumps, conveyors, chillers and air compressors</p>
+                  </div>
+                  <h3>Lagging power factor</h3>
+                  <p>Induction motors draw reactive power to build their magnetic field. With many running, power factor falls and the utility bills for energy the plant never uses.</p>
+                  <ul class="loads-x__chips"><li>Power factor penalties</li><li>Higher kVA demand</li><li>Cable losses</li></ul>
+                </div>
+                <div class="loads-x__item" data-load="paint">
+                  <div class="loads-x__lead">
+                    <div class="loads-x__art" data-anim="paint"><svg class="loads-x__icon" aria-hidden="true" focusable="false" viewBox="0 0 190 130" xmlns="http://www.w3.org/2000/svg"><rect class="anim-gun" x="18" y="35" width="70" height="42" rx="10" fill="currentColor"/><path class="anim-gun" d="M23,77 L28,108 Q31,123 35,109 L70,77 Z" fill="currentColor"/><rect class="anim-nozzle" x="99" y="45" width="12" height="21" rx="5" fill="currentColor"/><circle class="anim-p" cx="129" cy="46" r="5" fill="currentColor"/><circle class="anim-p" cx="129" cy="66" r="5" fill="currentColor"/><circle class="anim-p anim-p2" cx="153" cy="37" r="5" fill="currentColor"/><circle class="anim-p anim-p2" cx="153" cy="56" r="3" fill="currentColor"/><circle class="anim-p anim-p2" cx="153" cy="76" r="5" fill="currentColor"/><circle class="anim-p anim-p3" cx="177" cy="27" r="5.5" fill="currentColor"/><circle class="anim-p anim-p3" cx="177" cy="56" r="6" fill="currentColor"/><circle class="anim-p anim-p3" cx="177" cy="86" r="6" fill="currentColor"/></svg></div>
+                    <p class="loads-x__seen"><span>Seen in</span>Automotive paint lines, electroplating and battery charging</p>
+                  </div>
+                  <h3>Harmonics across many orders</h3>
+                  <p>Large rectifier loads generate significant harmonic content over several orders at once, stressing transformers and any capacitors on the same bus.</p>
+                  <ul class="loads-x__chips"><li>High THDv</li><li>Transformer derating</li><li>Capacitor stress</li></ul>
+                </div>
+              </div>
+            </div>
+            <div class="loads-x__col loads-x__col--fix">
+              <span class="loads-x__link loads-x__link--b" aria-hidden="true"><svg viewBox="0 0 16 16" width="16" height="16" fill="none"><path d="M3 8h9.5M8.5 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <p class="loads-x__head">Yansa&rsquo;s Solution</p>
+              <div class="loads-x__stack">
+                <div class="loads-x__item is-active" data-load="vfd">
+                  <h3>Active harmonic filter</h3>
+                  <p>We offer active harmonic filters that cancel these currents as they happen, with line chokes at the drive where they help, sized to the harmonic levels we measure on your site.</p>
+                  <ul class="loads-x__links"><li class="loads-x__fam loads-x__fam--active"><a href="solutions.html#ahf">Active harmonic filters</a></li><li class="loads-x__fam loads-x__fam--passive"><a href="solutions.html#chokes">Line chokes</a></li></ul>
+                </div>
+                <div class="loads-x__item" data-load="textile">
+                  <h3>Hybrid panel (AHF + detuned APFC)</h3>
+                  <p>We offer a hybrid panel where a detuned capacitor stage carries the steady reactive load and an active filter takes the harmonics, so power factor holds without resonance.</p>
+                  <ul class="loads-x__links"><li class="loads-x__fam loads-x__fam--hybrid"><a href="solutions.html#apfc-panel">APFC panel</a></li><li class="loads-x__fam loads-x__fam--hybrid"><a href="solutions.html#ahf-panel">AHF panel</a></li></ul>
+                </div>
+                <div class="loads-x__item" data-load="welding">
+                  <h3>Static VAR generator or thyristor switching</h3>
+                  <p>We offer an SVG or thyristor-switched capacitor steps that respond within a cycle, so correction keeps pace with the load.</p>
+                  <ul class="loads-x__links"><li class="loads-x__fam loads-x__fam--active"><a href="solutions.html#svg">Static VAR generator</a></li><li class="loads-x__fam loads-x__fam--active"><a href="solutions.html#tsm">Thyristor switching modules</a></li></ul>
+                </div>
+                <div class="loads-x__item" data-load="datacentre">
+                  <h3>Active harmonic filter with SVG</h3>
+                  <p>We offer active filtering for the harmonics and the neutral, with an SVG that corrects leading and lagging power factor alike, so the UPS and generators run as designed.</p>
+                  <ul class="loads-x__links"><li class="loads-x__fam loads-x__fam--active"><a href="solutions.html#ahf">Active harmonic filters</a></li><li class="loads-x__fam loads-x__fam--active"><a href="solutions.html#svg">Static VAR generator</a></li></ul>
+                </div>
+                <div class="loads-x__item" data-load="office">
+                  <h3>Active harmonic filter or SVG</h3>
+                  <p>We offer compact active filters and SVGs that clean up the neutral and hold power factor near unity, sized after we measure your building&rsquo;s loads.</p>
+                  <ul class="loads-x__links"><li class="loads-x__fam loads-x__fam--active"><a href="solutions.html#ahf">Active harmonic filters</a></li><li class="loads-x__fam loads-x__fam--active"><a href="solutions.html#svg">Static VAR generator</a></li></ul>
+                </div>
+                <div class="loads-x__item" data-load="furnace">
+                  <h3>SVG with tuned passive filters</h3>
+                  <p>We offer fast SVG compensation for the swings, alongside tuned passive filters that trap the dominant harmonic orders.</p>
+                  <ul class="loads-x__links"><li class="loads-x__fam loads-x__fam--active"><a href="solutions.html#svg">Static VAR generator</a></li><li class="loads-x__fam loads-x__fam--passive"><a href="solutions.html#reactors">Series reactors</a></li></ul>
+                </div>
+                <div class="loads-x__item" data-load="motors">
+                  <h3>Power capacitors and detuned APFC</h3>
+                  <p>We offer capacitor banks with series reactors, switched by an APFC controller, so power factor stays at target as motors start and stop.</p>
+                  <ul class="loads-x__links"><li class="loads-x__fam loads-x__fam--passive"><a href="solutions.html#capacitors">Power capacitors</a></li><li class="loads-x__fam loads-x__fam--hybrid"><a href="solutions.html#apfc-panel">APFC panel</a></li></ul>
+                </div>
+                <div class="loads-x__item" data-load="paint">
+                  <h3>Active harmonic filter</h3>
+                  <p>We offer active filters that cancel a wide spectrum of harmonics together, with detuned reactors protecting any existing capacitor banks.</p>
+                  <ul class="loads-x__links"><li class="loads-x__fam loads-x__fam--active"><a href="solutions.html#ahf">Active harmonic filters</a></li><li class="loads-x__fam loads-x__fam--passive"><a href="solutions.html#reactors">Series reactors</a></li></ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="loads-x__note">Not sure which load is behind it? <a href="yanq.html">A YanQ study measures it for you.</a></p>
       </div>
     </section>
 

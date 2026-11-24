@@ -7,7 +7,7 @@
    4. Buttons
    5. Layout          navbar, section shell, inner-page heroes
    6. Home            hero, diagnosis, symptoms, quote, why, case studies
-   7. Solutions       generates, problems, solution rows, inaction, results
+   7. Solutions       load explorer, problems, solution rows, inaction, results
    8. About           hero decor, statement, measure, values, industries, FAQ
    9. YanQ
    10. Contact
@@ -299,7 +299,7 @@ ul {
 .about-values h2,
 .industries h2,
 .faq__header h2,
-.generates h2,
+.loads-x h2,
 .solutions-row h2,
 .problems h2,
 .inaction h2,
@@ -343,7 +343,7 @@ ul {
 .inaction-card__row h3,
 .results__title,
 .problem-card__text h3,
-.generates__card h3,
+.loads-x__item h3,
 .faq__question,
 .svc-step__word,
 .yanq-step h3 {
@@ -376,7 +376,6 @@ ul {
 .yanq-works__lead,
 .yanq-hero__body,
 .about-values__copy,
-.generates > p,
 .pqs-next p,
 .solutions-row__inner > p,
 .svc-block__text,
@@ -406,6 +405,9 @@ ul {
 .pqs-card p,
 .pqs-fit__note,
 .glimpse__go,
+.loads-x__load,
+.loads-x__links a,
+.loads-x__note,
 .industry-tab,
 .industry-panel li,
 .industry-cell,
@@ -423,7 +425,8 @@ ul {
 /* Small — dense copy inside compact cards */
 .offered-col__sub,
 .yanq-step__tag,
-.generates__card p,
+.loads-x__item p,
+.loads-x__chips li,
 .problem-card__text p,
 .inaction-card p,
 .svc-step__line,
@@ -436,6 +439,9 @@ ul {
 .pq-entry__eyebrow,
 .pqs-eyebrow,
 .glimpse__tag,
+.loads-x__head,
+.loads-x__num,
+.loads-x__seen span,
 .pqs-card__num,
 .pqs-pills a,
 .pqs-marquee li,
@@ -1039,7 +1045,6 @@ ul {
 .industries,
 .faq,
 .solution-hero,
-.generates,
 .inaction,
 .results {
   display: flex;
@@ -1058,7 +1063,6 @@ ul {
 .why,
 .cases,
 .contact-body,
-.generates,
 .inaction,
 .results,
 .faq,
@@ -1081,7 +1085,6 @@ ul {
   .why,
   .cases,
   .contact-body,
-  .generates,
   .inaction,
   .results,
   .faq,
@@ -1099,7 +1102,6 @@ ul {
   .quote,
   .why,
   .cases,
-  .generates,
   .inaction,
   .results,
   .about-statement,
@@ -1134,7 +1136,6 @@ ul {
 .yanq-delivers__grid,
 .industry-tabs,
 .faq__inner,
-.generates__grid,
 .problems__stack,
 .solutions-row__inner,
 .inaction__inner,
@@ -2253,87 +2254,430 @@ ul {
   outline-offset: 2px;
 }
 
-/* ---------- What Generates Power Quality Problems ---------- */
-.generates {
+/* ---------- Load explorer ----------
+   Loads | Problem | Yansa's Solution on one board. The eight items of the
+   Problem and Solution columns share one grid cell, so each column is as
+   tall as its tallest item and picking a load never moves the page. The
+   outgoing item fades (120 ms); the incoming one fades and rises 8 px
+   (220 ms), the Solution column 60 ms behind the Problem. The script
+   (initLoadExplorer) sets .is-live on the board at the first pick, so
+   nothing animates on load. */
+.loads-x {
   background: var(--cream);
   padding: 112px var(--gutter);
-  text-align: center;
 }
 
-.generates h2 {
-  color: #6b6b6b;
-  margin-bottom: 16px;
-}
-
-.generates h2 .bold {
-  color: var(--ink);
-  font-weight: bold;
-}
-
-.generates > p {
-  color: #505050;
-  margin-bottom: 64px;
-}
-
-.generates__grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(200px, 1fr));
-  gap: 28px;
+.loads-x__inner {
   max-width: 1152px;
   margin: 0 auto;
-  text-align: left;
 }
 
-.generates__card {
+.loads-x h2 {
+  color: var(--ink);
+  margin-bottom: 48px;
+}
+
+.loads-x h2 .accent { color: var(--teal); }
+
+.loads-x__board {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 2fr);
   background: var(--ivory-card);
   border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 18px 44px rgba(26, 65, 70, 0.08);
+}
+
+.loads-x__col {
+  position: relative;
+  padding: 28px 28px 32px;
+}
+
+.loads-x__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  color: var(--text);
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+
+.loads-x__head::before {
+  content: "";
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--dot, var(--petrol));
+}
+
+.loads-x__col--problem { --dot: var(--orange); }
+.loads-x__col--fix { --dot: var(--teal); }
+
+/* Loads: a vertical list. The chosen row takes the old active style, a bar
+   on the left edge and a teal tint. */
+.loads-x__col--loads {
+  border-right: 1px solid var(--line);
+  border-radius: 12px 0 0 12px;
+  background: color-mix(in srgb, var(--cream) 55%, var(--ivory-card));
+}
+
+.loads-x__list {
+  display: grid;
+  gap: 4px;
+}
+
+.loads-x__load {
+  position: relative;
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  align-items: baseline;
+  width: 100%;
+  padding: 11px 14px 11px 16px;
+  border: 0;
   border-radius: 8px;
-  padding: 36px 32px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
-/* The icons have different aspect ratios, so they are sized by height.
-   Their fills are currentColor, so the accent is set once here. */
-.generates__icon {
-  height: 34px;
-  width: auto;
-  margin-bottom: 28px;
-  color: var(--orange);
-  display: block;
-  overflow: visible;
+.loads-x__load::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 9px;
+  bottom: 9px;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--orange);
+  transform: scaleY(0);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.generates__card h3 {
+.loads-x__num {
+  color: var(--line);
+  transition: color 0.25s ease;
+}
+
+.loads-x__load:hover {
+  background: color-mix(in srgb, var(--teal) 6%, transparent);
   color: var(--ink);
-  margin-bottom: 14px;
 }
 
-.generates__card p {
+.loads-x__load.is-active {
+  background: color-mix(in srgb, var(--teal) 11%, var(--ivory-card));
+  color: var(--ink);
+}
+
+.loads-x__load.is-active::before { transform: scaleY(1); }
+.loads-x__load.is-active .loads-x__num { color: var(--highlight); }
+
+.loads-x__load:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+
+/* Problem | Solution */
+.loads-x__panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.loads-x__col--fix {
+  border-left: 1px solid var(--line);
+}
+
+.loads-x__stack {
+  display: grid;
+}
+
+.loads-x__item {
+  grid-area: 1 / 1;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s ease, visibility 0s linear 0.12s;
+}
+
+.loads-x__item.is-active {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.12s ease;
+}
+
+@keyframes lxIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.loads-x__board.is-live .loads-x__item.is-active {
+  animation: lxIn 0.22s cubic-bezier(0.22, 1, 0.36, 1) 0.06s backwards;
+}
+
+.loads-x__board.is-live .loads-x__col--fix .loads-x__item.is-active {
+  animation-delay: 0.12s;
+}
+
+.loads-x__item h3 {
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+.loads-x__item p {
   color: var(--text);
 }
 
-.generates__card--cta {
-  background: var(--cream);
-  border: 1.5px solid var(--orange);
+.loads-x__lead {
   display: flex;
-  flex-direction: column;
-  gap: 14px;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 26px;
 }
 
-.generates__card--cta .btn {
-  align-self: flex-start;
-  padding: 10px 22px;
-  margin-top: 12px;
+/* The drawing sits on its own tile so five different shapes read as a set.
+   Fills are currentColor; sized by height, as the icons differ in ratio. */
+.loads-x__art {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 100px;
+  height: 76px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--orange) 10%, transparent);
+  color: var(--orange);
 }
 
-@media (max-width: 900px) {
-  .generates__grid {
-    grid-template-columns: repeat(2, 1fr);
+.loads-x__icon {
+  display: block;
+  height: 38px;
+  width: auto;
+  overflow: visible;
+}
+
+.loads-x__seen span {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--teal-deep);
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+
+.loads-x__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.loads-x__chips li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 13px 5px 11px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--ivory);
+  color: var(--ink);
+}
+
+.loads-x__chips li::before {
+  content: "";
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--orange);
+}
+
+.loads-x__links {
+  display: grid;
+  gap: 10px;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.loads-x__fam--active  { --chip: var(--teal-deep); }
+.loads-x__fam--passive { --chip: var(--highlight); }
+.loads-x__fam--hybrid  { --chip: var(--teal); }
+
+/* The solution links are the Solutions chips: they read as buttons before
+   they are touched, the arrow nudges and the family colour tints on hover */
+.loads-x__links a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 46px;
+  padding: 8px 14px 8px 18px;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  line-height: 1.4;
+  background: var(--ivory);
+  color: var(--text);
+  text-decoration: none;
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+.loads-x__links a::after {
+  content: "\2192";
+  flex: none;
+  color: var(--chip);
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.loads-x__links a:hover,
+.loads-x__links a:focus-visible {
+  border-color: var(--chip);
+  background: color-mix(in srgb, var(--chip) 12%, var(--ivory-card));
+  color: var(--ink);
+}
+
+.loads-x__links a:hover::after,
+.loads-x__links a:focus-visible::after {
+  transform: translateX(3px);
+}
+
+.loads-x__links a:focus-visible {
+  outline: 2px solid var(--chip);
+  outline-offset: 2px;
+}
+
+/* Connectors: a node sits on each divider, level with the column headings.
+   On every pick a ring leaves it and the arrow nudges, left node first, so
+   the change reads as travelling Loads > Problem > Solution. */
+.loads-x__link {
+  position: absolute;
+  left: 0;
+  top: 22px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin-left: -16px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--ivory-card);
+  color: var(--teal-deep);
+  pointer-events: none;
+}
+
+.loads-x__link::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border: 1.5px solid var(--teal);
+  border-radius: 50%;
+  opacity: 0;
+}
+
+@keyframes lxRing {
+  from { opacity: 0.75; transform: scale(1); }
+  to   { opacity: 0; transform: scale(2); }
+}
+
+@keyframes lxNudge {
+  0%, 100% { transform: translateX(0); }
+  40%      { transform: translateX(3px); }
+}
+
+.loads-x__board.is-pulse .loads-x__link::after {
+  animation: lxRing 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.loads-x__board.is-pulse .loads-x__link svg {
+  animation: lxNudge 0.5s ease-in-out both;
+}
+
+.loads-x__board.is-pulse .loads-x__link--b::after,
+.loads-x__board.is-pulse .loads-x__link--b svg {
+  animation-delay: 0.09s;
+}
+
+.loads-x__note {
+  margin-top: 28px;
+  color: var(--text);
+}
+
+.loads-x__note a {
+  color: var(--highlight);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Narrower than a wide laptop: the loads become a row of chips over the
+   two columns */
+@media (max-width: 1100px) {
+  .loads-x__board {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .loads-x__col--loads {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 12px 12px 0 0;
+  }
+
+  .loads-x__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .loads-x__load {
+    display: block;
+    width: auto;
+    padding: 9px 18px 9px 30px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--ivory-card);
+  }
+
+  .loads-x__load::before {
+    left: 14px;
+    top: 50%;
+    bottom: auto;
+    width: 6px;
+    height: 6px;
+    margin-top: -3px;
+    border-radius: 50%;
+    transform: scale(0);
+  }
+
+  .loads-x__load.is-active {
+    border-color: var(--teal-deep);
+  }
+
+  .loads-x__num {
+    display: none;
+  }
+
+  .loads-x__link--a {
+    display: none;
   }
 }
 
-@media (max-width: 560px) {
-  .generates__grid {
-    grid-template-columns: 1fr;
+@media (prefers-reduced-motion: reduce) {
+  .loads-x__item,
+  .loads-x__item.is-active,
+  .loads-x__load,
+  .loads-x__load::before {
+    transition: none;
+  }
+
+  .loads-x__board.is-live .loads-x__item.is-active,
+  .loads-x__board.is-pulse .loads-x__link::after,
+  .loads-x__board.is-pulse .loads-x__link svg {
+    animation: none;
   }
 }
 
@@ -6076,10 +6420,11 @@ body.sol-dialog-open {
   .problems.is-inview .is-front .anim-phi    { animation: pqPopIn 0.3s cubic-bezier(0.3, 1.5, 0.6, 1) 1.3s both; }
 }
 
-/* ---------- Solution icons: hover ----------
-   Each icon plays a short one-shot animation while its card is hovered and
-   returns to its exact resting state. data-anim sits on the card, since the
-   small icon alone would be a poor hover target. */
+/* ---------- Load drawings: hover and pick ----------
+   Each drawing plays a short one-shot animation while its tile is hovered,
+   and again on each pick in the load explorer (.is-play), then returns to
+   its exact resting state. data-anim sits on the tile, since the small icon
+   alone would be a poor hover target. */
 @media (prefers-reduced-motion: no-preference) {
   /* Variable Frequency Drives */
   @keyframes vfdTravel {
@@ -6092,18 +6437,22 @@ body.sol-dialog-open {
     45%, 55% { transform: scaleY(1.1); }
   }
 
-  [data-anim="vfd"]:hover .anim-wave {
+  [data-anim="vfd"]:hover .anim-wave,
+  [data-anim="vfd"].is-play .anim-wave {
     animation: vfdTravel 0.9s cubic-bezier(0.4, 0, 0.6, 1);
   }
 
-  [data-anim="vfd"]:hover .anim-bar {
+  [data-anim="vfd"]:hover .anim-bar,
+  [data-anim="vfd"].is-play .anim-bar {
     animation: vfdBar 0.9s ease-in-out;
     transform-box: fill-box;
     transform-origin: center;
   }
 
-  [data-anim="vfd"]:hover .anim-bar-b { animation-delay: 0.08s; }
-  [data-anim="vfd"]:hover .anim-bar-c { animation-delay: 0.16s; }
+  [data-anim="vfd"]:hover .anim-bar-b,
+  [data-anim="vfd"].is-play .anim-bar-b { animation-delay: 0.08s; }
+  [data-anim="vfd"]:hover .anim-bar-c,
+  [data-anim="vfd"].is-play .anim-bar-c { animation-delay: 0.16s; }
 
   /* Switched Mode Power Supplies */
   @keyframes smpsJoin {
@@ -6121,17 +6470,21 @@ body.sol-dialog-open {
     45%, 55% { transform: scale(1.04); }
   }
 
-  [data-anim="smps"]:hover .anim-gap {
+  [data-anim="smps"]:hover .anim-gap,
+  [data-anim="smps"].is-play .anim-gap {
     animation: smpsJoin 0.9s ease-in-out;
   }
 
-  [data-anim="smps"]:hover .anim-pin {
+  [data-anim="smps"]:hover .anim-pin,
+  [data-anim="smps"].is-play .anim-pin {
     animation: smpsPin 0.9s ease-in-out;
   }
 
-  [data-anim="smps"]:hover .anim-pin-b { animation-delay: 0.1s; }
+  [data-anim="smps"]:hover .anim-pin-b,
+  [data-anim="smps"].is-play .anim-pin-b { animation-delay: 0.1s; }
 
-  [data-anim="smps"]:hover .anim-body {
+  [data-anim="smps"]:hover .anim-body,
+  [data-anim="smps"].is-play .anim-body {
     animation: smpsBody 0.9s ease-in-out;
     transform-box: fill-box;
     transform-origin: center;
@@ -6154,18 +6507,23 @@ body.sol-dialog-open {
     45%, 55% { transform: scaleX(1.25); opacity: 0.6; }
   }
 
-  [data-anim="paint"]:hover .anim-p {
+  [data-anim="paint"]:hover .anim-p,
+  [data-anim="paint"].is-play .anim-p {
     animation: paintSpray 0.9s ease-out;
   }
 
-  [data-anim="paint"]:hover .anim-p2 { animation-delay: 0.08s; }
-  [data-anim="paint"]:hover .anim-p3 { animation-delay: 0.16s; }
+  [data-anim="paint"]:hover .anim-p2,
+  [data-anim="paint"].is-play .anim-p2 { animation-delay: 0.08s; }
+  [data-anim="paint"]:hover .anim-p3,
+  [data-anim="paint"].is-play .anim-p3 { animation-delay: 0.16s; }
 
-  [data-anim="paint"]:hover .anim-gun {
+  [data-anim="paint"]:hover .anim-gun,
+  [data-anim="paint"].is-play .anim-gun {
     animation: paintRecoil 0.9s ease-in-out;
   }
 
-  [data-anim="paint"]:hover .anim-nozzle {
+  [data-anim="paint"]:hover .anim-nozzle,
+  [data-anim="paint"].is-play .anim-nozzle {
     animation: paintNozzle 0.9s ease-in-out;
     transform-box: fill-box;
     transform-origin: left center;
@@ -6185,12 +6543,14 @@ body.sol-dialog-open {
     60%      { transform: scale(0.94); opacity: 1; }
   }
 
-  [data-anim="heavy"]:hover .anim-square {
+  [data-anim="heavy"]:hover .anim-square,
+  [data-anim="heavy"].is-play .anim-square {
     animation: heavyAmp 0.9s ease-in-out;
     transform-origin: 0px 90px;
   }
 
-  [data-anim="heavy"]:hover .anim-bolt {
+  [data-anim="heavy"]:hover .anim-bolt,
+  [data-anim="heavy"].is-play .anim-bolt {
     animation: heavyBolt 0.9s ease-in-out;
     transform-box: fill-box;
     transform-origin: center;
@@ -6217,27 +6577,35 @@ body.sol-dialog-open {
     50%      { transform: scaleX(1.025); }
   }
 
-  [data-anim="arc"]:hover .anim-dome {
+  [data-anim="arc"]:hover .anim-dome,
+  [data-anim="arc"].is-play .anim-dome {
     animation: arcLift 0.9s ease-in-out;
   }
 
-  [data-anim="arc"]:hover .anim-rod {
+  [data-anim="arc"]:hover .anim-rod,
+  [data-anim="arc"].is-play .anim-rod {
     animation: arcDip 0.9s ease-in-out;
   }
 
-  [data-anim="arc"]:hover .anim-rod-mid { animation-delay: 0.12s; }
+  [data-anim="arc"]:hover .anim-rod-mid,
+  [data-anim="arc"].is-play .anim-rod-mid { animation-delay: 0.12s; }
 
-  [data-anim="arc"]:hover .anim-spark {
+  [data-anim="arc"]:hover .anim-spark,
+  [data-anim="arc"].is-play .anim-spark {
     animation: arcSpark 0.45s steps(2, end) 2;
     transform-box: fill-box;
     transform-origin: center;
   }
 
-  [data-anim="arc"]:hover .anim-spark-b { animation-delay: 0.17s; }
-  [data-anim="arc"]:hover .anim-spark-c { animation-delay: 0.31s; }
-  [data-anim="arc"]:hover .anim-spark-d { animation-delay: 0.09s; }
+  [data-anim="arc"]:hover .anim-spark-b,
+  [data-anim="arc"].is-play .anim-spark-b { animation-delay: 0.17s; }
+  [data-anim="arc"]:hover .anim-spark-c,
+  [data-anim="arc"].is-play .anim-spark-c { animation-delay: 0.31s; }
+  [data-anim="arc"]:hover .anim-spark-d,
+  [data-anim="arc"].is-play .anim-spark-d { animation-delay: 0.09s; }
 
-  [data-anim="arc"]:hover .anim-shell {
+  [data-anim="arc"]:hover .anim-shell,
+  [data-anim="arc"].is-play .anim-shell {
     animation: arcShell 0.9s ease-in-out;
     transform-box: fill-box;
     transform-origin: center;

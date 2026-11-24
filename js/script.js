@@ -504,6 +504,95 @@
   }
 
 
+  /* ---------- Load explorer (Know Your Loads) ----------
+     Eight loads as ARIA tabs (roving tabindex; arrows, Home and End pick
+     and focus). A pick swaps .is-active on the matching item in the Problem
+     and Solution columns: the crossfade is CSS (they share a grid cell, so
+     the board never changes height). It also replays the load's drawing
+     (.is-play) and pulses the two connectors. .is-live is set at the first
+     pick so nothing animates on load. Under reduced motion the CSS drops all
+     movement, so there is nothing to restart here. On a narrow screen the
+     loads form a scrolling chip row; the picked chip is kept in view. */
+  function initLoadExplorer() {
+    var board = document.querySelector('.loads-x__board');
+    if (!board) return;
+
+    var list = board.querySelector('.loads-x__list');
+    var panel = board.querySelector('.loads-x__panel');
+    var tabs = toArray(board.querySelectorAll('.loads-x__load'));
+    var items = toArray(board.querySelectorAll('.loads-x__item'));
+    var arts = toArray(board.querySelectorAll('.loads-x__art'));
+    var current = Math.max(0, tabs.map(function (t) { return t.classList.contains('is-active'); }).indexOf(true));
+
+    // Restart a one-shot CSS animation by dropping and re-adding its class
+    function replay(el, cls) {
+      el.classList.remove(cls);
+      void el.offsetWidth;
+      el.classList.add(cls);
+    }
+
+    function keepInView(tab) {
+      if (list.scrollWidth <= list.clientWidth + 1) return;
+      var l = list.getBoundingClientRect();
+      var t = tab.getBoundingClientRect();
+      list.scrollBy({
+        left: t.left - l.left - (l.width - t.width) / 2,
+        behavior: reduceMotion ? 'auto' : 'smooth'
+      });
+    }
+
+    function select(i, focus) {
+      if (i < 0 || i >= tabs.length) return;
+      if (focus) tabs[i].focus();
+      if (i === current) return;
+      var id = tabs[i].getAttribute('data-load');
+      tabs.forEach(function (tab, k) {
+        var on = k === i;
+        tab.classList.toggle('is-active', on);
+        tab.setAttribute('aria-selected', on ? 'true' : 'false');
+        if (on) tab.removeAttribute('tabindex');
+        else tab.setAttribute('tabindex', '-1');
+      });
+      items.forEach(function (item) {
+        item.classList.toggle('is-active', item.getAttribute('data-load') === id);
+      });
+      panel.setAttribute('aria-labelledby', tabs[i].id);
+      arts.forEach(function (art) { art.classList.remove('is-play'); });
+      var art = board.querySelector('.loads-x__item.is-active .loads-x__art');
+      board.classList.add('is-live');
+      if (!reduceMotion) {
+        replay(board, 'is-pulse');
+        if (art) replay(art, 'is-play');
+      }
+      keepInView(tabs[i]);
+      current = i;
+    }
+
+    tabs.forEach(function (tab, i) {
+      tab.addEventListener('click', function () { select(i, false); });
+    });
+
+    list.addEventListener('keydown', function (e) {
+      var i = tabs.indexOf(document.activeElement);
+      if (i < 0) return;
+      var next = -1;
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') next = (i + 1) % tabs.length;
+      else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') next = (i - 1 + tabs.length) % tabs.length;
+      else if (e.key === 'Home') next = 0;
+      else if (e.key === 'End') next = tabs.length - 1;
+      if (next < 0) return;
+      e.preventDefault();
+      select(next, true);
+    });
+
+    // The loads read as a row when the board narrows (CSS, 1100px)
+    var row = window.matchMedia('(max-width: 1100px)');
+    function orient() { list.setAttribute('aria-orientation', row.matches ? 'horizontal' : 'vertical'); }
+    orient();
+    if (row.addEventListener) row.addEventListener('change', orient);
+  }
+
+
   /* ---------- Footer mark ----------
      Swaps the static icon for the rippling one from
      concentric-waves-icon.js, only once that is actually mounted. */
@@ -3083,6 +3172,7 @@
   initMeasureRotator();
   initValues();
   initProblems();
+  initLoadExplorer();
   initFooterMark();
   initSolutionDialog();
   initSolutionScroll();
