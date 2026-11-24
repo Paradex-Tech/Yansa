@@ -106,3 +106,9 @@ Commits 335d1f9, d9d9541, a68b589, 4d62607, 5e5812d, e1ea861.
   References: 21st "Animated Tabs" (sliding indicator), Kokonut / scrollxui FAQ accordions.
 - Round 2: the old per-cell tab glide with turning plus markers was replaced in round 1; restored (old motion is
   part of the identity), keeping the new indicator and fixed height.
+
+## S8 Final pass (done)
+Commits fb3928b (strict-img on privacy/terms footers, 404 description, yanq-wave-tile.svg removed, check-*.mjs tools),
+f9d30a3 (AGENTS.md rewritten). All scripts pass: links (+ --strict-img), check-nav-footer, check-head, check-site,
+measure (0 errors). check-dead-css found no CSS from retired sections left (only about-hero__decor--1..4, accent-*,
+results__* leftovers, listed not deleted). Unused images and the 35 MB videos/ folder are listed in AGENTS.md open items.
