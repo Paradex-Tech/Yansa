@@ -116,3 +116,42 @@ results__* leftovers, listed not deleted). Unused images and the 35 MB videos/ f
 ## 2026-11-24 changes after Shrey's review
 - S9 nav drop-down panels (2 UI rounds): 551b0b5 spec, c1554f4, ee1b518, 3d0f498, 4f175d6.
 - S10 audit-2 small fixes (see audit-2.md), S11 Solutions statement band + chips, S12 Services engagement hover, S13 Home hero video back (Shrey overrides the sitemap's video removal; the still was a stand-in).
+
+## S14 audit-2 decisions + Shrey's phone asks (done, 3 rounds)
+Spec `specs/S14-audit2-decisions.md` (rev 3: H footer, I jump landing, J phone menu added during the job, all Shrey
+via JARVIS). Commits: 9d99f2b/1b9fb36/69619d5/(rev 3) spec, 528d5fa A, be176f4 B, 6a47754 C, 6d87cfc D, 6199c11 E,
+b8335ca F, f64a08b G, 2871667 H, 8e99a0f I, af79190 J, 9fa4fac round-1 fixes, a029afa round-2 fixes.
+- A Home: symptoms one row of four from 1280 px (2 columns 769-1279, titles share a two-line min-height so dividers
+  line up), quote band on the 96 px rhythm. Desktop 5,073 -> 4,807 px (5.64 -> 5.34 screens; footer +46 of that).
+  Target ~5.0 NOT reached without touching the hero runway or card look: open for Shrey.
+- B CTAs: form-bound buttons all "Book a Diagnosis" (22), YanQ-bound buttons "See how YanQ works" (2: Home, Solutions).
+- C Phone swipe rows: shadow no longer clipped (padding + negative margin): Home symptoms, KYL problems and inaction
+  rows, Solutions product rows. KYL chip row and About tabs have no shadow (unchanged).
+- D Contact: optional Phone + "I'm interested in" select (YanQ study / A solution / Commissioning / AMC / Not sure);
+  `?interest=<value>` preselects. forms.gs writes Phone and Interested In AFTER Page and back-fills missing header
+  cells on an existing sheet. Needs an Apps Script redeploy (not done). worker/index.js unaffected (videos only).
+- E YanQ: "What to expect" row after How YanQ Works (299 px desktop, 500 px phone); own CTA band removed;
+  "Benchmarking+" -> "Benchmarking". Fact sources for the row:
+  1 "Your energy bills": brochure, Yan-Q Power Quality Analysis list, "Analysis of Energy Bills issued by
+    Electricity Authorities".
+  2 "Measurement on site": brochure "Power Quality Data Measurement of Facility"; site yanq.html step 1
+    "Calibrated on-site acquisition".
+  3 "A detailed report": brochure "Detailed Power Quality Report"; site "Benchmarked to IEEE 519-2022".
+  4 "Clear recommendations": brochure "Recommendations for Power Factor Improvement" / "...for Harmonic
+    Mitigation"; site step 4 "Solutions sized to your data".
+  No duration, turnaround, price or access facts exist in Yansa's material, so none are shown.
+- F Services: "Ask about commissioning" / "Ask about an AMC" links to the form with the option preselected.
+- G Case studies removed everywhere (section, footer links, CSS, initCaseStudies, AGENTS.md lines). case-0*-photo.jpg
+  kept: the Home hero floats and About decor still use them.
+- H Footer: Explore / Company labelled groups, legal row (copyright, Privacy Policy, Terms of Use; Back to top on
+  phone), logo links home, Home link dropped. Footer 601 -> 647 desktop, 736 -> 774 phone; links 44 px on phone.
+- I Solutions jumps (chips, nav panels, hash) land 24-25 px under the sticky bar at 1440/820/390, nothing of the
+  previous section showing (JS landOnRow; before: 99-150 px gaps).
+- J Phone menu: main items 24 px, sub-items 17 px; Solutions/Services accordions (chevron button, aria-expanded,
+  inert when closed, current page open); numbers centred; teal stub removed; fits closed at 390x667.
+- UI rounds: r0 SHURI shots; r1 VISION (A/D/E fixes; footer blocker was a capture cut, checked live) + Chrome live at
+  390 (symptoms shadow, footer, menu at 667, Passive jump); r2 VISION (A 1024, footer 820, select padding) + Chrome
+  live at 1920 (YanQ expect row) and 820 (Services links, footer); r2 fixes checked in shots.
+- Heights (desktop / phone): index 4,807 / 5,098; yanq 4,163 / 4,298 (was 4,006: footer + expect row, band removed);
+  contact 2,631 / 2,641; services 3,152 / 3,639; solutions 4,960 / 5,844; about 4,086 / 3,797; know-your-loads
+  4,644 / 4,997; 404 1,035 / 1,221. All checks pass; 0 console errors.

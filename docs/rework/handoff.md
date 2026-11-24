@@ -1,5 +1,23 @@
 # Handoff for the build (fresh FRIDAY)
 
+> **Status 2026-11-24 (S14, after Shrey's audit-2 decisions):** built D1 (Home symptoms 4-across, quote rhythm),
+> D2 (CTA system), D4 (contact Phone + "I'm interested in"), D5 (YanQ "What to expect", sourced facts only),
+> D6 (YanQ own CTA band removed), D7 ("Benchmarking"), D9 (Services ask links), case studies deleted (none will be
+> added), plus Shrey's asks: phone swipe-row shadows, footer regrouped (Explore / Company / legal row), Solutions
+> jump landing, phone menu sizes + accordions. Details, commits and heights in `progress.md` (S14). Head after
+> S14: see `git log`. Nothing pushed.
+> Open for Shrey: (1) Home desktop is 4,807 px = 5.34 screens, not ~5.0: the rest needs a shorter hero runway or
+> smaller symptom cards (both change the look); (2) `backend/forms.gs` changed (Phone, Interested In columns after
+> Page): paste into the sheet's Apps Script and Deploy > Manage deployments > New version; until then the live
+> script ignores the two new fields (the form still works); (3) contact details (email/phone/address) from Yansa;
+> (4) real photos from Yansa (capacitor cut-out, hybrid panels, commissioning/AMC). YanQ desktop grew 4,006 ->
+> 4,163 px (expect row + taller footer, minus the removed band).
+> Next (JARVIS): a fresh FRIDAY does a full PHONE-view audit (sizes, visual weights). Phone/tablet notes from S14
+> for it: the floating "Book a Diagnosis" pill can sit over the Home "Which loads cause these? Know Your Loads"
+> line while scrolling; at 1024/820 the "02 Benchmarking" card in What YanQ Delivers sits ~13 px higher than
+> "01 Diagnosis" (pre-existing); at 820 the footer link groups stay left under the brand block (legal row is full
+> width); with Solutions open the phone menu scrolls at 390x667 (allowed; closed it fits).
+
 > **Status 2026-11-24 (after Shrey's review, round 2):** S9 nav drop-down panels, S10 audit-2 fixes, S11 Solutions
 > statement band + 2x2 offered grid, S12 Services engagement hover, S13 Home hero video restored (Shrey overrides
 > the sitemap; `videos/` is used again). Findings and the decisions list for Shrey: `audit-2.md`. Rule from Shrey
@@ -71,7 +89,7 @@ Read with `git show client-revamp-nov:<file>`:
   `pres.txt`; WhatsApp chat in `...\scratchpad\wa\` (nothing structural in it). To re-extract pptx text,
   unzip and read `ppt/slides/slideN.xml` `<a:t>` runs; `pdftotext -layout` works for the PDFs.
 - The brochure never mentions YanQ; the presentation PDF has a product list (Capacitors, Reactors,
-  APFCR Panel, Static VAR, Active Harmonic, Hybrid Panel) and an electricity-bill case study.
+  APFCR Panel, Static VAR, Active Harmonic, Hybrid Panel). No case studies on the site (Shrey, 2026-11-24).
 
 ## Assets
 - Wide hero photos (1672x941): `about-hero.jpg`, `contact-hero.jpg`, `hero-plant.jpg` (planned Services

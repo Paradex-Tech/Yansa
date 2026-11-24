@@ -37,7 +37,7 @@ Status key: **APPLIED** (built in S10 or S9), **DECIDE** (for Shrey; changes str
 | 22 | YanQ, What YanQ Delivers | Card title "Benchmarking+" (carried over from the old site). Looks like a typo, or a "+" meant as "and more". | "Benchmarking" (or tell us what the + means). | S | DECIDE (client copy) |
 | 23 | Real photos needed from Yansa | Power Capacitors photo has certification logos and a white box baked in; Hybrid panel photos are stand-ins (`apfc-relay.jpg`, `svg-plus.jpg`); Services photos `service-amc.jpg` and `service-commissioning.jpg` were AI-generated in October. Nav tiles `images/nav/feature-loads.jpg` and `feature-services.jpg` are crops of the existing `solution-hero.jpg` and `hero-plant.jpg` (not generated). Rule (Shrey, 2026-11-24): no image generators unless he says so; existing or Yansa-supplied images only. | Ask Yansa for a clean capacitor cut-out, real hybrid panel photos, and real commissioning and AMC site photos. | S | DECIDE (needs assets) |
 | 24 | Services | Commissioning and AMC blocks have no direct "ask about this" action; the only route is the footer band. | A small "Ask about commissioning" / "Ask about an AMC" link to the contact form. | S | DECIDE (copy) |
-| 25 | Home | Case Studies stay hidden (sitemap). The presentation PDF holds a real electricity-bill case study. | Show that one case study as a single card when Yansa approves the numbers. | M | DECIDE |
+| 25 | Home | (Closed) Case studies. | Shrey: there is no case study and none will be added. Hidden section, footer links, CSS and JS deleted in S14. | - | CLOSED |
 | 26 | Solutions product grids, 1440 | Three cards sit left in a four-column grid (Hybrid two), leaving a right gutter. This is the old site's grid. | Keep (identity). | - | NOTED |
 | 27 | Services, Learn More | First "Learn More" is a link (arrow), the next two expand in place (chevron). The icons already tell them apart. | Keep. | - | NOTED |
 | 28 | Know Your Loads, explorer | 16 H3s inside the tab panels (some repeated, e.g. "Active harmonic filter" twice) make a noisy heading outline. | Could become H4 / styled paragraphs; low value. | S | NOTED |
@@ -55,6 +55,10 @@ YanQ naming is consistent ("YanQ Power Quality Study" in nav, services, solution
 - S12 Services: engagement row lights up to the hovered/focused step; on phones it fills once in view.
 - S13 Home: the old hero video is back on the same choreography and the 1.8-screen runway.
 
+## Shrey's decisions (2026-11-24) and outcome
+Built in S14: D1 (4,807 px, 5.34 screens: target ~5.0 not fully met, see handoff), D2, D4 (Apps Script redeploy
+open), D5, D6, D7, D9. Not built: D3 and D8 (Shrey handles with Yansa, still open). D10 closed: no case study.
+
 ## Decisions for Shrey (with recommendation)
 
 D1. Home length (5.64 screens, target 5). **Recommend:** symptom cards as one row of four at >= 1200 px (the
@@ -69,5 +73,4 @@ D6. YanQ double CTA band (finding 7). **Recommend** drop the page's own band and
 D7. "Benchmarking+" (finding 22). **Recommend** "Benchmarking".
 D8. Product photos (finding 23). **Recommend** ask Yansa for a clean capacitor photo and real hybrid panel photos.
 D9. Services "Ask about" links (finding 24). **Recommend** yes.
-D10. One real case study on Home (finding 25). **Recommend** yes once Yansa approves the numbers; it would add
-    ~400 px, so pair it with D1.
+D10. Closed: no case study (Shrey, 2026-11-24).

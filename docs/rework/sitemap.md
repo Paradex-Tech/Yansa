@@ -29,7 +29,7 @@ Phone footer cut from 1.35 screens to under 1 on every page.
 | 5 | Why Yansa? | Measure. Solve. Support. cards, now clickable: Measure > YanQ, Solve > Solutions, Support > Services | Sanya's links. Turns the three cards into the site's main paths |
 | — | Footer CTA | "Solve before problems become expensive." | Unchanged; shorter on phone |
 
-Case Studies stay hidden until real ones exist.
+No Case Studies section (Shrey, 2026-11-24: there is none and none will be added; markup and CSS deleted in S14).
 
 ## 2. About Us (`about.html`)
 
@@ -127,5 +127,4 @@ Unchanged apart from the form heading: **"Your Facility. Our Solution."** ("Tell
 2. Red VFD light in the hero (Sanya marked it optional): skipped (decided when the video was out; the video is back as of 2026-11-24).
 3. Wording I chose without Sanya: "YanQ Power Quality Study" as one service; "Energy Transition" tab;
    "Power Quality" dropped from industries.
-4. The Yansa presentation PDF has an electricity-bill case study. Case Studies stay hidden unless you want
-   that one used.
+4. (Closed 2026-11-24) No case studies: Shrey decided none will be added.
