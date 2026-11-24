@@ -47,3 +47,14 @@ Commits fda3d47, 4bdcfea, 4e51653, 962f976, cee9938, d98dd7d, 05016ce, 3cf1698 (
 - Round 2 (shots s2-r2 + Chrome phone frame at 390): phone bottom bar stacked on the Next-step band's own
   "Book a Diagnosis"; fixed site-wide with `data-m-bar-end` on a page's CTA band.
 - Note: http.server lets Chrome cache old CSS; hard-refresh when checking.
+
+## S3 Solutions (done, 2 rounds)
+Commits a60532b, 4e3b7e2, 51c7bdd, 8828dae, 0e68155, c4215da, f6e083c.
+- Heights: old solution 6,033 + pq-solved 4,524 px desktop -> solutions 4,657 (5.17 screens);
+  phone 7,485 + 5,316 -> 5,566 (6.59).
+- Hero "Solutions." on the PQ Solved grid with a wave that settles from distorted (orange) to a clean sine (cyan)
+  and re-distorts locally under the pointer (rAF only while moving). Chip index (Powerside "Select a Solution"
+  pattern), cards get ids and a :target ring, Hybrid stand-in photos, closing band. References: Powerside Products,
+  21st "Tabbed Feature Categories"; wave own build.
+- Round 1 (headless shots + Chrome phone frame): chip tint colour, band line balance. Round 2: statement-to-offered
+  gap too large on desktop and phone (padding trimmed).
