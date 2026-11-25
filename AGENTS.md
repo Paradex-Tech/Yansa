@@ -1,6 +1,6 @@
-# Yansa website — agent handoff
+﻿# Yansa website â€” agent handoff
 
-Context for any coding agent (Codex, Claude Code, …) picking up this project.
+Context for any coding agent (Codex, Claude Code, â€¦) picking up this project.
 Last updated 2026-11-24 (rework branch `restructure-v2`, slice S8 final pass).
 
 ## What this is
@@ -18,8 +18,8 @@ no package.json.** Don't introduce a framework or bundler.
 `_redirects` sends `/solution(.html)` and `/pq-solved(.html)` to `/solutions` (301),
 and a small script on `solutions.html` forwards `#services` to `services.html`.
 
-- **Menu (6 items + CTA)**: Home · About Us · Solutions · Services · Know Your
-  Loads · Contact, plus the orange "Book a Diagnosis" button. Solutions has a
+- **Menu (6 items + CTA)**: Home Â· About Us Â· Solutions Â· Services Â· Know Your
+  Loads Â· Contact, plus the orange "Book a Diagnosis" button. Solutions has a
   drop-down (Active / Passive / Hybrid), Services has one (YanQ Power Quality
   Study / Commissioning Support / AMC). Markup: `.nav-item` > `.nav-item__link`
   + `.nav-item__chev` button + `.nav-menu`; behaviour in `initNavMenus` and
@@ -38,7 +38,7 @@ and a small script on `solutions.html` forwards `#services` to `services.html`.
   URLs), `robots.txt`, `site.webmanifest`, favicons, `images/og-image.jpg`.
   Every page has a unique title/description, canonical + og:url, og:image and
   valid JSON-LD (`check-head.mjs`).
-- `videos/hero-1920.mp4`, `hero-1280.mp4` (35 MB) are the Home hero film again
+- `videos/hero-1920.mp4`, `hero-1280.mp4` (18 MB, new 25 s film from 25 Nov) are the Home hero film
   (`<video>` in `index.html`, poster `images/hero-poster.jpg`, 1920 cut from 1400 px;
   paused on the poster under reduced motion by `initHeroVideo`); `worker/index.js` routes `/videos/*`.
 
@@ -93,11 +93,11 @@ is a deliberate grey inherited from the old page.
   right section.
 - **Colours and spacing come from `:root` tokens** (`--orange`, `--teal`,
   `--teal-deep`, `--petrol`, `--cream`, `--ivory-card`, `--line`, `--mist`,
-  `--text-on-dark`, `--nav-height`, `--section-pad-y`, `--gutter`, …). Don't
+  `--text-on-dark`, `--nav-height`, `--section-pad-y`, `--gutter`, â€¦). Don't
   hard-code new hex values.
-- **Every font-size lives in section 3 (Typography)** as tiers (Display 84 ·
-  H1 52 · H2 42 · Statement 34 · H3 30 · H4 24 · Lead 19 · Body 17 · Small 15
-  · Label 14) with responsive overrides. To size something, add its selector
+- **Every font-size lives in section 3 (Typography)** as tiers (Display 84 Â·
+  H1 52 Â· H2 42 Â· Statement 34 Â· H3 30 Â· H4 24 Â· Lead 19 Â· Body 17 Â· Small 15
+  Â· Label 14) with responsive overrides. To size something, add its selector
   to a tier; never set font-size locally.
 - **Motion**: scroll sequences are a pure function of scroll position (no
   time-based transitions driving them); in-view reveals may use
@@ -146,7 +146,7 @@ Planning docs for the rework: `docs/rework/{sitemap,audit,handoff,progress}.md`.
 - `.claude/` is gitignored.
 
 ## Forms backend (Google Sheet + Apps Script)
-- Sheet "Yansa Website — Form Submissions" (paradexstudios Drive, folder
+- Sheet "Yansa Website â€” Form Submissions" (paradexstudios Drive, folder
   "Yansa Assets"):
   https://docs.google.com/spreadsheets/d/1wDh7HBbQCDd6F639c01GRsWW4RpvoSir5ac-K3ro6YI/edit
   It has two tabs, Contact and Brochure. 4 rows labelled "TEST - Claude" can
@@ -158,7 +158,7 @@ Planning docs for the rework: `docs/rework/{sitemap,audit,handoff,progress}.md`.
 - The brochure popup (every `a[data-brochure]`) saves the lead, then
   downloads `assets/yansa-brochure.pdf`.
 - **Pending: the user must redeploy the Apps Script** with the updated
-  `backend/forms.gs` (Deploy → Manage deployments → edit → New version, then
+  `backend/forms.gs` (Deploy â†’ Manage deployments â†’ edit â†’ New version, then
   re-authorise). Until then, no emails go out. Once redeployed:
   - it emails the requester the brochure, fetched from
     `raw.githubusercontent.com/Paradex-Tech/Yansa/main/assets/yansa-brochure.pdf`;
